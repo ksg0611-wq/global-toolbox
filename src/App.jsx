@@ -12,6 +12,8 @@ import PasswordGenerator from './components/tools/PasswordGenerator';
 import ImageCompressor from './components/tools/ImageCompressor';
 import SeoMetaGenerator from './components/tools/SeoMetaGenerator';
 import RegexTester from './components/tools/RegexTester';
+import AIPromptBuilder from './components/tools/AIPromptBuilder';
+import CodeImageGenerator from './components/tools/CodeImageGenerator';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsOfService from './components/pages/TermsOfService';
 import About from './components/pages/About';
@@ -48,8 +50,8 @@ export default function App() {
       {/* 1. Header */}
       <Header onOpenAbout={() => setActiveTool('about')} />
 
-      {/* 2. Top Ad Banner */}
-      <AdBanner />
+      {/* 2. Top Ad Banner — VITE_SHOW_ADS=true 일 때만 렌더링 */}
+      {import.meta.env.VITE_SHOW_ADS === 'true' && <AdBanner />}
 
       {/* 3. Main */}
       <main id="main" className="flex-grow">
@@ -147,8 +149,8 @@ export default function App() {
         </section>
       </main>
 
-      {/* 4. Bottom Ad Banner */}
-      <AdBanner />
+      {/* 4. Bottom Ad Banner — VITE_SHOW_ADS=true 일 때만 렌더링 */}
+      {import.meta.env.VITE_SHOW_ADS === 'true' && <AdBanner />}
 
       {/* 5. Footer */}
       <Footer 
@@ -190,6 +192,12 @@ export default function App() {
       )}
       {activeTool === 'regex-tester' && (
         <RegexTester onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'ai-prompt-builder' && (
+        <AIPromptBuilder onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'code-image-generator' && (
+        <CodeImageGenerator onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'about' && (
         <About onClose={() => setActiveTool(null)} />

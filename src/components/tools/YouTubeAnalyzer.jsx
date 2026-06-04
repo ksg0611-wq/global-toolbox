@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { YT_ANALYZER } from '../../constants/strings';
-import { API_BASE_URL } from '../../constants/config';
 
 // ── 색상 토큰 ────────────────────────────────────────────────────────────────
 const YT_RED   = '#ff0033';
@@ -181,16 +180,17 @@ export default function YouTubeAnalyzer({ onClose }) {
     setResult(null);
     setError('');
 
-    const endpoint = mode === 'video' ? 'video' : 'channel';
-
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/youtube/${endpoint}?input=${encodeURIComponent(trimmed)}`
-      );
+      // Cloudflare Pages Function (/api/youtube) 으로 요청
+      // mode=video|channel, url=<input>
+      const params = new URLSearchParams({
+        url:  trimmed,
+        mode: mode,
+      });
+      const res  = await fetch(`/api/youtube?${params.toString()}`);
       const data = await res.json();
 
       if (!res.ok) {
-        // 백엔드가 반환한 에러 메시지 표시
         setError(data?.error?.message ?? YT_ANALYZER.errUnknown);
         return;
       }

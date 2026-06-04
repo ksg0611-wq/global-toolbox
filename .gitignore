@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Environment variables (보안 정보 및 설정값 — GitHub 업로드 제외)
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
