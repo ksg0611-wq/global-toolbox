@@ -140,4 +140,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'markdown-editor',
+    title:       'Markdown to HTML Live Editor',
+    description: 'Write Markdown text and render to styled HTML in real-time. Copy clean, sanitized HTML code with one click.',
+    category:    'Writing',
+    iconName:    'IconFileText',
+    badge:       'New',
+    href:        '/tools/markdown-editor',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];

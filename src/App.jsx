@@ -14,6 +14,7 @@ import SeoMetaGenerator from './components/tools/SeoMetaGenerator';
 import RegexTester from './components/tools/RegexTester';
 import AIPromptBuilder from './components/tools/AIPromptBuilder';
 import CodeImageGenerator from './components/tools/CodeImageGenerator';
+import MarkdownEditor from './components/tools/MarkdownEditor';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsOfService from './components/pages/TermsOfService';
 import About from './components/pages/About';
@@ -198,6 +199,9 @@ export default function App() {
       )}
       {activeTool === 'code-image-generator' && (
         <CodeImageGenerator onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'markdown-editor' && (
+        <MarkdownEditor onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'about' && (
         <About onClose={() => setActiveTool(null)} />

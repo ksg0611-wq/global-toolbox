@@ -29,6 +29,7 @@ const ICON_MAP = {
   IconRegex:      Icons.IconRegex,
   IconSparkle:    Icons.IconSparkle,
   IconCamera:     Icons.IconCamera,
+  IconFileText:   Icons.IconFileText,
 };
 
 const BADGE_STYLES = {
