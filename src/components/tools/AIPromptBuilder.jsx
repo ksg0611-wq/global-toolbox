@@ -1,5 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { trackEvent } from '../../utils/analytics';
+import { db, auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 
 /* ─── 브랜드 색상 ────────────────────────────────────────────────────────── */
 const LIME     = '#deff9a';
@@ -221,7 +224,6 @@ const inputCls = `w-full rounded-lg border border-slate-200 dark:border-zinc-700
   outline-none focus:ring-2 focus:ring-[#deff9a]/40 focus:border-[#8fc400]
   dark:focus:border-[#8fc400] transition-all`;
 
-/* ─── 메인 컴포넌트 ──────────────────────────────────────────────────────── */
 export default function AIPromptBuilder({ onClose }) {
   const [engine, setEngine] = useState('general');
   const [role,   setRole]   = useState('');
@@ -229,6 +231,114 @@ export default function AIPromptBuilder({ onClose }) {
   const [tone,   setTone]   = useState('professional');
   const [format, setFormat] = useState('markdown');
   const [copied, setCopied] = useState(false);
+
+  // Firestore & Auth 관련 상태 정의
+  const [currentUser, setCurrentUser] = useState(auth.currentUser);
+  const [savedPrompts, setSavedPrompts] = useState([]);
+  const [loadingPrompts, setLoadingPrompts] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState('');
+
+  // 구글 로그인 상태 감지
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 토스트 타이머
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  // Firestore 저장된 프롬프트 조회 (인덱스 에러 방지를 위해 JS 메모리에서 시간순 정렬)
+  const fetchPrompts = useCallback(async () => {
+    if (!currentUser) {
+      setSavedPrompts([]);
+      return;
+    }
+    setLoadingPrompts(true);
+    try {
+      const q = query(
+        collection(db, 'prompts'),
+        where('uid', '==', currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const list = [];
+      querySnapshot.forEach((doc) => {
+        list.push({ id: doc.id, ...doc.data() });
+      });
+      // 메모리 정렬 (createdAt desc)
+      list.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
+      });
+      setSavedPrompts(list);
+    } catch (error) {
+      console.error('Error fetching prompts:', error);
+    } finally {
+      setLoadingPrompts(false);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    fetchPrompts();
+  }, [fetchPrompts]);
+
+  // 프롬프트 보관함에 저장 (Create)
+  const handleSaveToLibrary = async () => {
+    if (!currentUser) return;
+    if (!prompt) return;
+    setSaving(true);
+    try {
+      await addDoc(collection(db, 'prompts'), {
+        uid: currentUser.uid,
+        title: role || 'AI Assistant',
+        prompt: prompt,
+        engine: engine,
+        role: role,
+        task: task,
+        tone: tone,
+        format: format,
+        createdAt: serverTimestamp(),
+      });
+      setToast('Saved to My Library! (보관함에 저장되었습니다)');
+      fetchPrompts();
+    } catch (error) {
+      console.error('Error saving prompt:', error);
+      setToast('Failed to save prompt.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // 저장된 프롬프트 빌더에 적용하기 (Load)
+  const handleApplyPrompt = (item) => {
+    setEngine(item.engine || 'general');
+    setRole(item.role || '');
+    setTask(item.task || '');
+    setTone(item.tone || 'professional');
+    setFormat(item.format || 'markdown');
+    setToast('Prompt settings loaded! (설정이 빌더에 적용되었습니다)');
+  };
+
+  // 저장된 프롬프트 삭제하기 (Delete)
+  const handleDeletePrompt = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this prompt? (정말 삭제하시겠습니까?)')) return;
+    try {
+      await deleteDoc(doc(db, 'prompts', id));
+      setToast('Prompt deleted! (프롬프트가 삭제되었습니다)');
+      fetchPrompts();
+    } catch (error) {
+      console.error('Error deleting prompt:', error);
+      setToast('Failed to delete prompt.');
+    }
+  };
 
   /* ── 실시간 프롬프트 조합 ── */
   const prompt = useMemo(
@@ -455,22 +565,50 @@ export default function AIPromptBuilder({ onClose }) {
                 )}
               </div>
 
-              {/* 메인 Copy 버튼 */}
-              <button
-                onClick={handleCopy}
-                disabled={!prompt}
-                className="w-full flex items-center justify-center gap-2
-                  py-3.5 rounded-xl font-bold text-sm
-                  disabled:opacity-40 disabled:cursor-not-allowed
-                  active:scale-[0.98] transition-all duration-200"
-                style={{
-                  background: copied ? '#4ade80' : prompt ? LIME : '#e2e8f0',
-                  color:      '#1a1a1a',
-                  boxShadow:  prompt ? `0 4px 20px rgba(222,255,154,0.35)` : 'none',
-                }}
-              >
-                {copied ? <><IconCheck /> Copied to Clipboard!</> : <><IconCopy /> Copy Prompt</>}
-              </button>
+              {/* 메인 액션 버튼 그리드 (복사 & 보관함 저장) */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={handleCopy}
+                  disabled={!prompt}
+                  className="flex items-center justify-center gap-2
+                    py-3.5 rounded-xl font-bold text-sm
+                    disabled:opacity-40 disabled:cursor-not-allowed
+                    active:scale-[0.98] transition-all duration-200 cursor-pointer"
+                  style={{
+                    background: copied ? '#4ade80' : prompt ? LIME : '#e2e8f0',
+                    color:      '#1a1a1a',
+                    boxShadow:  prompt ? `0 4px 20px rgba(222,255,154,0.35)` : 'none',
+                  }}
+                >
+                  {copied ? <><IconCheck /> Copied!</> : <><IconCopy /> Copy Prompt</>}
+                </button>
+
+                <button
+                  onClick={handleSaveToLibrary}
+                  disabled={saving || !prompt || !currentUser}
+                  className="flex items-center justify-center gap-2
+                    py-3.5 rounded-xl font-bold text-sm border
+                    disabled:opacity-40 disabled:cursor-not-allowed
+                    active:scale-[0.98] transition-all duration-200 cursor-pointer"
+                  style={{
+                    background: currentUser ? 'rgba(222,255,154,0.05)' : 'rgba(0,0,0,0.03)',
+                    borderColor: currentUser ? 'rgba(222,255,154,0.4)' : 'rgba(0,0,0,0.1)',
+                    color: currentUser ? LIME : '#94a3b8',
+                  }}
+                  title={currentUser ? "Save to Firestore Library" : "Login to Google to save prompts"}
+                >
+                  {saving ? (
+                    <>
+                      <span className="animate-spin rounded-full h-4 w-4 border-2 border-[#1a1a1a] border-t-transparent" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      💾 {currentUser ? 'Save to Library' : 'Login to Save'}
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* 프롬프트 팁 박스 */}
               <div className="rounded-xl p-4 space-y-2"
@@ -484,6 +622,71 @@ export default function AIPromptBuilder({ onClose }) {
                 </ul>
               </div>
             </div>
+          </div>
+
+          {/* ── My Saved Prompts 보관함 섹션 ── */}
+          <div className="border-t border-slate-200 dark:border-zinc-800 pt-6 space-y-4">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-2">
+              💾 My Saved Prompts Library (나만의 프롬프트 보관함)
+              {currentUser && savedPrompts.length > 0 && (
+                <span className="rounded-md bg-lime-500/10 px-2 py-0.5 text-xs font-bold text-[#8fc400] dark:text-[#deff9a]">
+                  {savedPrompts.length}
+                </span>
+              )}
+            </h3>
+
+            {!currentUser ? (
+              <div className="rounded-xl border border-dashed border-slate-200 dark:border-zinc-800 p-6 text-center text-slate-400 dark:text-zinc-500 text-xs leading-relaxed">
+                🔒 Google 로그인 후 사용 가능한 보관함입니다. 우측 상단의 [Sign in with Google] 버튼을 클릭해 로그인해 보세요.
+              </div>
+            ) : loadingPrompts ? (
+              <div className="flex items-center justify-center py-8 text-xs text-slate-400 dark:text-zinc-500 gap-2">
+                <span className="animate-spin rounded-full h-4 w-4 border-2 border-[#8fc400] border-t-transparent" />
+                Loading your prompts from Firestore...
+              </div>
+            ) : savedPrompts.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-slate-200 dark:border-zinc-800 p-8 text-center text-slate-400 dark:text-zinc-500 text-xs">
+                ✨ 보관된 프롬프트가 없습니다. 원하는 설정을 만들고 [Save to Library] 버튼을 눌러 보관해 보세요!
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {savedPrompts.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col justify-between p-4 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 hover:border-[#deff9a]/40 transition-all group"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-bold text-xs text-slate-800 dark:text-zinc-200 truncate" title={item.title}>
+                          {item.title}
+                        </span>
+                        <span className="rounded bg-slate-200 dark:bg-zinc-800 px-1.5 py-0.5 text-[9px] font-mono text-slate-500 dark:text-zinc-400 uppercase">
+                          {item.engine || 'General'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-3 font-mono leading-relaxed bg-white dark:bg-zinc-950/40 p-2 rounded border border-slate-100 dark:border-zinc-900/50 break-words whitespace-pre-wrap">
+                        {item.prompt}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/60">
+                      <button
+                        onClick={() => handleApplyPrompt(item)}
+                        className="flex-1 py-1.5 rounded bg-slate-200 dark:bg-zinc-800 hover:bg-[#deff9a]/20 hover:text-[#8fc400] dark:hover:text-[#deff9a] text-slate-700 dark:text-zinc-300 font-semibold text-xs transition-all cursor-pointer"
+                      >
+                        적용하기
+                      </button>
+                      <button
+                        onClick={() => handleDeletePrompt(item.id)}
+                        className="py-1.5 px-3 rounded border border-slate-200 dark:border-zinc-800 hover:border-red-200 dark:hover:border-red-900/40 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-500/10 text-slate-400 text-xs transition-all cursor-pointer"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── SEO 아티클 ── */}
@@ -543,6 +746,21 @@ export default function AIPromptBuilder({ onClose }) {
           </article>
         </div>
       </div>
+
+      {/* ── 토스트 팝업 ── */}
+      {toast && (
+        <div
+          className="fixed bottom-6 right-6 z-[100] rounded-xl px-5 py-3 text-sm font-bold shadow-2xl flex items-center gap-2 border text-white transition-all duration-300"
+          style={{
+            background: '#111118',
+            borderColor: 'rgba(222,255,154,0.3)',
+            boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.7)'
+          }}
+        >
+          <span className="h-2 w-2 rounded-full animate-ping bg-[#deff9a]" />
+          <span>{toast}</span>
+        </div>
+      )}
     </div>
   );
 }
