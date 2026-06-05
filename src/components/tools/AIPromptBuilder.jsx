@@ -589,22 +589,23 @@ export default function AIPromptBuilder({ onClose }) {
                   className="flex items-center justify-center gap-2
                     py-3.5 rounded-xl font-bold text-sm border
                     disabled:opacity-40 disabled:cursor-not-allowed
-                    active:scale-[0.98] transition-all duration-200 cursor-pointer"
+                    active:scale-95 transition-all duration-200 hover:brightness-105 disabled:hover:brightness-100 cursor-pointer"
                   style={{
-                    background: currentUser ? 'rgba(222,255,154,0.05)' : 'rgba(0,0,0,0.03)',
-                    borderColor: currentUser ? 'rgba(222,255,154,0.4)' : 'rgba(0,0,0,0.1)',
-                    color: currentUser ? LIME : '#94a3b8',
+                    background: currentUser ? (prompt ? LIME : 'rgba(222,255,154,0.3)') : '#e2e8f0',
+                    borderColor: currentUser ? '#deff9a' : 'rgba(0,0,0,0.1)',
+                    color: currentUser ? '#111118' : '#94a3b8',
+                    boxShadow: (currentUser && prompt) ? `0 4px 20px rgba(222,255,154,0.35)` : 'none',
                   }}
                   title={currentUser ? "Save to Firestore Library" : "Login to Google to save prompts"}
                 >
                   {saving ? (
                     <>
-                      <span className="animate-spin rounded-full h-4 w-4 border-2 border-[#1a1a1a] border-t-transparent" />
+                      <span className="animate-spin rounded-full h-4 w-4 border-2 border-zinc-900 border-t-transparent" />
                       Saving...
                     </>
                   ) : (
                     <>
-                      💾 {currentUser ? 'Save to Library' : 'Login to Save'}
+                      💾 {currentUser ? 'Save Prompt' : 'Login to Save'}
                     </>
                   )}
                 </button>
