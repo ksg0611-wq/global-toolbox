@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdBanner from './components/AdBanner';
@@ -26,8 +26,98 @@ import { IconSpark, IconFilter, IconSearch } from './components/icons';
 export default function App() {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(TOOLS_SECTION.filterAll);
-  // 현재 열려 있는 모달 도구 ID (null = 닫힘)
-  const [activeTool, setActiveTool] = useState(null);
+  
+  // 현재 열려 있는 모달 도구 ID (URL 경로 분석 후 설정)
+  const [activeTool, setActiveTool] = useState(() => {
+    const path = window.location.pathname;
+    if (path.startsWith('/tools/')) {
+      return path.substring(7);
+    } else if (path.startsWith('/') && path.length > 1) {
+      return path.substring(1);
+    }
+    return null;
+  });
+
+  // 뒤로가기/앞으로가기 브라우저 내비게이션 지원
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.startsWith('/tools/')) {
+        setActiveTool(path.substring(7));
+      } else if (path.startsWith('/') && path.length > 1) {
+        setActiveTool(path.substring(1));
+      } else {
+        setActiveTool(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // activeTool 변경 시 브라우저 주소창 및 메타 태그 동적 업데이트
+  useEffect(() => {
+    let newPath = '/';
+    if (activeTool) {
+      if (['about', 'contact', 'privacy-policy', 'terms-of-service'].includes(activeTool)) {
+        newPath = `/${activeTool}`;
+      } else {
+        newPath = `/tools/${activeTool}`;
+      }
+    }
+
+    if (window.location.pathname !== newPath) {
+      window.history.pushState(null, '', newPath);
+    }
+
+    const tool = TOOLS.find((t) => t.id === activeTool);
+
+    if (tool) {
+      document.title = `${tool.title} | Global ToolBox`;
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', tool.description);
+
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', `${tool.title} | Global ToolBox`);
+
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', tool.description);
+
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.setAttribute('content', `https://global-toolbox.com/tools/${tool.id}`);
+
+      const twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.setAttribute('content', `${tool.title} | Global ToolBox`);
+
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc) twDesc.setAttribute('content', tool.description);
+    } else if (activeTool) {
+      const capitalized = activeTool.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      document.title = `${capitalized} | Global ToolBox`;
+    } else {
+      document.title = 'Global ToolBox - Free Web Utilities for Creators & Developers';
+
+      const defaultDesc = 'Global ToolBox is a high-performance hub of free, fast, and secure web utilities for creators and developers, including YouTube tag analyzer, margin calculators, JSON formatter, QR generator, WebP image compressor, and AI prompt builders.';
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', defaultDesc);
+
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', 'Global ToolBox - Free Web Utilities for Creators & Developers');
+
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', defaultDesc);
+
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.setAttribute('content', 'https://global-toolbox.com');
+
+      const twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.setAttribute('content', 'Global ToolBox - Free Web Utilities for Creators & Developers');
+
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc) twDesc.setAttribute('content', defaultDesc);
+    }
+  }, [activeTool]);
 
   const categories = useMemo(
     () => [TOOLS_SECTION.filterAll, ...new Set(TOOLS.map((t) => t.category))],
