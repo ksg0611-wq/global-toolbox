@@ -136,7 +136,7 @@ export default function App() {
   const reset = () => { setQuery(''); setActiveCategory(TOOLS_SECTION.filterAll); };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-zinc-955 text-gray-900 dark:text-zinc-200 transition-colors duration-300">
 
       {/* 1. Header */}
       <Header onOpenAbout={() => setActiveTool('about')} />
@@ -208,7 +208,7 @@ export default function App() {
               </div>
               <input type="search" value={query} onChange={(e) => setQuery(e.target.value)}
                 placeholder={TOOLS_SECTION.searchPlaceholder}
-                className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-2 pl-9 pr-4 text-sm text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all"
+                className="w-full rounded-xl border border-gray-250/70 dark:border-zinc-800/80 bg-white dark:bg-zinc-900/50 py-2 pl-9 pr-4 text-sm text-gray-900 dark:text-zinc-100 placeholder-gray-400 dark:placeholder-zinc-500 outline-none focus:ring-2 focus:ring-indigo-550/20 focus:border-indigo-500 dark:focus:border-indigo-400 shadow-sm transition-all"
               />
             </div>
           </div>

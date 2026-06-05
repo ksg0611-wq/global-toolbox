@@ -52,7 +52,7 @@ export default function ToolCard({
   const IconComponent = ICON_MAP[iconName] ?? Icons.IconDefault;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-slate-300 dark:hover:border-zinc-700">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-250/70 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-300 dark:hover:border-zinc-750">
 
       {/* 호버 시 상단 glow */}
       <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-tr from-indigo-400/20 to-purple-400/20 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -61,7 +61,7 @@ export default function ToolCard({
         {/* ── Header row ── */}
         <div className="flex items-start justify-between mb-4">
           {/* Icon box */}
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors duration-300 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-350 transition-colors duration-300 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
             <IconComponent />
           </div>
           {/* Badges */}
@@ -78,12 +78,12 @@ export default function ToolCard({
         </div>
 
         {/* ── Title ── */}
-        <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 mb-2">
+        <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 mb-2">
           {title}
         </h3>
 
         {/* ── Description ── */}
-        <p className="flex-1 text-sm leading-relaxed text-slate-500 dark:text-zinc-400 line-clamp-3">
+        <p className="flex-1 text-sm leading-relaxed text-gray-550 dark:text-zinc-400 line-clamp-3">
           {description}
         </p>
 

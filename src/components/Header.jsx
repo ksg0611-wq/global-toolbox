@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { HEADER } from '../constants/strings';
 import { IconSun, IconMoon, IconGlobe, IconMenu, IconX } from './icons';
 import { auth } from '../firebase';
@@ -18,14 +19,17 @@ const IconGoogle = () => (
 );
 
 export default function Header({ onOpenAbout }) {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const saved = localStorage.getItem('gtb-theme');
-    return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = theme === 'dark';
 
   // 구글 세션 지속성 관찰
   useEffect(() => {
@@ -34,12 +38,6 @@ export default function Header({ onOpenAbout }) {
     });
     return () => unsubscribe();
   }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    isDark ? root.classList.add('dark') : root.classList.remove('dark');
-    localStorage.setItem('gtb-theme', isDark ? 'dark' : 'light');
-  }, [isDark]);
 
   useEffect(() => {
     if (toast) {
@@ -166,12 +164,12 @@ export default function Header({ onOpenAbout }) {
 
             {/* Theme toggle */}
             <button
-              onClick={() => setIsDark(!isDark)}
+              onClick={() => setTheme(isDark ? 'light' : 'dark')}
               aria-label={HEADER.themeAriaLabel}
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all duration-300 hover:rotate-12 active:scale-90 cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:bg-slate-55 dark:hover:bg-zinc-800 transition-all duration-300 hover:rotate-12 active:scale-90 cursor-pointer"
             >
               <div className="transition-transform duration-300 hover:scale-110">
-                {isDark ? <IconSun /> : <IconMoon />}
+                {mounted ? (isDark ? <IconSun /> : <IconMoon />) : <IconSun />}
               </div>
             </button>
 

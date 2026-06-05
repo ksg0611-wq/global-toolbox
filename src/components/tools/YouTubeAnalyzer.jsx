@@ -118,12 +118,11 @@ function Spinner() {
 // ── 통계 카드 ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, value }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 rounded-2xl px-4 py-4"
-      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-      <div className="flex items-center gap-1.5 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+    <div className="flex flex-col items-center gap-1.5 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80">
+      <div className="flex items-center gap-1.5 text-slate-550 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">
         {icon}<span>{label}</span>
       </div>
-      <span className="text-2xl font-extrabold tabular-nums text-white">{value}</span>
+      <span className="text-2xl font-extrabold tabular-nums text-slate-900 dark:text-white">{value}</span>
     </div>
   );
 }
@@ -217,8 +216,7 @@ export default function YouTubeAnalyzer({ onClose }) {
     >
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col"
-        style={{ background: '#0f0f11', border: '1px solid rgba(255,0,51,0.2)' }}
+        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
       >
         {/* 상단 빨간 accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
@@ -232,30 +230,30 @@ export default function YouTubeAnalyzer({ onClose }) {
               <IconYouTube />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold text-white tracking-tight">
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 {YT_ANALYZER.title}
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">{YT_ANALYZER.subtitle}</p>
             </div>
           </div>
           <button onClick={onClose} aria-label={YT_ANALYZER.closeAriaLabel}
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 hover:text-white transition-colors ml-4"
-            style={{ background: 'rgba(255,255,255,0.06)' }}>
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-colors ml-4">
             <IconClose />
           </button>
         </div>
 
         {/* ── Mode Toggle ── */}
         <div className="px-6 pb-4 flex-shrink-0">
-          <div className="inline-flex rounded-xl p-1 gap-1"
-            style={{ background: 'rgba(255,255,255,0.06)' }}>
+          <div className="inline-flex rounded-xl p-1 gap-1 bg-slate-100 dark:bg-zinc-900">
             {['video', 'channel'].map((m) => (
               <button key={m}
                 onClick={() => { setMode(m); handleReset(); }}
-                className="px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200"
+                className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                  mode === m ? '' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
                 style={mode === m
                   ? { background: YT_RED, color: '#fff', boxShadow: `0 0 14px ${YT_RED}55` }
-                  : { color: '#94a3b8' }}>
+                  : {}}>
                 {m === 'video' ? YT_ANALYZER.modeVideo : YT_ANALYZER.modeChannel}
               </button>
             ))}
@@ -274,20 +272,9 @@ export default function YouTubeAnalyzer({ onClose }) {
                 placeholder={mode === 'video'
                   ? YT_ANALYZER.inputPlaceholderVideo
                   : YT_ANALYZER.inputPlaceholderChannel}
-                className="w-full rounded-xl border py-3 pl-4 pr-4 text-sm font-medium outline-none transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  borderColor: error ? '#f87171' : 'rgba(255,0,51,0.25)',
-                  color: '#f1f5f9',
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = YT_RED;
-                  e.target.style.boxShadow = `0 0 0 3px ${YT_RED_DIM}`;
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = error ? '#f87171' : 'rgba(255,0,51,0.25)';
-                  e.target.style.boxShadow = 'none';
-                }}
+                className={`w-full rounded-xl border py-3 pl-4 pr-4 text-sm font-medium outline-none transition-all bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 ${
+                  error ? 'border-red-400' : 'border-slate-205 dark:border-zinc-800'
+                } focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]/20`}
               />
             </div>
 
@@ -355,8 +342,7 @@ export default function YouTubeAnalyzer({ onClose }) {
             <div className="flex flex-col gap-5">
 
               {/* 썸네일 + 제목 */}
-              <div className="relative rounded-2xl overflow-hidden"
-                style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
                 {result.thumbnail && (
                   <img
                     src={result.thumbnail}
@@ -382,9 +368,7 @@ export default function YouTubeAnalyzer({ onClose }) {
                 <StatCard icon={<IconMsg />}    label={YT_ANALYZER.labelComments} value={fmtNum(result.statistics?.commentCount)} />
               </div>
 
-              {/* 메타 정보 */}
-              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
                 <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelChannel}   value={result.channelTitle} />
                 <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelPublished}  value={fmtDate(result.publishedAt)} />
                 <MetaRow icon={<IconClock />}    label={YT_ANALYZER.labelDuration}   value={parseDuration(result.duration)} />
@@ -399,8 +383,7 @@ export default function YouTubeAnalyzer({ onClose }) {
                   <div className="flex flex-wrap gap-1.5">
                     {result.tags.slice(0, 20).map((tag) => (
                       <span key={tag}
-                        className="rounded-lg px-2.5 py-1 text-xs font-medium text-slate-400"
-                        style={{ background: 'rgba(255,255,255,0.06)' }}>
+                        className="rounded-lg px-2.5 py-1 text-xs font-medium text-slate-650 dark:text-slate-400 bg-slate-100 dark:bg-zinc-900">
                         #{tag}
                       </span>
                     ))}
@@ -419,9 +402,7 @@ export default function YouTubeAnalyzer({ onClose }) {
           {!loading && result?.type === 'channel' && (
             <div className="flex flex-col gap-5">
 
-              {/* 채널 헤더 */}
-              <div className="flex items-center gap-4 rounded-2xl p-4"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="flex items-center gap-4 rounded-2xl p-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
                 {result.thumbnail ? (
                   <img src={result.thumbnail} alt={result.title}
                     className="h-16 w-16 rounded-full object-cover flex-shrink-0"
@@ -433,7 +414,7 @@ export default function YouTubeAnalyzer({ onClose }) {
                   </div>
                 )}
                 <div>
-                  <h3 className="text-lg font-extrabold text-white">{result.title}</h3>
+                  <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">{result.title}</h3>
                   {result.customUrl && (
                     <p className="text-sm font-medium mt-0.5" style={{ color: YT_RED }}>
                       {result.customUrl}
@@ -460,9 +441,7 @@ export default function YouTubeAnalyzer({ onClose }) {
                 <StatCard icon={<IconEye />}   label={YT_ANALYZER.labelTotalViews}  value={fmtNum(result.statistics?.viewCount)} />
               </div>
 
-              {/* 메타 정보 */}
-              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
                 <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelJoined}  value={fmtDate(result.publishedAt)} />
                 <MetaRow icon={<IconGlobe />}    label={YT_ANALYZER.labelCountry} value={result.country} />
                 <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelHandle}  value={result.customUrl} />
@@ -474,16 +453,14 @@ export default function YouTubeAnalyzer({ onClose }) {
           {result && !loading && (
             <button
               onClick={handleReset}
-              className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition-all active:scale-95"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-450 bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-all active:scale-95 border border-slate-200 dark:border-zinc-800"
             >
               <IconReset /> {YT_ANALYZER.btnReset}
             </button>
           )}
 
-          {/* SEO Optimized Description (Thin Content Defense) */}
-          <article className="mt-8 pt-6 border-t border-white/10 text-xs text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-white mb-2">
+          <article className="mt-8 pt-6 border-t border-slate-250 dark:border-zinc-800/80 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
               What is the YouTube Analyzer Tool?
             </h2>
             <p className="leading-relaxed">
