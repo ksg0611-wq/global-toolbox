@@ -17,6 +17,7 @@ import CodeImageGenerator from './components/tools/CodeImageGenerator';
 import MarkdownEditor from './components/tools/MarkdownEditor';
 import RevenueEstimator from './components/tools/RevenueEstimator';
 import ViralHookGenerator from './components/tools/ViralHookGenerator';
+import BrandDealPitchBuilder from './components/tools/BrandDealPitchBuilder';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsOfService from './components/pages/TermsOfService';
 import About from './components/pages/About';
@@ -60,7 +61,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'viral-hook-generator'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'viral-hook-generator', 'brand-deal-pitch-builder'].includes(activeTool)) {
         newPath = `/${activeTool}`;
       } else {
         newPath = `/tools/${activeTool}`;
@@ -300,6 +301,9 @@ export default function App() {
       )}
       {activeTool === 'viral-hook-generator' && (
         <ViralHookGenerator onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'brand-deal-pitch-builder' && (
+        <BrandDealPitchBuilder onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'about' && (
         <About onClose={() => setActiveTool(null)} />

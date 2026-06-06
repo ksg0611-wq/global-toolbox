@@ -64,6 +64,17 @@ export const TOOLS = [
     openModal:   true,   // 클릭 시 인라인 모달로 열림
   },
   {
+    id:          'brand-deal-pitch-builder',
+    title:       'Brand Deal Email Pitch Builder',
+    description: 'Create persuasive and professional cold email pitches to secure brand deals and sponsorships using AI.',
+    category:    'Writing',
+    iconName:    'IconFileText',
+    badge:       'New',
+    href:        '/tools/brand-deal-pitch-builder',
+    comingSoon:  false,
+    openModal:   true,
+  },
+  {
     id:          'text-formatter',
     title:       'Text Formatter',
     description: 'Transform text to UPPERCASE, lowercase, Title Case, camelCase, or snake_case. Strip whitespace, count words, and clean up copy in one click.',
