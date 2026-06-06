@@ -65,7 +65,9 @@
       "/brand-deal-pitch-builder",
       "/tools/brand-deal-pitch-builder",
       "/youtube-chapter-formatter",
-      "/tools/youtube-chapter-formatter"
+      "/tools/youtube-chapter-formatter",
+      "/youtube-thumbnail-preview",
+      "/tools/youtube-thumbnail-preview"
     ]
   }
 }

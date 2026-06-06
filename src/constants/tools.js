@@ -53,6 +53,17 @@ export const TOOLS = [
     openModal:   true,
   },
   {
+    id:          'youtube-thumbnail-preview',
+    title:       'YouTube Title & Thumbnail Preview Simulator',
+    description: 'Preview and test how your video thumbnail and title truncation will look on YouTube mobile and desktop feeds instantly.',
+    category:    'SEO',
+    iconName:    'IconYoutube',
+    badge:       'New',
+    href:        '/tools/youtube-thumbnail-preview',
+    comingSoon:  false,
+    openModal:   true,
+  },
+  {
     id:          'margin-calculator',
     title:       'CPA Margin Calculator',
     description: 'Real-time CPA profit analysis: enter payout, ad spend, and conversions to instantly see Gross Revenue, Net Profit, ROI, and Margin — all in your browser.',
