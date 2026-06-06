@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ToolSEOSection from '../common/ToolSEOSection';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -330,24 +331,32 @@ export default function BrandDealPitchBuilder({ onClose }) {
 
           </div>
 
-          {/* ── SEO Informational Article (Thin Content Defense) ── */}
-          <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-              Writing cold emails that brands actually reply to
-            </h2>
-            <p className="leading-relaxed">
-              Securing sponsorship deals as a content creator can be challenging. Whether you have 5,000 or 500,000 subscribers, the email pitch is your first impression. Brands receive hundreds of copy-pasted templates daily. A successful pitch must be personalized, clear about value, and structured professionally.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 mt-4 mb-2">
-              Essential elements of a brand pitch email
-            </h3>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Catchy &amp; Professional Subject Line:</strong> Brands should know who you are and what you want immediately. Avoid clickbait. (e.g., <em>"Collab: TechReviewer John x Logitech"</em> is much better than <em>"Sponsorship inquiry"</em>).</li>
-              <li><strong>Brief Channel Context:</strong> Introduce yourself, your stats, and your niche. Keep it under three sentences. Mentioning specific audience interests is key.</li>
-              <li><strong>Custom Value Proposition ("Why You"):</strong> Explain why your channels are a good match for the brand's products. Show that you understand their brand goals or recently reviewed their competitors.</li>
-              <li><strong>Call to Action (CTA):</strong> End with a simple request. (e.g., <em>"Do you have 5 minutes for a quick chat next Tuesday?"</em> or <em>"Let me know if you would like me to send over my media kit."</em>).</li>
-            </ul>
-          </article>
+          <ToolSEOSection
+            title="Writing Cold Emails That Brands Actually Reply To"
+            description={`Securing sponsorship deals as a content creator can be challenging. Whether you have 5,000 or 500,000 subscribers, the email pitch is your first impression. Brands receive hundreds of copy-pasted templates daily. A successful pitch must be personalized, clear about value, and structured professionally.`}
+            howToUse={[
+              "Fill in your creator or channel name as you want it to appear.",
+              "Input your follower or subscriber count to establish your platform size.",
+              "Specify the name of the target brand you wish to collaborate with.",
+              "Define your main niche or video topics.",
+              "Add optional context for 'Why you?' to highlight target products or audience affinity.",
+              "Click 'Generate Pitch Email' to run the AI writer, then copy the result."
+            ]}
+            faqs={[
+              {
+                question: "How long should a cold email pitch to a brand be?",
+                answer: "Keep your cold email concise, ideally under 150-200 words. Brand managers and marketing agencies are busy and receive hundreds of pitches. A short pitch with a clear value proposition is much more likely to be read fully and answered."
+              },
+              {
+                question: "What makes a subject line successful for brand sponsorships?",
+                answer: "A successful subject line is professional, clear, and co-branded. Avoid vague lines like 'Sponsorship opportunity' or 'Partnership request'. Instead, use structured formats like 'Partnership: [Your Name] x [Brand Name]' or 'Content Collaboration - [Your Name] ([Subscribers] Subs)'."
+              },
+              {
+                question: "Should I include my rates in the initial pitch email?",
+                answer: "Generally, no. The goal of the initial email is to start a conversation and gauge their interest. Once they reply expressing interest, you can send your media kit and discuss custom packages and pricing based on their specific campaign objectives."
+              }
+            ]}
+          />
 
         </div>
       </div>

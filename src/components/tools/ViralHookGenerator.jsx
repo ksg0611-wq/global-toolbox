@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ToolSEOSection from '../common/ToolSEOSection';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
@@ -320,27 +321,32 @@ export default function ViralHookGenerator({ onClose }) {
 
           </div>
 
-          {/* ── SEO Informational Article (Thin Content Defense) ── */}
-          <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-              The Science of Short-form Video Hooks: TikTok, Reels &amp; Shorts
-            </h2>
-            <p className="leading-relaxed">
-              Why do some short-form videos get millions of views while others stop at 200 views? The secret lies in the first 3 seconds. The **hook** is the opening statement or visual frame that captures a viewer's attention and prevents them from swiping away. Search algorithms prioritize average watch time and completion rate; getting users past the 3-second mark is essential.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 mt-4 mb-2">
-              Choosing the Right Hook Tone
-            </h3>
-            <p className="leading-relaxed">
-              Different target audiences respond to different triggers. Understanding the psychology of each tone can elevate your video:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Controversial:</strong> Challenges a commonly held belief. (e.g., <em>"Stop doing cardio if you want to lose weight."</em>) This triggers curiosity and debate in the comments.</li>
-              <li><strong>Educational:</strong> Offers a quick, high-value insight. (e.g., <em>"The one secret app developers don't want you to know."</em>) Perfect for building authority.</li>
-              <li><strong>Funny/Relatable:</strong> Uses humor or situational irony to build instant rapport. (e.g., <em>"My clients after I tell them to delete their database..."</em>) Highly shareable.</li>
-              <li><strong>Urgent:</strong> Employs FOMO (Fear of Missing Out). (e.g., <em>"Do this before the next YouTube algorithm change!"</em>) Commands immediate action.</li>
-            </ul>
-          </article>
+          <ToolSEOSection
+            title="The Science of Short-form Video Hooks: TikTok, Reels & Shorts"
+            description={`Why do some short-form videos get millions of views while others stop at 200 views? The secret lies in the first 3 seconds. The hook is the opening statement or visual frame that captures a viewer's attention and prevents them from swiping away. Search algorithms prioritize average watch time and completion rate; getting users past the 3-second mark is essential.
+
+Different target audiences respond to different triggers. Understanding the psychology of each tone can elevate your video content structure.`}
+            howToUse={[
+              "Type in your target short-form video topic (e.g., fitness tips, coding hacks).",
+              "Choose your target platform (TikTok, YouTube Shorts, or Instagram Reels) to adapt formatting.",
+              "Select a hook tone (Controversial, Educational, Funny, or Urgent) depending on your content goal.",
+              "Click the 'Generate Hooks' button to generate 5 AI-powered hooks, then copy the best ones to use."
+            ]}
+            faqs={[
+              {
+                question: "Why are the first 3 seconds of a short-form video so critical?",
+                answer: "The first 3 seconds determine whether a viewer will swipe away or watch the rest of your video. Algorithms like TikTok's and YouTube Shorts' prioritize completion rates and watch time. A high drop-off in the first few seconds signals poor quality, preventing the video from getting pushed to a wider audience."
+              },
+              {
+                question: "How do I choose the best tone for my video's hook?",
+                answer: "Choose controversial hooks if you want to invite discussions and comments. Choose educational hooks for sharing quick value and building authority. Funny or relatable hooks are great for shareability, while urgent hooks leverage FOMO (fear of missing out) to demand immediate attention."
+              },
+              {
+                question: "Can I use these hooks across multiple social platforms?",
+                answer: "Yes, although minor tweaks are recommended. TikTok hooks can be highly conversational and trend-based. YouTube Shorts hooks benefit from strong search intent keywords, while Instagram Reels hooks perform well when they focus on aesthetic and lifestyle appeal."
+              }
+            ]}
+          />
 
         </div>
       </div>

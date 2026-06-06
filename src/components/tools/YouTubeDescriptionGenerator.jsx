@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ToolSEOSection from '../common/ToolSEOSection';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -382,27 +383,31 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
 
           </div>
 
-          {/* ── SEO Informational Article (Thin Content Defense) ── */}
-          <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-              The importance of metadata optimization in YouTube SEO
-            </h2>
-            <p className="leading-relaxed">
-              YouTube is the second-largest search engine in the world. To index your video correctly, the algorithm parses your **title**, **description**, and **tags** to understand your content. Writing descriptive, keyword-rich metadata is the absolute baseline of video optimization.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 mt-4 mb-2">
-              Structuring your video description correctly
-            </h3>
-            <p className="leading-relaxed">
-              A high-converting, search-engine-friendly YouTube description should follow a standardized blueprint:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>The First 2 Lines:</strong> The first 150-200 characters are displayed in Google and YouTube search results snippets. You must include your target title keywords naturally in the first two sentences to grab searchers' interest.</li>
-              <li><strong>Body Content (Keyword Density):</strong> Expand on the video's details using descriptive paragraphs. Mention related topics and keywords naturally. Aim for a 1-2% keyword density to avoid keyword stuffing penalties.</li>
-              <li><strong>Interactive Navigations:</strong> Adding timeline chapters (e.g. `00:00 Intro`) helps search robos map your video segments and serve them as key search moments.</li>
-              <li><strong>Descriptive Tag Lists:</strong> YouTube tags help identify common misspellings or related search terms. Standardizing 15 highly relevant keyword phrases helps categorize your content adjacent to competitor videos in suggested queues.</li>
-            </ul>
-          </article>
+          <ToolSEOSection
+            title="The Importance of Metadata Optimization in YouTube SEO"
+            description={`YouTube is the second-largest search engine in the world. To index your video correctly, the algorithm parses your title, description, and tags to understand your content. Writing descriptive, keyword-rich metadata is the absolute baseline of video optimization.`}
+            howToUse={[
+              "Enter the final title of your YouTube video.",
+              "Specify target keywords separated by commas (e.g., 'grow channel, algorithm hacks').",
+              "Provide a 1-2 line summary of what happens in the video.",
+              "Choose the tone of voice (Professional, Casual, or Energetic).",
+              "Click 'Generate SEO Description' to run the generator, then copy the plain text or preview the rich formatting."
+            ]}
+            faqs={[
+              {
+                question: "Why are the first two lines of a YouTube description so important?",
+                answer: "The first 150 to 200 characters (roughly the first two lines) of your description are shown as the snippet in YouTube and Google search results. Front-loading your primary keywords in these two lines directly affects your search CTR and helps search engines verify what the video is about immediately."
+              },
+              {
+                question: "Do keyword tags still matter on YouTube?",
+                answer: "While YouTube states that tags play a minimal role in video discovery compared to titles and descriptions, they are still highly useful for covering common misspellings of your channel name, topic keywords, or video concepts, helping you capture long-tail traffic."
+              },
+              {
+                question: "How long should my YouTube video description be?",
+                answer: "YouTube allows up to 5,000 characters for a description. You don't need to use all of it, but aim for at least 200 to 300 words of detailed, keyword-rich description content that naturally explains the video topics and lists chapters, social links, and related playlists."
+              }
+            ]}
+          />
 
         </div>
       </div>

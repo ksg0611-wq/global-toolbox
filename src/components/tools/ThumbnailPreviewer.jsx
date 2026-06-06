@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
 const IconClose = () => (
@@ -287,26 +288,30 @@ export default function ThumbnailPreviewer({ onClose }) {
 
           </div>
 
-          {/* ── SEO Informational Article (Thin Content Defense) ── */}
-          <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-              Optimizing Video Thumbnails &amp; Title Truncation for higher CTR
-            </h2>
-            <p className="leading-relaxed">
-              Your video's Click-Through Rate (CTR) is one of the most critical factors in the YouTube algorithm. Even if your content is high quality, people won't click if your thumbnail and title aren't compelling. A crucial, often overlooked mistake is **title truncation** — when key information in your title is cut off by the YouTube interface.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 mt-4 mb-2">
-              YouTube Title Length &amp; Word Order rules
-            </h3>
-            <p className="leading-relaxed">
-              YouTube allows titles up to 100 characters. However, depending on the viewer's screen size, only a portion is shown:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Front-load Important Keywords:</strong> Keep your most critical words, hooks, and tags in the first 50-60 characters. This ensures they remain visible across all device formats before the ellipses (`...`) cut them off.</li>
-              <li><strong>Mobile vs. Desktop limits:</strong> Mobile feeds truncate earlier than desktop. This simulator allows you to test the visual limits on both platforms to ensure maximum comprehension at first glance.</li>
-              <li><strong>Thumbnail Text Contrast:</strong> Keep any overlay text on your thumbnail limited to 3-5 words, in high contrast, and positioned away from the bottom-right corner where the video duration timestamp badge is rendered.</li>
-            </ul>
-          </article>
+          <ToolSEOSection
+            title="Optimizing Video Thumbnails & Title Truncation for Higher CTR"
+            description={`Your video's Click-Through Rate (CTR) is one of the most critical factors in the YouTube algorithm. Even if your content is high quality, people won't click if your thumbnail and title aren't compelling. A crucial, often overlooked mistake is title truncation — when key information in your title is cut off by the YouTube interface.`}
+            howToUse={[
+              "Upload your thumbnail image (JPG, PNG, or WebP format) using the file select area.",
+              "Type in your proposed Video Title and customize the Channel Name.",
+              "Observe the real-time simulation under both 'Mobile Home View' and 'Desktop Suggested Video' views.",
+              "Check if your title's key hooks or keywords are cut off by the ellipses (...) and adjust length accordingly."
+            ]}
+            faqs={[
+              {
+                question: "What is title truncation on YouTube and why does it matter?",
+                answer: "Title truncation occurs when a video title is too long to be fully displayed in a viewer's feed. YouTube cuts off long titles with ellipses (...) to save layout space. If your title's primary hook or keyword is located at the very end, viewers won't see it, which can drastically reduce your Click-Through Rate (CTR)."
+              },
+              {
+                question: "How many characters should a YouTube video title be to avoid truncation?",
+                answer: "While YouTube allows up to 100 characters, it is best to keep your title under 50 to 60 characters to ensure it is fully readable on mobile home feeds and desktop sidebar recommendations without truncation."
+              },
+              {
+                question: "Where should I place key elements on my thumbnail image?",
+                answer: "Keep text overlays simple (3 to 5 words) and place them on the left or middle of the image. Always avoid placing important text or details in the bottom-right corner, as that is where YouTube overlays the video duration timestamp badge."
+              }
+            ]}
+          />
 
         </div>
       </div>

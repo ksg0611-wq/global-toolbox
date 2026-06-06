@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ToolSEOSection from '../common/ToolSEOSection';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -228,23 +229,30 @@ Raw notes: ${rawNotes}`;
 
           </div>
 
-          {/* ── SEO Informational Article (Thin Content Defense) ── */}
-          <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-              Why YouTube Timestamps &amp; Video Chapters Matter for SEO
-            </h2>
-            <p className="leading-relaxed">
-              Adding timestamps and video chapters to your YouTube descriptions does more than just help viewers navigate. It directly influences your visibility in search results. Google indexes video segments, meaning your video can rank for specific questions and sub-topics directly inside search engines as "Key Moments."
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350 mt-4 mb-2">
-              Best practices for YouTube Chapters
-            </h3>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>The 00:00 Rule:</strong> The first timestamp in your list must start exactly at `00:00` or `0:00`. If you skip this, YouTube's system won't recognize your chapters.</li>
-              <li><strong>Minimum Count &amp; Length:</strong> Your video must contain at least three timestamps listed in ascending order, and each chapter segment must be at least 10 seconds long.</li>
-              <li><strong>Keywords in Chapter Titles:</strong> Use descriptive, keyword-rich names for your chapters. Think about what users search for when looking for specific parts of your video.</li>
-            </ul>
-          </article>
+          <ToolSEOSection
+            title="Why YouTube Timestamps & Video Chapters Matter for SEO"
+            description={`Adding timestamps and video chapters to your YouTube descriptions does more than just help viewers navigate. It directly influences your visibility in search results. Google indexes video segments, meaning your video can rank for specific questions and sub-topics directly inside search engines as "Key Moments."`}
+            howToUse={[
+              "Paste your rough timeline notes, scribbles, or draft timestamps into the raw text area.",
+              "Ensure you list events in chronological order (e.g., intro, unboxing, outro).",
+              "Click the 'Format Chapters' button to run the AI formatting algorithm.",
+              "Copy the resulting YouTube-ready chapter list and paste it directly into your video description."
+            ]}
+            faqs={[
+              {
+                question: "What is the 00:00 rule for YouTube video chapters?",
+                answer: "For YouTube to generate interactive chapters, the first timestamp in your description MUST start exactly at 00:00 (or 0:00). If it starts at any other time (like 00:01), YouTube will ignore the timestamps and fail to split your video player bar into segments."
+              },
+              {
+                question: "What are the minimum requirements for YouTube chapters to show up?",
+                answer: "You must include at least 3 timestamps in chronological order, and each chapter segment must be at least 10 seconds long. Additionally, the video must not have any active copyright strikes or be restricted for certain audiences."
+              },
+              {
+                question: "How do video chapters help with Google Search SEO?",
+                answer: "Google indexes video chapters as 'Key Moments' directly on search results pages. This means searchers looking for a specific sub-topic (e.g. 'Logitech Mouse Unboxing') can click a chapter link on Google and jump straight to that segment of your video, even if they didn't start from the beginning."
+              }
+            ]}
+          />
 
         </div>
       </div>
