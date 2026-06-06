@@ -184,4 +184,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'youtube-chapter-formatter',
+    title:       'YouTube Timestamp & Chapter Formatter',
+    description: 'Convert messy video notes and time markers into clean, YouTube-ready chapters using AI.',
+    category:    'SEO',
+    iconName:    'IconYoutube',
+    badge:       'New',
+    href:        '/tools/youtube-chapter-formatter',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];

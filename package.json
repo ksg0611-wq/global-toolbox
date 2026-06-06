@@ -63,7 +63,9 @@
       "/viral-hook-generator",
       "/tools/viral-hook-generator",
       "/brand-deal-pitch-builder",
-      "/tools/brand-deal-pitch-builder"
+      "/tools/brand-deal-pitch-builder",
+      "/youtube-chapter-formatter",
+      "/tools/youtube-chapter-formatter"
     ]
   }
 }
