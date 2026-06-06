@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
+import SEOMeta from '../common/SEOMeta';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -37,14 +38,7 @@ export default function YouTubeChapterFormatter({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // SEO용 메타 태그 주입
-  useEffect(() => {
-    document.title = "YouTube Timestamp & Chapter Formatter | Global ToolBox";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Convert messy video notes into perfectly formatted YouTube video chapters and timestamps using AI. Just copy and paste into your video description.');
-    }
-  }, []);
+
 
   // 결과 복사
   const handleCopy = () => {
@@ -98,6 +92,12 @@ Raw notes: ${rawNotes}`;
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="YouTube Timestamp & Chapter Formatter"
+        description="Convert messy video notes into perfectly formatted YouTube video chapters and timestamps using AI. Just copy and paste into your video description."
+        url="/tools/youtube-chapter-formatter"
+        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Chapter+Formatter"
+      />
       {/* ── Modal Panel ── */}
       <div
         className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"

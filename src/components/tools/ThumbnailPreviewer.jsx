@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
+import SEOMeta from '../common/SEOMeta';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
 const IconClose = () => (
@@ -36,14 +37,7 @@ export default function ThumbnailPreviewer({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // SEO용 메타 태그 주입
-  useEffect(() => {
-    document.title = "YouTube Title & Thumbnail Preview Simulator | Global ToolBox";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Simulate how your video title and thumbnail will look on YouTube Mobile and Desktop feeds in real-time. Test line-clamp truncation instantly.');
-    }
-  }, []);
+
 
   // 이미지 해제 시 메모리 누수 방지
   useEffect(() => {
@@ -67,6 +61,12 @@ export default function ThumbnailPreviewer({ onClose }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="YouTube Title & Thumbnail Preview Simulator"
+        description="Simulate how your video title and thumbnail will look on YouTube Mobile and Desktop feeds in real-time. Test line-clamp truncation instantly."
+        url="/tools/youtube-thumbnail-preview"
+        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Thumbnail+Preview"
+      />
       {/* ── Modal Panel ── */}
       <div
         className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"

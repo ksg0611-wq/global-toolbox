@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
+import SEOMeta from '../common/SEOMeta';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
@@ -92,14 +93,7 @@ export default function ViralHookGenerator({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // SEO용 메타 태그 주입
-  useEffect(() => {
-    document.title = "Short-form Viral Hook Generator | Global ToolBox";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Generate viral, high-converting 3-second hook ideas for TikTok, YouTube Shorts, and Instagram Reels using AI. Choose topic, platform, and tone.');
-    }
-  }, []);
+
 
   // 훅 생성 API 핸들러
   const handleGenerate = async () => {
@@ -159,6 +153,12 @@ export default function ViralHookGenerator({ onClose }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="Short-form Viral Hook Generator"
+        description="Generate viral, high-converting 3-second hook ideas for TikTok, YouTube Shorts, and Instagram Reels using AI. Choose topic, platform, and tone."
+        url="/tools/viral-hook-generator"
+        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=Viral+Hook+Generator"
+      />
       {/* ── Modal Panel ── */}
       <div
         className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"

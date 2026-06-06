@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
+import SEOMeta from '../common/SEOMeta';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -46,14 +47,7 @@ export default function YouTubeDescriptionGenerator({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // SEO용 메타 태그 주입
-  useEffect(() => {
-    document.title = "YouTube SEO Description & Tag Generator | Global ToolBox";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Generate highly optimized YouTube video descriptions and 15 relevant tags based on your keywords and title using AI. Free tool for YouTube SEO.');
-    }
-  }, []);
+
 
   // 결과 복사
   const handleCopy = () => {
@@ -120,6 +114,12 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="YouTube SEO Description & Tag Generator"
+        description="Generate highly optimized YouTube video descriptions and 15 relevant tags based on your keywords and title using AI. Free tool for YouTube SEO."
+        url="/tools/youtube-description-generator"
+        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Description+Generator"
+      />
       {/* 마크다운 프리뷰 전용 CSS 스타일 주입 */}
       <style>{`
         .markdown-preview h1 {

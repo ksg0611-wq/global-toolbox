@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
+import SEOMeta from '../common/SEOMeta';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
 const NICHES = {
@@ -65,14 +66,7 @@ export default function RevenueEstimator({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  // SEO용 메타 태그 주입
-  useEffect(() => {
-    document.title = "YouTube & AdSense Revenue Estimator | Global ToolBox";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Calculate your estimated YouTube channel earnings and AdSense revenue. Adjust daily views, channel niche, and audience tiers to see potential daily, monthly, and yearly profits.');
-    }
-  }, []);
+
 
   // 통계 계산
   const selectedNiche = NICHES[niche];
@@ -108,6 +102,12 @@ export default function RevenueEstimator({ onClose }) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="YouTube & AdSense Revenue Estimator"
+        description="Calculate your estimated YouTube channel earnings and AdSense revenue. Adjust daily views, channel niche, and audience tiers to see potential daily, monthly, and yearly profits."
+        url="/tools/youtube-revenue-calculator"
+        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Revenue+Estimator"
+      />
       {/* ── Modal Panel ── */}
       <div
         className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
