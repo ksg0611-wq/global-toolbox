@@ -18,7 +18,7 @@ const IconGoogle = () => (
   </svg>
 );
 
-export default function Header({ onOpenAbout }) {
+export default function Header({ onOpenAbout, onOpenTools }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -73,10 +73,15 @@ export default function Header({ onOpenAbout }) {
     setMobileOpen(false);
 
     if (href === '#tools') {
-      const el = document.getElementById('tools');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+      if (onOpenTools) {
+        onOpenTools();
       }
+      setTimeout(() => {
+        const el = document.getElementById('tools');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 50);
     } else if (href === '#about' && onOpenAbout) {
       onOpenAbout();
     } else if (href === '#suggest-tool') {
@@ -93,12 +98,12 @@ export default function Header({ onOpenAbout }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300">
+    <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-955/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           {/* ── Logo ── */}
-          <a href="/" className="flex items-center gap-2.5 group">
+          <a href="/" onClick={(e) => { e.preventDefault(); onOpenTools?.(); }} className="flex items-center gap-2.5 group">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md shadow-indigo-500/25 transition-transform duration-300 group-hover:scale-105">
               <span className="text-white font-black text-sm">G</span>
             </div>
