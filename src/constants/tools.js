@@ -42,6 +42,17 @@ export const TOOLS = [
     openModal:   true,
   },
   {
+    id:          'viral-hook-generator',
+    title:       'Short-form Viral Hook Generator',
+    description: 'Create 5 high-converting, viral 3-second hook ideas for TikTok, YouTube Shorts, and Reels using AI.',
+    category:    'AI',
+    iconName:    'IconSparkle',
+    badge:       'New',
+    href:        '/tools/viral-hook-generator',
+    comingSoon:  false,
+    openModal:   true,
+  },
+  {
     id:          'margin-calculator',
     title:       'CPA Margin Calculator',
     description: 'Real-time CPA profit analysis: enter payout, ad spend, and conversions to instantly see Gross Revenue, Net Profit, ROI, and Margin — all in your browser.',
