@@ -15,6 +15,7 @@ import RegexTester from './components/tools/RegexTester';
 import AIPromptBuilder from './components/tools/AIPromptBuilder';
 import CodeImageGenerator from './components/tools/CodeImageGenerator';
 import MarkdownEditor from './components/tools/MarkdownEditor';
+import RevenueEstimator from './components/tools/RevenueEstimator';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsOfService from './components/pages/TermsOfService';
 import About from './components/pages/About';
@@ -58,7 +59,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy-policy', 'terms-of-service'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator'].includes(activeTool)) {
         newPath = `/${activeTool}`;
       } else {
         newPath = `/tools/${activeTool}`;
@@ -292,6 +293,9 @@ export default function App() {
       )}
       {activeTool === 'markdown-editor' && (
         <MarkdownEditor onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'youtube-revenue-calculator' && (
+        <RevenueEstimator onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'about' && (
         <About onClose={() => setActiveTool(null)} />

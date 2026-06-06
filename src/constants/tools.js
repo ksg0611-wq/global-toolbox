@@ -151,4 +151,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'youtube-revenue-calculator',
+    title:       'YouTube & AdSense Revenue Estimator',
+    description: 'Calculate your estimated YouTube channel earnings and AdSense revenue. Adjust daily views, channel niche, and audience tiers to see potential daily, monthly, and yearly profits.',
+    category:    'Finance',
+    iconName:    'IconCalculator',
+    badge:       'New',
+    href:        '/tools/youtube-revenue-calculator',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];
