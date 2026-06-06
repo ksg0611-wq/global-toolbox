@@ -67,7 +67,9 @@
       "/youtube-chapter-formatter",
       "/tools/youtube-chapter-formatter",
       "/youtube-thumbnail-preview",
-      "/tools/youtube-thumbnail-preview"
+      "/tools/youtube-thumbnail-preview",
+      "/youtube-description-generator",
+      "/tools/youtube-description-generator"
     ]
   }
 }

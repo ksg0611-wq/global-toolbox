@@ -20,6 +20,7 @@ import ViralHookGenerator from './components/tools/ViralHookGenerator';
 import BrandDealPitchBuilder from './components/tools/BrandDealPitchBuilder';
 import YouTubeChapterFormatter from './components/tools/YouTubeChapterFormatter';
 import ThumbnailPreviewer from './components/tools/ThumbnailPreviewer';
+import YouTubeDescriptionGenerator from './components/tools/YouTubeDescriptionGenerator';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsOfService from './components/pages/TermsOfService';
 import About from './components/pages/About';
@@ -63,7 +64,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator'].includes(activeTool)) {
         newPath = `/${activeTool}`;
       } else {
         newPath = `/tools/${activeTool}`;
@@ -312,6 +313,9 @@ export default function App() {
       )}
       {activeTool === 'youtube-thumbnail-preview' && (
         <ThumbnailPreviewer onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'youtube-description-generator' && (
+        <YouTubeDescriptionGenerator onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'about' && (
         <About onClose={() => setActiveTool(null)} />

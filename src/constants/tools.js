@@ -206,4 +206,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'youtube-description-generator',
+    title:       'YouTube SEO Description & Tag Generator',
+    description: 'Generate highly optimized YouTube video descriptions and tags based on your title and keywords using AI.',
+    category:    'SEO',
+    iconName:    'IconYoutube',
+    badge:       'New',
+    href:        '/tools/youtube-description-generator',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];
