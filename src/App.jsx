@@ -26,6 +26,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import About from './pages/About';
 import Contact from './components/pages/Contact';
+import MyToolbox from './pages/MyToolbox';
 import { HERO, TOOLS_SECTION } from './constants/strings';
 import { TOOLS } from './constants/tools';
 import { IconSpark, IconFilter, IconSearch } from './components/icons';
@@ -75,7 +76,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator', 'hashtag-generator'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator', 'hashtag-generator', 'my-toolbox'].includes(activeTool)) {
         let mappedTool = activeTool;
         if (mappedTool === 'privacy-policy') mappedTool = 'privacy';
         if (mappedTool === 'terms-of-service') mappedTool = 'terms';
@@ -159,18 +160,23 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-zinc-955 text-gray-900 dark:text-zinc-200 transition-colors duration-300">
 
       {/* 1. Header */}
-      <Header onOpenAbout={() => setActiveTool('about')} onOpenTools={() => setActiveTool(null)} />
+      <Header 
+        onOpenAbout={() => setActiveTool('about')} 
+        onOpenTools={() => setActiveTool(null)} 
+        onOpenMyToolbox={() => setActiveTool('my-toolbox')} 
+      />
 
       {/* 2. Top Ad Banner — VITE_SHOW_ADS=true 일 때만 렌더링 */}
       {import.meta.env.VITE_SHOW_ADS === 'true' && <AdBanner />}
 
       {/* 3. Main */}
       <main id="main" className="flex-grow">
-        {['about', 'privacy', 'terms'].includes(activeTool) ? (
+        {['about', 'privacy', 'terms', 'my-toolbox'].includes(activeTool) ? (
           <div className="bg-gray-55 dark:bg-zinc-955 transition-colors duration-300">
             {activeTool === 'about' && <About />}
             {activeTool === 'privacy' && <PrivacyPolicy />}
             {activeTool === 'terms' && <TermsOfService />}
+            {activeTool === 'my-toolbox' && <MyToolbox />}
           </div>
         ) : (
           <>

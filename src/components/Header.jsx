@@ -18,7 +18,7 @@ const IconGoogle = () => (
   </svg>
 );
 
-export default function Header({ onOpenAbout, onOpenTools }) {
+export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -84,6 +84,8 @@ export default function Header({ onOpenAbout, onOpenTools }) {
       }, 50);
     } else if (href === '#about' && onOpenAbout) {
       onOpenAbout();
+    } else if (href === '#my-toolbox' && onOpenMyToolbox) {
+      onOpenMyToolbox();
     } else if (href === '#suggest-tool') {
       setToast('Feature coming soon! (새로운 도구 제안 기능이 곧 업데이트됩니다)');
     } else {
@@ -93,6 +95,7 @@ export default function Header({ onOpenAbout, onOpenTools }) {
 
   const navLinks = [
     { label: HEADER.navTools, href: '#tools' },
+    { label: 'My Toolbox', href: '#my-toolbox' },
     { label: HEADER.navAbout, href: '#about' },
     { label: HEADER.navBlog,  href: '#suggest-tool' },
   ];

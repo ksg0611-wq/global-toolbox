@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
+import SaveToToolboxButton from '../common/SaveToToolboxButton';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
@@ -279,9 +280,17 @@ export default function ViralHookGenerator({ onClose }) {
               <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[350px]">
                 
                 <div className="space-y-4 flex-grow">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-3 flex items-center gap-1.5">
-                    <IconList /> Generated Hook Ideas
-                  </h3>
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3 flex-shrink-0">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                      <IconList /> Generated Hook Ideas
+                    </h3>
+                    {hooks.length > 0 && (
+                      <SaveToToolboxButton
+                        toolName="Viral Hook Generator"
+                        content={hooks.map((h, idx) => `${idx + 1}. ${h}`).join('\n')}
+                      />
+                    )}
+                  </div>
 
                   {error && (
                     <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
+import SaveToToolboxButton from '../common/SaveToToolboxButton';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const PLATFORMS = [
@@ -344,16 +345,19 @@ export default function HashtagGenerator({ onClose }) {
                     </h3>
                     
                     {hashtags && (
-                      <button
-                        onClick={handleCopyAll}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
-                          copiedAll
-                            ? 'bg-emerald-500 border-emerald-500 text-white'
-                            : 'bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700'
-                        }`}
-                      >
-                        {copiedAll ? 'All Copied!' : '📋 Copy All Hashtags'}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleCopyAll}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
+                            copiedAll
+                              ? 'bg-emerald-500 border-emerald-500 text-white'
+                              : 'bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700'
+                          }`}
+                        >
+                          {copiedAll ? 'All Copied!' : '📋 Copy All Hashtags'}
+                        </button>
+                        <SaveToToolboxButton toolName="AI Hashtag Generator" content={getCopyableText()} />
+                      </div>
                     )}
                   </div>
 

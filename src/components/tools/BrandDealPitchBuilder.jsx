@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
+import SaveToToolboxButton from '../common/SaveToToolboxButton';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -266,16 +267,22 @@ export default function BrandDealPitchBuilder({ onClose }) {
                     
                     {/* Copy button */}
                     {(emailSubject || emailBody) && (
-                      <button
-                        onClick={handleCopy}
-                        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
-                          copied
-                            ? 'bg-emerald-500 border-emerald-500 text-white'
-                            : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
-                        }`}
-                      >
-                        {copied ? 'Copied!' : '📋 Copy Email'}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={handleCopy}
+                          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
+                            copied
+                              ? 'bg-emerald-500 border-emerald-500 text-white'
+                              : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
+                          }`}
+                        >
+                          {copied ? 'Copied!' : '📋 Copy Email'}
+                        </button>
+                        <SaveToToolboxButton
+                          toolName="Brand Deal Pitch Builder"
+                          content={`Subject: ${emailSubject}\n\n${emailBody}`}
+                        />
+                      </div>
                     )}
                   </div>
 
