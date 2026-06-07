@@ -217,4 +217,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'hashtag-generator',
+    title:       'Multi-platform AI Hashtag Generator',
+    description: 'Generate highly relevant, active hashtags for Instagram, TikTok, and YouTube Shorts based on topic and strategy using AI.',
+    category:    'SEO',
+    iconName:    'IconSparkle',
+    badge:       'New',
+    href:        '/tools/hashtag-generator',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];
