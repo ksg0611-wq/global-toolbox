@@ -74,7 +74,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator'].includes(activeTool)) {
         let mappedTool = activeTool;
         if (mappedTool === 'privacy-policy') mappedTool = 'privacy';
         if (mappedTool === 'terms-of-service') mappedTool = 'terms';
