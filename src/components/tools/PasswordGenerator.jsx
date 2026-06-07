@@ -83,6 +83,8 @@ export default function PasswordGenerator({ onClose }) {
 
   // 옵션이나 길이가 변경될 때마다 자동 실시간 갱신
   useEffect(() => {
+    const isPrerender = typeof window !== 'undefined' && (window.navigator.webdriver || window.__PRERENDER__);
+    if (isPrerender) return;
     generatePassword();
   }, [generatePassword]);
 

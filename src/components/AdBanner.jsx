@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AD_BANNER } from '../constants/strings';
 import { IconInfo } from './icons';
 
@@ -7,6 +7,8 @@ import { IconInfo } from './icons';
  * - min-h-[90px] 고정 높이로 광고 로딩 중 레이아웃 흔들림(CLS) 방지
  */
 export default function AdBanner({ className = '' }) {
+  const [isLocalhost, setIsLocalhost] = useState(false);
+
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
@@ -15,10 +17,14 @@ export default function AdBanner({ className = '' }) {
     } catch (error) {
       console.warn('AdSense script loaded warning or AdBlocker block:', error);
     }
-  }, []);
 
-  const isLocalhost = typeof window !== 'undefined' && 
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        setIsLocalhost(true);
+      }
+    }
+  }, []);
 
   return (
     <div className={`w-full px-4 sm:px-6 lg:px-8 py-3 ${className}`}>
