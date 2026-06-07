@@ -75,7 +75,9 @@
       "/hashtag-generator",
       "/tools/hashtag-generator",
       "/my-toolbox",
-      "/suggest-tool"
+      "/suggest-tool",
+      "/youtube-thumbnail-downloader",
+      "/tools/youtube-thumbnail-downloader"
     ]
   }
 }

@@ -228,4 +228,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'youtube-thumbnail-downloader',
+    title:       'YouTube HD Thumbnail Downloader',
+    description: 'Extract and download high-resolution (HD, 1080p, maxresdefault) thumbnails from any YouTube video instantly by pasting the link.',
+    category:    'SEO',
+    iconName:    'IconYoutube',
+    badge:       'New',
+    href:        '/tools/youtube-thumbnail-downloader',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];
