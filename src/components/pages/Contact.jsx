@@ -30,7 +30,7 @@ const IconCheck = () => (
 
 export default function Contact({ onClose }) {
   const [copied, setCopied] = useState(false);
-  const email = 'contact@global-toolbox.com';
+  const email = 'ksg0611@gmail.com';
 
   // ESC 키로 모달 닫기
   useEffect(() => {

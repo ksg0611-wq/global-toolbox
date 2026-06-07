@@ -112,7 +112,7 @@ export default function SuggestTool() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="ksg0611@gmail.com"
                 className="w-full rounded-xl border border-gray-250/70 dark:border-zinc-800/80 bg-white dark:bg-zinc-950/50 py-3 px-4 text-sm text-gray-900 dark:text-zinc-150 placeholder-gray-400 dark:placeholder-zinc-650 outline-none focus:ring-2 focus:ring-indigo-550/20 focus:border-indigo-500 dark:focus:border-indigo-400 shadow-sm transition-all"
               />
             </div>

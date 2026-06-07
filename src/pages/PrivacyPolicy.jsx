@@ -44,7 +44,7 @@ export default function PrivacyPolicy() {
 
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8">5. Contact Information</h2>
         <p>
-          If you have any questions or feedback regarding our privacy practices, please contact us at: <a href="mailto:contact@global-toolbox.com" className="underline text-indigo-600 dark:text-indigo-400">contact@global-toolbox.com</a>.
+          If you have any questions or feedback regarding our privacy practices, please contact us at: <a href="mailto:ksg0611@gmail.com" className="underline text-indigo-600 dark:text-indigo-400">ksg0611@gmail.com</a>.
         </p>
       </div>
     </div>

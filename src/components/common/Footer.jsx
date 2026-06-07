@@ -5,7 +5,7 @@ export default function Footer({ onNavigate }) {
     { label: 'About', onClick: () => onNavigate('about'), href: '/about' },
     { label: 'Privacy Policy', onClick: () => onNavigate('privacy'), href: '/privacy' },
     { label: 'Terms of Service', onClick: () => onNavigate('terms'), href: '/terms' },
-    { label: 'Contact', href: 'mailto:contact@global-toolbox.com' }
+    { label: 'Contact', href: 'mailto:ksg0611@gmail.com' }
   ];
 
   return (
