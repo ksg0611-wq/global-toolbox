@@ -15,7 +15,12 @@ export default function ClientOnly({ children }) {
     setHasMounted(true);
   }, []);
 
-  if (!hasMounted) {
+  // react-snap (Puppeteer) 빌드 환경이거나 SSR 환경인 경우 무조건 null 반환
+  const isSSROrSnap = typeof window === 'undefined' || 
+                      !!window.__snap || 
+                      (typeof navigator !== 'undefined' && /HeadlessChrome|puppeteer/i.test(navigator.userAgent));
+
+  if (isSSROrSnap || !hasMounted) {
     return null;
   }
 

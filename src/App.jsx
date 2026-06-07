@@ -30,6 +30,7 @@ import About from './pages/About';
 import Contact from './components/pages/Contact';
 import MyToolbox from './pages/MyToolbox';
 import SuggestTool from './pages/SuggestTool';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { HERO, TOOLS_SECTION } from './constants/strings';
 import { TOOLS } from './constants/tools';
 import { IconSpark, IconFilter, IconSearch } from './components/icons';
@@ -160,7 +161,8 @@ export default function App() {
   const reset = () => { setQuery(''); setActiveCategory(TOOLS_SECTION.filterAll); };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-zinc-955 text-gray-900 dark:text-zinc-200 transition-colors duration-300">
+    <ErrorBoundary>
+      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-zinc-955 text-gray-900 dark:text-zinc-200 transition-colors duration-300">
 
       {/* 1. Header */}
       <Header 
@@ -353,6 +355,7 @@ export default function App() {
         <Contact onClose={() => setActiveTool(null)} />
       )}
 
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
