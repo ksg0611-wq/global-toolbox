@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const PLATFORMS = [
@@ -244,179 +245,181 @@ export default function HashtagGenerator({ onClose }) {
 
         {/* ── Body ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Input Form (Col-5) */}
-            <div className="lg:col-span-5 space-y-5">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Topic / Keywords Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Topic / Keywords (영상 및 포스트 주제)
-                </label>
-                <input
-                  type="text"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g. Minimalist workspace setup"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 shadow-sm"
-                />
-              </div>
-
-              {/* Target Platforms Checkboxes */}
-              <div className="space-y-2.5">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300 block">
-                  Target Platforms (대상 플랫폼)
-                </label>
-                <div className="flex flex-col gap-2">
-                  {PLATFORMS.map(p => {
-                    const isChecked = selectedPlatforms.includes(p.id);
-                    return (
-                      <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-colors shadow-sm select-none">
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => handlePlatformToggle(p.id)}
-                          className="h-4.5 w-4.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                        />
-                        <span className="text-sm font-semibold text-slate-700 dark:text-zinc-350">
-                          {p.label}
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Hashtag Strategy Dropdown */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Hashtag Strategy (태그 노출 전략)
-                </label>
-                <div className="relative">
-                  <select
-                    value={strategy}
-                    onChange={(e) => setStrategy(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer shadow-sm font-semibold"
-                  >
-                    {STRATEGIES.map(s => (
-                      <option key={s.id} value={s.id}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
-                  </div>
-                </div>
-              </div>
-
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Analyzing trends...
-                  </>
-                ) : (
-                  <>✨ Generate Hashtags</>
-                )}
-              </button>
-
-            </div>
-
-            {/* 2. Right Output Panel (Col-7) */}
-            <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
-              
-              <div className="space-y-4 flex-grow">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-3 flex-shrink-0">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                    <IconHash /> Curated Hashtags
-                  </h3>
-                  
-                  {hashtags && (
-                    <button
-                      onClick={handleCopyAll}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
-                        copiedAll
-                          ? 'bg-emerald-500 border-emerald-500 text-white'
-                          : 'bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700'
-                      }`}
-                    >
-                      {copiedAll ? 'All Copied!' : '📋 Copy All Hashtags'}
-                    </button>
-                  )}
+              {/* 1. Left Input Form (Col-5) */}
+              <div className="lg:col-span-5 space-y-5">
+                
+                {/* Topic / Keywords Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Topic / Keywords (영상 및 포스트 주제)
+                  </label>
+                  <input
+                    type="text"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    placeholder="e.g. Minimalist workspace setup"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 shadow-sm"
+                  />
                 </div>
 
-                {error && (
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                    ⚠️ {error}
-                  </div>
-                )}
-
-                {!loading && !error && !hashtags && (
-                  <div className="flex flex-col items-center justify-center py-20 text-center space-y-2">
-                    <p className="text-zinc-500 text-xs">Enter a topic, select platforms, and generate tags.</p>
-                  </div>
-                )}
-
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-                    <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <p className="text-zinc-400 text-xs">Gemini is searching for organic trends...</p>
-                  </div>
-                )}
-
-                {!loading && hashtags && (
-                  <div className="space-y-6 max-h-[380px] overflow-y-auto pr-1">
-                    {Object.entries(hashtags).map(([platformId, tags]) => {
-                      if (tags.length === 0) return null;
-                      const platformLabel = PLATFORMS.find(p => p.id === platformId)?.label || platformId;
+                {/* Target Platforms Checkboxes */}
+                <div className="space-y-2.5">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300 block">
+                    Target Platforms (대상 플랫폼)
+                  </label>
+                  <div className="flex flex-col gap-2">
+                    {PLATFORMS.map(p => {
+                      const isChecked = selectedPlatforms.includes(p.id);
                       return (
-                        <div key={platformId} className="space-y-2.5">
-                          <h4 className="text-xs font-extrabold text-zinc-450 border-l-2 border-indigo-400 pl-2 tracking-wide uppercase">
-                            {platformLabel} Tags
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {tags.map((tag, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => handleCopyTag(tag, idx)}
-                                className={`text-xs px-2.5 py-1.5 rounded-lg font-mono font-medium border transition-all active:scale-95 cursor-pointer flex items-center gap-1 ${
-                                  individualCopied[tag]
-                                    ? 'bg-emerald-500 border-emerald-500 text-white'
-                                    : 'bg-zinc-800/80 hover:bg-zinc-750 border-zinc-750 text-zinc-300'
-                                }`}
-                              >
-                                {tag}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
+                        <label key={p.id} className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-colors shadow-sm select-none">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handlePlatformToggle(p.id)}
+                            className="h-4.5 w-4.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          />
+                          <span className="text-sm font-semibold text-slate-700 dark:text-zinc-350">
+                            {p.label}
+                          </span>
+                        </label>
                       );
                     })}
                   </div>
-                )}
+                </div>
+
+                {/* Hashtag Strategy Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Hashtag Strategy (태그 노출 전략)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={strategy}
+                      onChange={(e) => setStrategy(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer shadow-sm font-semibold"
+                    >
+                      {STRATEGIES.map(s => (
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
+                  </div>
+                </div>
+
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-2"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Analyzing trends...
+                    </>
+                  ) : (
+                    <>✨ Generate Hashtags</>
+                  )}
+                </button>
 
               </div>
 
-              <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal mt-4">
-                💡 **Pro Tip:** Hashtag strategy varies by algorithm. TikTok benefits from combining 2 broad category tags and 2 highly specific theme tags. Instagram performs best with 5-10 hyper-relevant tags to keep captions neat and organic.
+              {/* 2. Right Output Panel (Col-7) */}
+              <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
+                
+                <div className="space-y-4 flex-grow">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3 flex-shrink-0">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                      <IconHash /> Curated Hashtags
+                    </h3>
+                    
+                    {hashtags && (
+                      <button
+                        onClick={handleCopyAll}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
+                          copiedAll
+                            ? 'bg-emerald-500 border-emerald-500 text-white'
+                            : 'bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700'
+                        }`}
+                      >
+                        {copiedAll ? 'All Copied!' : '📋 Copy All Hashtags'}
+                      </button>
+                    )}
+                  </div>
+
+                  {error && (
+                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
+                      ⚠️ {error}
+                    </div>
+                  )}
+
+                  {!loading && !error && !hashtags && (
+                    <div className="flex flex-col items-center justify-center py-20 text-center space-y-2">
+                      <p className="text-zinc-500 text-xs">Enter a topic, select platforms, and generate tags.</p>
+                    </div>
+                  )}
+
+                  {loading && (
+                    <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+                      <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <p className="text-zinc-400 text-xs">Gemini is searching for organic trends...</p>
+                    </div>
+                  )}
+
+                  {!loading && hashtags && (
+                    <div className="space-y-6 max-h-[380px] overflow-y-auto pr-1">
+                      {Object.entries(hashtags).map(([platformId, tags]) => {
+                        if (tags.length === 0) return null;
+                        const platformLabel = PLATFORMS.find(p => p.id === platformId)?.label || platformId;
+                        return (
+                          <div key={platformId} className="space-y-2.5">
+                            <h4 className="text-xs font-extrabold text-zinc-450 border-l-2 border-indigo-400 pl-2 tracking-wide uppercase">
+                              {platformLabel} Tags
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {tags.map((tag, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleCopyTag(tag, idx)}
+                                  className={`text-xs px-2.5 py-1.5 rounded-lg font-mono font-medium border transition-all active:scale-95 cursor-pointer flex items-center gap-1 ${
+                                    individualCopied[tag]
+                                      ? 'bg-emerald-500 border-emerald-500 text-white'
+                                      : 'bg-zinc-800/80 hover:bg-zinc-750 border-zinc-750 text-zinc-300'
+                                  }`}
+                                >
+                                  {tag}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal mt-4">
+                  💡 **Pro Tip:** Hashtag strategy varies by algorithm. TikTok benefits from combining 2 broad category tags and 2 highly specific theme tags. Instagram performs best with 5-10 hyper-relevant tags to keep captions neat and organic.
+                </div>
+
               </div>
 
             </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="Optimizing Social Media Reach: The Power of AI Hashtags"

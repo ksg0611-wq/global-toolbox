@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
@@ -187,139 +188,141 @@ export default function ViralHookGenerator({ onClose }) {
 
         {/* ── Body Container ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Side: Input Form (Col-5) */}
-            <div className="lg:col-span-5 space-y-5">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Topic Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Video Topic (영상 주제)
-                </label>
-                <input
-                  type="text"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g. How to lose weight fast"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
+              {/* 1. Left Side: Input Form (Col-5) */}
+              <div className="lg:col-span-5 space-y-5">
+                
+                {/* Topic Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Video Topic (영상 주제)
+                  </label>
+                  <input
+                    type="text"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    placeholder="e.g. How to lose weight fast"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
 
-              {/* Target Platform Dropdown */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Target Platform (대상 플랫폼)
-                </label>
-                <div className="relative">
-                  <select
-                    value={platform}
-                    onChange={(e) => setPlatform(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
-                  >
-                    {Object.entries(PLATFORMS).map(([key, label]) => (
-                      <option key={key} value={key}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
+                {/* Target Platform Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Target Platform (대상 플랫폼)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={platform}
+                      onChange={(e) => setPlatform(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
+                    >
+                      {Object.entries(PLATFORMS).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Hook Tone Dropdown */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Hook Tone (훅 분위기)
-                </label>
-                <div className="relative">
-                  <select
-                    value={tone}
-                    onChange={(e) => setTone(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
-                  >
-                    {Object.entries(TONES).map(([key, label]) => (
-                      <option key={key} value={key}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
+                {/* Hook Tone Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Hook Tone (훅 분위기)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={tone}
+                      onChange={(e) => setTone(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
+                    >
+                      {Object.entries(TONES).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
                   </div>
                 </div>
+
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-2"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Generating...
+                    </>
+                  ) : (
+                    <>🚀 Generate Hooks</>
+                  )}
+                </button>
+
               </div>
 
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Generating...
-                  </>
-                ) : (
-                  <>🚀 Generate Hooks</>
-                )}
-              </button>
+              {/* 2. Right Side: Results Display Panel (Col-7) */}
+              <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[350px]">
+                
+                <div className="space-y-4 flex-grow">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-3 flex items-center gap-1.5">
+                    <IconList /> Generated Hook Ideas
+                  </h3>
+
+                  {error && (
+                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
+                      ⚠️ {error}
+                    </div>
+                  )}
+
+                  {!loading && !error && hooks.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center space-y-2">
+                      <p className="text-zinc-500 text-xs">Enter your topic and click 'Generate Hooks' to see results here.</p>
+                    </div>
+                  )}
+
+                  {loading && (
+                    <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+                      <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <p className="text-zinc-400 text-xs">Gemini is creating viral hooks...</p>
+                    </div>
+                  )}
+
+                  {!loading && hooks.length > 0 && (
+                    <div className="space-y-3">
+                      {hooks.map((hook, idx) => (
+                        <HookItem key={idx} hook={hook} index={idx} />
+                      ))}
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal mt-4">
+                  💡 **Pro Tip:** In short-form video, the first 3 seconds (the hook) determine 90% of your retention. Combine controversial headers with fast visual shifts for maximum viral potential.
+                </div>
+
+              </div>
 
             </div>
-
-            {/* 2. Right Side: Results Display Panel (Col-7) */}
-            <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[350px]">
-              
-              <div className="space-y-4 flex-grow">
-                <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-3 flex items-center gap-1.5">
-                  <IconList /> Generated Hook Ideas
-                </h3>
-
-                {error && (
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                    ⚠️ {error}
-                  </div>
-                )}
-
-                {!loading && !error && hooks.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center space-y-2">
-                    <p className="text-zinc-500 text-xs">Enter your topic and click 'Generate Hooks' to see results here.</p>
-                  </div>
-                )}
-
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
-                    <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <p className="text-zinc-400 text-xs">Gemini is creating viral hooks...</p>
-                  </div>
-                )}
-
-                {!loading && hooks.length > 0 && (
-                  <div className="space-y-3">
-                    {hooks.map((hook, idx) => (
-                      <HookItem key={idx} hook={hook} index={idx} />
-                    ))}
-                  </div>
-                )}
-
-              </div>
-
-              <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal mt-4">
-                💡 **Pro Tip:** In short-form video, the first 3 seconds (the hook) determine 90% of your retention. Combine controversial headers with fast visual shifts for maximum viral potential.
-              </div>
-
-            </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="The Science of Short-form Video Hooks: TikTok, Reels & Shorts"

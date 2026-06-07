@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
 const IconClose = () => (
@@ -37,8 +38,6 @@ export default function ThumbnailPreviewer({ onClose }) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-
-
   // 이미지 해제 시 메모리 누수 방지
   useEffect(() => {
     return () => {
@@ -69,7 +68,7 @@ export default function ThumbnailPreviewer({ onClose }) {
       />
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-955 border border-slate-250 dark:border-zinc-800/80"
       >
         {/* 상단 라임 액센트 바 */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#deff9a] to-transparent" />
@@ -95,198 +94,200 @@ export default function ThumbnailPreviewer({ onClose }) {
 
         {/* ── Body Container ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Side: Input Form (Col-5) */}
-            <div className="lg:col-span-5 space-y-5">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Thumbnail Upload Zone */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
-                  Upload Thumbnail (썸네일 업로드)
-                </label>
-                <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl p-5 text-center hover:border-slate-350 dark:hover:border-zinc-700 transition-colors relative cursor-pointer flex flex-col items-center justify-center min-h-[140px] bg-slate-50/50 dark:bg-zinc-900/30">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                  />
-                  {previewUrl ? (
-                    <div className="space-y-3 w-full flex flex-col items-center">
-                      <img
-                        src={previewUrl}
-                        alt="Thumbnail upload preview"
-                        className="h-24 aspect-video object-cover rounded-lg border border-slate-200 dark:border-zinc-850 shadow-sm"
-                      />
-                      <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
-                        Change Image (이미지 변경)
-                      </span>
-                    </div>
-                  ) : (
-                    <>
-                      <IconUpload />
-                      <span className="text-xs font-bold text-slate-600 dark:text-zinc-400">
-                        Drag &amp; drop or click to upload
-                      </span>
-                      <span className="text-xxs text-slate-400 mt-1">PNG, JPG, WebP (16:9 ratio recommended)</span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Video Title */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
-                    Video Title (영상 제목)
-                  </label>
-                  <span className={`text-xxs font-bold ${title.length > 100 ? 'text-red-500' : 'text-slate-400'}`}>
-                    {title.length} / 100
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Enter video title"
-                  maxLength="100"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Channel Name */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
-                  Channel Name (채널명)
-                </label>
-                <input
-                  type="text"
-                  value={channelName}
-                  onChange={(e) => setChannelName(e.target.value)}
-                  placeholder="e.g. Creator Hub"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-            </div>
-
-            {/* 2. Right Side: Results Display Panel (Col-7) */}
-            <div className="lg:col-span-7 rounded-2xl bg-zinc-950 p-6 text-white space-y-6 flex flex-col justify-start border border-zinc-900/60 min-h-[400px]">
-              
-              <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-900 pb-3 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" /> YouTube Feed Simulation
-              </h3>
-
-              {/* 2.1 Mobile Home View */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Mobile Home View (모바일 홈 뷰)</span>
-                  <span className="text-xxs text-zinc-500">Scroll Feed Card</span>
-                </div>
+              {/* 1. Left Side: Input Form (Col-5) */}
+              <div className="lg:col-span-5 space-y-5">
                 
-                <div className="bg-[#0f0f0f] w-full max-w-[375px] mx-auto rounded-xl border border-zinc-900 overflow-hidden text-left shadow-lg">
-                  {/* Mock Thumbnail Image */}
-                  <div className="w-full aspect-video bg-zinc-800 relative overflow-hidden flex items-center justify-center">
+                {/* Thumbnail Upload Zone */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
+                    Upload Thumbnail (썸네일 업로드)
+                  </label>
+                  <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl p-5 text-center hover:border-slate-355 hover:border-slate-350 dark:hover:border-zinc-700 transition-colors relative cursor-pointer flex flex-col items-center justify-center min-h-[140px] bg-slate-50/50 dark:bg-zinc-900/30">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                    />
                     {previewUrl ? (
-                      <img src={previewUrl} alt="Thumbnail Mobile view" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center p-4">
-                        <span className="text-[#deff9a] text-xxs font-extrabold tracking-widest uppercase mb-1">Thumbnail Preview</span>
-                        <span className="text-[10px] text-zinc-400">16:9 Image placeholder</span>
+                      <div className="space-y-3 w-full flex flex-col items-center">
+                        <img
+                          src={previewUrl}
+                          alt="Thumbnail upload preview"
+                          className="h-24 aspect-video object-cover rounded-lg border border-slate-200 dark:border-zinc-850 shadow-sm"
+                        />
+                        <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                          Change Image (이미지 변경)
+                        </span>
                       </div>
+                    ) : (
+                      <>
+                        <IconUpload />
+                        <span className="text-xs font-bold text-slate-600 dark:text-zinc-400">
+                          Drag &amp; drop or click to upload
+                        </span>
+                        <span className="text-xxs text-slate-400 mt-1">PNG, JPG, WebP (16:9 ratio recommended)</span>
+                      </>
                     )}
-                    {/* Timestamp duration badge */}
-                    <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-[10px] font-bold text-white leading-none">
-                      10:45
+                  </div>
+                </div>
+
+                {/* Video Title */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
+                      Video Title (영상 제목)
+                    </label>
+                    <span className={`text-xxs font-bold ${title.length > 100 ? 'text-red-500' : 'text-slate-400'}`}>
+                      {title.length} / 100
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter video title"
+                    maxLength="100"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
+
+                {/* Channel Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-350">
+                    Channel Name (채널명)
+                  </label>
+                  <input
+                    type="text"
+                    value={channelName}
+                    onChange={(e) => setChannelName(e.target.value)}
+                    placeholder="e.g. Creator Hub"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
+
+              </div>
+
+              {/* 2. Right Side: Results Display Panel (Col-7) */}
+              <div className="lg:col-span-7 rounded-2xl bg-zinc-950 p-6 text-white space-y-6 flex flex-col justify-start border border-zinc-900/60 min-h-[400px]">
+                
+                <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-900 pb-3 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" /> YouTube Feed Simulation
+                </h3>
+
+                {/* 2.1 Mobile Home View */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Mobile Home View (모바일 홈 뷰)</span>
+                    <span className="text-xxs text-zinc-500">Scroll Feed Card</span>
+                  </div>
+                  
+                  <div className="bg-[#0f0f0f] w-full max-w-[375px] mx-auto rounded-xl border border-zinc-900 overflow-hidden text-left shadow-lg">
+                    {/* Mock Thumbnail Image */}
+                    <div className="w-full aspect-video bg-zinc-800 relative overflow-hidden flex items-center justify-center">
+                      {previewUrl ? (
+                        <img src={previewUrl} alt="Thumbnail Mobile view" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center p-4">
+                          <span className="text-[#deff9a] text-xxs font-extrabold tracking-widest uppercase mb-1">Thumbnail Preview</span>
+                          <span className="text-[10px] text-zinc-400">16:9 Image placeholder</span>
+                        </div>
+                      )}
+                      {/* Timestamp duration badge */}
+                      <div className="absolute bottom-2 right-2 bg-black/80 px-1.5 py-0.5 rounded text-[10px] font-bold text-white leading-none">
+                        10:45
+                      </div>
+                    </div>
+
+                    {/* Channel Meta & Title */}
+                    <div className="p-3 flex gap-3">
+                      {/* Channel profile circle */}
+                      <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-zinc-200 text-xs shadow-inner">
+                        {channelName ? channelName.charAt(0).toUpperCase() : 'C'}
+                      </div>
+
+                      <div className="space-y-1">
+                        {/* Title simulation (with line-clamp-2) */}
+                        <h4
+                          className="text-[14px] font-bold text-white leading-[19px] overflow-hidden text-ellipsis"
+                          style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            maxHeight: '38px',
+                          }}
+                        >
+                          {title || 'Untitled Video'}
+                        </h4>
+                        {/* Sub-info */}
+                        <div className="text-[12px] text-zinc-400 flex flex-wrap items-center gap-1.5">
+                          <span>{channelName || 'My Channel'}</span>
+                          <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                          <span>12K views</span>
+                          <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                          <span>2 hours ago</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Channel Meta & Title */}
-                  <div className="p-3 flex gap-3">
-                    {/* Channel profile circle */}
-                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-zinc-700 flex items-center justify-center font-bold text-zinc-200 text-xs shadow-inner">
-                      {channelName ? channelName.charAt(0).toUpperCase() : 'C'}
+                {/* 2.2 Desktop Sidebar View */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Desktop Suggested Video (데스크톱 사이드바 뷰)</span>
+                    <span className="text-xxs text-zinc-500">Sidebar List Card</span>
+                  </div>
+
+                  <div className="bg-[#0f0f0f] w-full max-w-[400px] rounded-xl border border-zinc-900 p-2 flex gap-3 text-left shadow-lg">
+                    {/* Mock Thumbnail Left */}
+                    <div className="w-[168px] aspect-video bg-zinc-800 relative rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                      {previewUrl ? (
+                        <img src={previewUrl} alt="Thumbnail Desktop view" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center p-2">
+                          <span className="text-[#deff9a] text-[8px] font-extrabold uppercase mb-0.5">Thumbnail</span>
+                          <span className="text-[7px] text-zinc-400">16:9</span>
+                        </div>
+                      )}
+                      {/* Timestamp duration badge */}
+                      <div className="absolute bottom-1 right-1 bg-black/80 px-1 py-0.5 rounded text-[8px] font-bold text-white leading-none">
+                        10:45
+                      </div>
                     </div>
 
-                    <div className="space-y-1">
-                      {/* Title simulation (with line-clamp-2) */}
+                    {/* Title & Metadata Right */}
+                    <div className="flex flex-col justify-start pt-0.5 min-w-0">
                       <h4
-                        className="text-[14px] font-bold text-white leading-[19px] overflow-hidden text-ellipsis"
+                        className="text-[13px] font-bold text-[#f1f1f1] leading-[18px] overflow-hidden text-ellipsis mb-1"
                         style={{
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
-                          maxHeight: '38px',
+                          maxHeight: '36px',
                         }}
                       >
                         {title || 'Untitled Video'}
                       </h4>
-                      {/* Sub-info */}
-                      <div className="text-[12px] text-zinc-400 flex flex-wrap items-center gap-1.5">
-                        <span>{channelName || 'My Channel'}</span>
-                        <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                      <span className="text-[11px] text-zinc-400 truncate leading-none block mb-0.5">
+                        {channelName || 'My Channel'}
+                      </span>
+                      <div className="text-[11px] text-zinc-400 leading-none flex items-center gap-1">
                         <span>12K views</span>
-                        <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                        <span className="w-0.5 h-0.5 rounded-full bg-zinc-600" />
                         <span>2 hours ago</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* 2.2 Desktop Sidebar View */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Desktop Suggested Video (데스크톱 사이드바 뷰)</span>
-                  <span className="text-xxs text-zinc-500">Sidebar List Card</span>
-                </div>
-
-                <div className="bg-[#0f0f0f] w-full max-w-[400px] rounded-xl border border-zinc-900 p-2 flex gap-3 text-left shadow-lg">
-                  {/* Mock Thumbnail Left */}
-                  <div className="w-[168px] aspect-video bg-zinc-800 relative rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    {previewUrl ? (
-                      <img src={previewUrl} alt="Thumbnail Desktop view" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-tr from-zinc-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center p-2">
-                        <span className="text-[#deff9a] text-[8px] font-extrabold uppercase mb-0.5">Thumbnail</span>
-                        <span className="text-[7px] text-zinc-400">16:9</span>
-                      </div>
-                    )}
-                    {/* Timestamp duration badge */}
-                    <div className="absolute bottom-1 right-1 bg-black/80 px-1 py-0.5 rounded text-[8px] font-bold text-white leading-none">
-                      10:45
-                    </div>
-                  </div>
-
-                  {/* Title & Metadata Right */}
-                  <div className="flex flex-col justify-start pt-0.5 min-w-0">
-                    <h4
-                      className="text-[13px] font-bold text-[#f1f1f1] leading-[18px] overflow-hidden text-ellipsis mb-1"
-                      style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        maxHeight: '36px',
-                      }}
-                    >
-                      {title || 'Untitled Video'}
-                    </h4>
-                    <span className="text-[11px] text-zinc-400 truncate leading-none block mb-0.5">
-                      {channelName || 'My Channel'}
-                    </span>
-                    <div className="text-[11px] text-zinc-400 leading-none flex items-center gap-1">
-                      <span>12K views</span>
-                      <span className="w-0.5 h-0.5 rounded-full bg-zinc-600" />
-                      <span>2 hours ago</span>
-                    </div>
-                  </div>
-                </div>
               </div>
 
             </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="Optimizing Video Thumbnails & Title Truncation for Higher CTR"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -46,8 +47,6 @@ export default function BrandDealPitchBuilder({ onClose }) {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
-
-
 
   // 이메일 복사
   const handleCopy = () => {
@@ -133,7 +132,7 @@ export default function BrandDealPitchBuilder({ onClose }) {
       />
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-955 border border-slate-250 dark:border-zinc-800/80"
       >
         {/* 상단 라임 액센트 바 */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#deff9a] to-transparent" />
@@ -159,177 +158,179 @@ export default function BrandDealPitchBuilder({ onClose }) {
 
         {/* ── Body Container ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Side: Input Form (Col-5) */}
-            <div className="lg:col-span-5 space-y-4">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Creator Name */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Channel/Creator Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={creatorName}
-                  onChange={(e) => setCreatorName(e.target.value)}
-                  placeholder="e.g. TechReviewer John"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Follower Count */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Follower/Subscriber Count <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={followerCount}
-                  onChange={(e) => setFollowerCount(e.target.value)}
-                  placeholder="e.g. 50,000"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Target Brand Name */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Target Brand Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={brandName}
-                  onChange={(e) => setBrandName(e.target.value)}
-                  placeholder="e.g. Logitech"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Niche */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Your Niche/Topic <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={niche}
-                  onChange={(e) => setNiche(e.target.value)}
-                  placeholder="e.g. Tech and Gadgets"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Why you? */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Why you? (Optional)
-                </label>
-                <textarea
-                  value={whyYou}
-                  onChange={(e) => setWhyYou(e.target.value)}
-                  placeholder="e.g. My audience loves ergonomic mice, recent video had 20% engagement rate..."
-                  rows="3"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"
-                />
-              </div>
-
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-1"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Drafting email...
-                  </>
-                ) : (
-                  <>✉️ Generate Pitch Email</>
-                )}
-              </button>
-
-            </div>
-
-            {/* 2. Right Side: Results Display Panel (Col-7) */}
-            <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
-              
-              <div className="space-y-4 flex-grow flex flex-col">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                    <IconFileText /> Pitch Email Draft
-                  </h3>
-                  
-                  {/* Copy button */}
-                  {(emailSubject || emailBody) && (
-                    <button
-                      onClick={handleCopy}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
-                        copied
-                          ? 'bg-emerald-500 border-emerald-500 text-white'
-                          : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
-                      }`}
-                    >
-                      {copied ? 'Copied!' : '📋 Copy Email'}
-                    </button>
-                  )}
+              {/* 1. Left Side: Input Form (Col-5) */}
+              <div className="lg:col-span-5 space-y-4">
+                
+                {/* Creator Name */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                    Channel/Creator Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={creatorName}
+                    onChange={(e) => setCreatorName(e.target.value)}
+                    placeholder="e.g. TechReviewer John"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
                 </div>
 
-                {error && (
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                    ⚠️ {error}
-                  </div>
-                )}
+                {/* Follower Count */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                    Follower/Subscriber Count <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={followerCount}
+                    onChange={(e) => setFollowerCount(e.target.value)}
+                    placeholder="e.g. 50,000"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-550/20"
+                  />
+                </div>
 
-                {!loading && !error && !emailSubject && !emailBody && (
-                  <div className="flex flex-col items-center justify-center py-24 text-center space-y-2 flex-grow">
-                    <p className="text-zinc-500 text-xs">Fill out the pitch details and click 'Generate Pitch Email' to create a draft here.</p>
-                  </div>
-                )}
+                {/* Target Brand Name */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-355">
+                    Target Brand Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={brandName}
+                    onChange={(e) => setBrandName(e.target.value)}
+                    placeholder="e.g. Logitech"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
 
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 flex-grow">
-                    <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <p className="text-zinc-400 text-xs">Gemini is drafting a cold email proposal...</p>
-                  </div>
-                )}
+                {/* Niche */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-355">
+                    Your Niche/Topic <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={niche}
+                    onChange={(e) => setNiche(e.target.value)}
+                    placeholder="e.g. Tech and Gadgets"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
 
-                {!loading && (emailSubject || emailBody) && (
-                  <div className="space-y-4 flex-grow flex flex-col text-sm text-left">
-                    {/* Subject field */}
-                    <div className="space-y-1">
-                      <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Subject Line</span>
-                      <div className="bg-zinc-800/80 px-4 py-3 rounded-xl border border-zinc-800 text-zinc-100 font-bold select-all">
-                        {emailSubject}
-                      </div>
-                    </div>
+                {/* Why you? */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-355">
+                    Why you? (Optional)
+                  </label>
+                  <textarea
+                    value={whyYou}
+                    onChange={(e) => setWhyYou(e.target.value)}
+                    placeholder="e.g. My audience loves ergonomic mice, recent video had 20% engagement rate..."
+                    rows="3"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                  />
+                </div>
 
-                    {/* Email Body field */}
-                    <div className="space-y-1 flex-grow flex flex-col">
-                      <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Email Body</span>
-                      <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-zinc-200 select-all font-sans whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[300px]">
-                        {emailBody}
-                      </pre>
-                    </div>
-                  </div>
-                )}
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-1"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Drafting email...
+                    </>
+                  ) : (
+                    <>✉️ Generate Pitch Email</>
+                  )}
+                </button>
 
               </div>
 
-              <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
-                💡 **Pitch Tip:** Make sure to replace placeholders like `[Your Link]` or `[Media Kit]` before sending! Cold pitches work best when you offer clear win-win situations for the brand.
+              {/* 2. Right Side: Results Display Panel (Col-7) */}
+              <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
+                
+                <div className="space-y-4 flex-grow flex flex-col">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                      <IconFileText /> Pitch Email Draft
+                    </h3>
+                    
+                    {/* Copy button */}
+                    {(emailSubject || emailBody) && (
+                      <button
+                        onClick={handleCopy}
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
+                          copied
+                            ? 'bg-emerald-500 border-emerald-500 text-white'
+                            : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
+                        }`}
+                      >
+                        {copied ? 'Copied!' : '📋 Copy Email'}
+                      </button>
+                    )}
+                  </div>
+
+                  {error && (
+                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
+                      ⚠️ {error}
+                    </div>
+                  )}
+
+                  {!loading && !error && !emailSubject && !emailBody && (
+                    <div className="flex flex-col items-center justify-center py-24 text-center space-y-2 flex-grow">
+                      <p className="text-zinc-500 text-xs">Fill out the pitch details and click 'Generate Pitch Email' to create a draft here.</p>
+                    </div>
+                  )}
+
+                  {loading && (
+                    <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 flex-grow">
+                      <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <p className="text-zinc-400 text-xs">Gemini is drafting a cold email proposal...</p>
+                    </div>
+                  )}
+
+                  {!loading && (emailSubject || emailBody) && (
+                    <div className="space-y-4 flex-grow flex flex-col text-sm text-left">
+                      {/* Subject field */}
+                      <div className="space-y-1">
+                        <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Subject Line</span>
+                        <div className="bg-zinc-800/80 px-4 py-3 rounded-xl border border-zinc-800 text-zinc-100 font-bold select-all">
+                          {emailSubject}
+                        </div>
+                      </div>
+
+                      {/* Email Body field */}
+                      <div className="space-y-1 flex-grow flex flex-col">
+                        <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">Email Body</span>
+                        <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-zinc-200 select-all font-sans whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[300px]">
+                          {emailBody}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
+                  💡 **Pitch Tip:** Make sure to replace placeholders like `[Your Link]` or `[Media Kit]` before sending! Cold pitches work best when you offer clear win-win situations for the brand.
+                </div>
+
               </div>
 
             </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="Writing Cold Emails That Brands Actually Reply To"

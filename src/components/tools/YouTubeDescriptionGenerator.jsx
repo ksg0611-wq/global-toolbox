@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -46,8 +47,6 @@ export default function YouTubeDescriptionGenerator({ onClose }) {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
-
-
 
   // 결과 복사
   const handleCopy = () => {
@@ -164,7 +163,7 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
 
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-955 border border-slate-250 dark:border-zinc-800/80"
       >
         {/* 상단 라임 액센트 바 */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#deff9a] to-transparent" />
@@ -190,198 +189,200 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
 
         {/* ── Body Container ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Side: Input Form (Col-5) */}
-            <div className="lg:col-span-5 space-y-4">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Video Title */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Video Title (영상 제목)
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. How to grow on YouTube fast"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Target Keywords */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Target Keywords (쉼표 구분 키워드)
-                </label>
-                <input
-                  type="text"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="e.g. youtube growth, 2026 algorithm"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
-                />
-              </div>
-
-              {/* Short Summary */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Short Summary (간단 내용 요약)
-                </label>
-                <textarea
-                  value={summary}
-                  onChange={(e) => setSummary(e.target.value)}
-                  placeholder="Summarize the video contents in 1-2 sentences..."
-                  rows="3"
-                  className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"
-                />
-              </div>
-
-              {/* Tone of Voice */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
-                  Tone of Voice (말투 설정)
-                </label>
-                <div className="relative">
-                  <select
-                    value={tone}
-                    onChange={(e) => setTone(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
-                  >
-                    <option value="Professional">Professional (전문적인)</option>
-                    <option value="Casual">Casual (친근하고 일상적인)</option>
-                    <option value="Energetic">Energetic (활기차고 열정적인)</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
-                  </div>
+              {/* 1. Left Side: Input Form (Col-5) */}
+              <div className="lg:col-span-5 space-y-4">
+                
+                {/* Video Title */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                    Video Title (영상 제목)
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. How to grow on YouTube fast"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
                 </div>
-              </div>
 
-              {/* Generate Button */}
-              <button
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-1"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Generating...
-                  </>
-                ) : (
-                  <>🚀 Generate SEO Description</>
-                )}
-              </button>
+                {/* Target Keywords */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                    Target Keywords (쉼표 구분 키워드)
+                  </label>
+                  <input
+                    type="text"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    placeholder="e.g. youtube growth, 2026 algorithm"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
+                </div>
 
-            </div>
+                {/* Short Summary */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-350">
+                    Short Summary (간단 내용 요약)
+                  </label>
+                  <textarea
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    placeholder="Summarize the video contents in 1-2 sentences..."
+                    rows="3"
+                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 resize-none"
+                  />
+                </div>
 
-            {/* 2. Right Side: Results Display Panel (Col-7) */}
-            <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
-              
-              <div className="space-y-4 flex-grow flex flex-col">
-                <div className="flex items-center justify-between border-b border-zinc-800 pb-3 flex-wrap gap-2">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5 mr-2">
-                      <IconFileText /> SEO Metadata
-                    </h3>
-                    
-                    {/* View Tabs */}
-                    {rawMarkdown && (
-                      <div className="flex bg-zinc-800 rounded-lg p-0.5">
-                        <button
-                          onClick={() => setActiveTab('raw')}
-                          className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors cursor-pointer ${
-                            activeTab === 'raw'
-                              ? 'bg-zinc-700 text-white shadow-sm'
-                              : 'text-zinc-400 hover:text-white'
-                          }`}
-                        >
-                          📝 Plain Text
-                        </button>
-                        <button
-                          onClick={() => setActiveTab('preview')}
-                          className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors cursor-pointer ${
-                            activeTab === 'preview'
-                              ? 'bg-zinc-700 text-white shadow-sm'
-                              : 'text-zinc-400 hover:text-white'
-                          }`}
-                        >
-                          ✨ Rich Preview
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Copy button */}
-                  {rawMarkdown && (
-                    <button
-                      onClick={handleCopy}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
-                        copied
-                          ? 'bg-emerald-500 border-emerald-500 text-white'
-                          : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
-                      }`}
+                {/* Tone of Voice */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-zinc-355">
+                    Tone of Voice (말투 설정)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={tone}
+                      onChange={(e) => setTone(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
                     >
-                      {copied ? 'Copied!' : '📋 Copy All'}
-                    </button>
-                  )}
+                      <option value="Professional">Professional (전문적인)</option>
+                      <option value="Casual">Casual (친근하고 일상적인)</option>
+                      <option value="Energetic">Energetic (활기차고 열정적인)</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
+                  </div>
                 </div>
 
-                {error && (
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                    ⚠️ {error}
-                  </div>
-                )}
-
-                {!loading && !error && !rawMarkdown && (
-                  <div className="flex flex-col items-center justify-center py-24 text-center space-y-2 flex-grow">
-                    <p className="text-zinc-500 text-xs">Fill out the video details and click 'Generate SEO Description' to view outputs here.</p>
-                  </div>
-                )}
-
-                {loading && (
-                  <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 flex-grow">
-                    <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    <p className="text-zinc-400 text-xs">Gemini is generating metadata description and tags...</p>
-                  </div>
-                )}
-
-                {!loading && rawMarkdown && (
-                  <div className="flex-grow flex flex-col text-sm text-left min-h-0">
-                    {activeTab === 'raw' ? (
-                      <div className="flex-grow flex flex-col min-h-0">
-                        <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Description &amp; Tags Copy-paste</span>
-                        <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-zinc-200 select-all font-mono whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[300px]">
-                          {rawMarkdown}
-                        </pre>
-                      </div>
-                    ) : (
-                      <div className="flex-grow flex flex-col min-h-0">
-                        <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Formatted Live Preview</span>
-                        <div className="bg-zinc-950/60 px-5 py-5 rounded-xl border border-zinc-800 text-zinc-300 overflow-y-auto flex-grow max-h-[300px] markdown-preview">
-                          <div dangerouslySetInnerHTML={{ __html: richHtml }} />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+                {/* Generate Button */}
+                <button
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl font-extrabold text-slate-900 bg-[#deff9a] hover:bg-opacity-90 active:scale-95 transition-all duration-200 shadow-md shadow-[#deff9a]/10 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2 cursor-pointer mt-1"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 text-slate-900" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Generating...
+                    </>
+                  ) : (
+                    <>🚀 Generate SEO Description</>
+                  )}
+                </button>
 
               </div>
 
-              <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
-                💡 **SEO Tip:** Add timestamps to the description placeholder to enable key search moments, and verify that all 15 tags are inputted in YouTube Studio's tag settings.
+              {/* 2. Right Side: Results Display Panel (Col-7) */}
+              <div className="lg:col-span-7 rounded-2xl bg-zinc-900 p-6 text-white space-y-4 flex flex-col justify-between shadow-inner min-h-[400px]">
+                
+                <div className="space-y-4 flex-grow flex flex-col">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-3 flex-wrap gap-2">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 flex items-center gap-1.5 mr-2">
+                        <IconFileText /> SEO Metadata
+                      </h3>
+                      
+                      {/* View Tabs */}
+                      {rawMarkdown && (
+                        <div className="flex bg-zinc-800 rounded-lg p-0.5">
+                          <button
+                            onClick={() => setActiveTab('raw')}
+                            className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors cursor-pointer ${
+                              activeTab === 'raw'
+                                ? 'bg-zinc-700 text-white shadow-sm'
+                                : 'text-zinc-400 hover:text-white'
+                            }`}
+                          >
+                            📝 Plain Text
+                          </button>
+                          <button
+                            onClick={() => setActiveTab('preview')}
+                            className={`px-2 py-1 rounded-md text-[10px] font-bold transition-colors cursor-pointer ${
+                              activeTab === 'preview'
+                                ? 'bg-zinc-700 text-white shadow-sm'
+                                : 'text-zinc-400 hover:text-white'
+                            }`}
+                          >
+                            ✨ Rich Preview
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Copy button */}
+                    {rawMarkdown && (
+                      <button
+                        onClick={handleCopy}
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xxs font-bold transition-all border active:scale-95 cursor-pointer ${
+                          copied
+                            ? 'bg-emerald-550 border-emerald-500 text-white'
+                            : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-300'
+                        }`}
+                      >
+                        {copied ? 'Copied!' : '📋 Copy All'}
+                      </button>
+                    )}
+                  </div>
+
+                  {error && (
+                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
+                      ⚠️ {error}
+                    </div>
+                  )}
+
+                  {!loading && !error && !rawMarkdown && (
+                    <div className="flex flex-col items-center justify-center py-24 text-center space-y-2 flex-grow">
+                      <p className="text-zinc-500 text-xs">Fill out the video details and click 'Generate SEO Description' to view outputs here.</p>
+                    </div>
+                  )}
+
+                  {loading && (
+                    <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 flex-grow">
+                      <svg className="animate-spin h-8 w-8 text-[#deff9a]" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <p className="text-zinc-400 text-xs">Gemini is generating metadata description and tags...</p>
+                    </div>
+                  )}
+
+                  {!loading && rawMarkdown && (
+                    <div className="flex-grow flex flex-col text-sm text-left min-h-0">
+                      {activeTab === 'raw' ? (
+                        <div className="flex-grow flex flex-col min-h-0">
+                          <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Description &amp; Tags Copy-paste</span>
+                          <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-zinc-200 select-all font-mono whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[300px]">
+                            {rawMarkdown}
+                          </pre>
+                        </div>
+                      ) : (
+                        <div className="flex-grow flex flex-col min-h-0">
+                          <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500 mb-1.5">Formatted Live Preview</span>
+                          <div className="bg-zinc-955/60 px-5 py-5 rounded-xl border border-zinc-800 text-zinc-300 overflow-y-auto flex-grow max-h-[300px] markdown-preview">
+                            <div dangerouslySetInnerHTML={{ __html: richHtml }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
+                  💡 **SEO Tip:** Add timestamps to the description placeholder to enable key search moments, and verify that all 15 tags are inputted in YouTube Studio's tag settings.
+                </div>
+
               </div>
 
             </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="The Importance of Metadata Optimization in YouTube SEO"

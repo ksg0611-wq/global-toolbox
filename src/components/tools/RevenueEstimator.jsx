@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
 const NICHES = {
@@ -136,148 +137,150 @@ export default function RevenueEstimator({ onClose }) {
 
         {/* ── Body Container ── */}
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* 1. Left Side: Input Form (Col-7) */}
-            <div className="lg:col-span-7 space-y-6">
+          <ClientOnly>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               
-              {/* Daily Views Input */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                    Daily Views (일일 조회수)
-                  </label>
+              {/* 1. Left Side: Input Form (Col-7) */}
+              <div className="lg:col-span-7 space-y-6">
+                
+                {/* Daily Views Input */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                      Daily Views (일일 조회수)
+                    </label>
+                    <input
+                      type="number"
+                      value={views}
+                      min="1000"
+                      max="10000000"
+                      step="1000"
+                      onChange={(e) => setViews(Math.max(1000, parseInt(e.target.value || 0)))}
+                      className="w-32 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-right text-sm font-bold text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    />
+                  </div>
                   <input
-                    type="number"
-                    value={views}
+                    type="range"
                     min="1000"
-                    max="10000000"
-                    step="1000"
-                    onChange={(e) => setViews(Math.max(1000, parseInt(e.target.value || 0)))}
-                    className="w-32 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-right text-sm font-bold text-slate-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    max="1000000"
+                    step="5000"
+                    value={views > 1000000 ? 1000000 : views}
+                    onChange={(e) => setViews(parseInt(e.target.value))}
+                    className="w-full h-2 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-zinc-100"
                   />
+                  <div className="flex justify-between text-xxs text-slate-400">
+                    <span>1K</span>
+                    <span>250K</span>
+                    <span>500K</span>
+                    <span>750K</span>
+                    <span>1M+</span>
+                  </div>
                 </div>
-                <input
-                  type="range"
-                  min="1000"
-                  max="1000000"
-                  step="5000"
-                  value={views > 1000000 ? 1000000 : views}
-                  onChange={(e) => setViews(parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-zinc-100"
-                />
-                <div className="flex justify-between text-xxs text-slate-400">
-                  <span>1K</span>
-                  <span>250K</span>
-                  <span>500K</span>
-                  <span>750K</span>
-                  <span>1M+</span>
+
+                {/* Content Niche Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Content Niche (채널 주제)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={niche}
+                      onChange={(e) => setNiche(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
+                    >
+                      {Object.entries(NICHES).map(([key, val]) => (
+                        <option key={key} value={key}>
+                          {val.name} (CPM: ${val.minCpm} ~ ${val.maxCpm})
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
+                  </div>
+                  <p className="text-xxs text-slate-400 mt-1">Different categories attract different advertiser bids, affecting CPM rate.</p>
                 </div>
+
+                {/* Audience Region Dropdown */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
+                    Audience Region (주요 시청자 국가)
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
+                    >
+                      {Object.entries(REGIONS).map(([key, val]) => (
+                        <option key={key} value={key}>
+                          {val.name} (Multiplier: {val.weight * 100}%)
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
+                      ▼
+                    </div>
+                  </div>
+                  <p className="text-xxs text-slate-400 mt-1">Viewer geography is a key driver for CPM. Tier 1 regions command highest advertiser values.</p>
+                </div>
+
               </div>
 
-              {/* Content Niche Dropdown */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Content Niche (채널 주제)
-                </label>
-                <div className="relative">
-                  <select
-                    value={niche}
-                    onChange={(e) => setNiche(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
-                  >
-                    {Object.entries(NICHES).map(([key, val]) => (
-                      <option key={key} value={key}>
-                        {val.name} (CPM: ${val.minCpm} ~ ${val.maxCpm})
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
+              {/* 2. Right Side: Results Display Panel (Col-5) */}
+              <div className="lg:col-span-5 rounded-2xl bg-zinc-900 p-6 text-white space-y-6 flex flex-col justify-between shadow-inner">
+                
+                <div className="space-y-4">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-3 flex items-center gap-1.5">
+                    <IconTrending /> Potential Ad Revenue
+                  </h3>
+
+                  {/* Daily earnings card */}
+                  <div className="space-y-1">
+                    <span className="text-xs text-zinc-400">Estimated Daily Revenue</span>
+                    <div className="text-3xl font-black tracking-tight" style={{ color: LIME }}>
+                      {formatCurrency(avgDaily)}
+                    </div>
+                    <div className="text-xxs text-zinc-500">
+                      Range: {formatCurrency(minDaily)} ~ {formatCurrency(maxDaily)}
+                    </div>
                   </div>
-                </div>
-                <p className="text-xxs text-slate-400 mt-1">Different categories attract different advertiser bids, affecting CPM rate.</p>
-              </div>
 
-              {/* Audience Region Dropdown */}
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-zinc-300">
-                  Audience Region (주요 시청자 국가)
-                </label>
-                <div className="relative">
-                  <select
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-sm text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer"
-                  >
-                    {Object.entries(REGIONS).map(([key, val]) => (
-                      <option key={key} value={key}>
-                        {val.name} (Multiplier: {val.weight * 100}%)
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-slate-400">
-                    ▼
+                  {/* Monthly earnings card */}
+                  <div className="space-y-1 pt-3 border-t border-zinc-800/50">
+                    <div className="flex items-center gap-1 text-xs text-zinc-400">
+                      <IconClock /> <span>Estimated Monthly Revenue</span>
+                    </div>
+                    <div className="text-2xl font-black tracking-tight text-white">
+                      {formatCurrency(avgMonthly)}
+                    </div>
+                    <div className="text-xxs text-zinc-500">
+                      Range: {formatCurrency(minMonthly)} ~ {formatCurrency(maxMonthly)}
+                    </div>
                   </div>
-                </div>
-                <p className="text-xxs text-slate-400 mt-1">Viewer geography is a key driver for CPM. Tier 1 regions command highest advertiser values.</p>
-              </div>
 
-            </div>
-
-            {/* 2. Right Side: Results Display Panel (Col-5) */}
-            <div className="lg:col-span-5 rounded-2xl bg-zinc-900 p-6 text-white space-y-6 flex flex-col justify-between shadow-inner">
-              
-              <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800 pb-3 flex items-center gap-1.5">
-                  <IconTrending /> Potential Ad Revenue
-                </h3>
-
-                {/* Daily earnings card */}
-                <div className="space-y-1">
-                  <span className="text-xs text-zinc-400">Estimated Daily Revenue</span>
-                  <div className="text-3xl font-black tracking-tight" style={{ color: LIME }}>
-                    {formatCurrency(avgDaily)}
-                  </div>
-                  <div className="text-xxs text-zinc-500">
-                    Range: {formatCurrency(minDaily)} ~ {formatCurrency(maxDaily)}
+                  {/* Yearly earnings card */}
+                  <div className="space-y-1 pt-3 border-t border-zinc-800/50">
+                    <div className="flex items-center gap-1 text-xs text-zinc-400">
+                      <IconCalendar /> <span>Estimated Yearly Revenue</span>
+                    </div>
+                    <div className="text-2xl font-black tracking-tight text-white">
+                      {formatCurrency(avgYearly)}
+                    </div>
+                    <div className="text-xxs text-zinc-500">
+                      Range: {formatCurrency(minYearly)} ~ {formatCurrency(maxYearly)}
+                    </div>
                   </div>
                 </div>
 
-                {/* Monthly earnings card */}
-                <div className="space-y-1 pt-3 border-t border-zinc-800/50">
-                  <div className="flex items-center gap-1 text-xs text-zinc-400">
-                    <IconClock /> <span>Estimated Monthly Revenue</span>
-                  </div>
-                  <div className="text-2xl font-black tracking-tight text-white">
-                    {formatCurrency(avgMonthly)}
-                  </div>
-                  <div className="text-xxs text-zinc-500">
-                    Range: {formatCurrency(minMonthly)} ~ {formatCurrency(maxMonthly)}
-                  </div>
+                <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
+                  💡 **CPM Info:** Based on typical averages of {formatCurrency(selectedNiche.minCpm)} - {formatCurrency(selectedNiche.maxCpm)} CPM for the **{selectedNiche.name}** niche, multiplied by audience tier weights. Actual earnings vary based on click rates (CTR), ad types, and seasonality.
                 </div>
 
-                {/* Yearly earnings card */}
-                <div className="space-y-1 pt-3 border-t border-zinc-800/50">
-                  <div className="flex items-center gap-1 text-xs text-zinc-400">
-                    <IconCalendar /> <span>Estimated Yearly Revenue</span>
-                  </div>
-                  <div className="text-2xl font-black tracking-tight text-white">
-                    {formatCurrency(avgYearly)}
-                  </div>
-                  <div className="text-xxs text-zinc-500">
-                    Range: {formatCurrency(minYearly)} ~ {formatCurrency(maxYearly)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-zinc-850 p-3.5 rounded-xl border border-zinc-800 text-xxs text-zinc-400 leading-normal">
-                💡 **CPM Info:** Based on typical averages of {formatCurrency(selectedNiche.minCpm)} - {formatCurrency(selectedNiche.maxCpm)} CPM for the **{selectedNiche.name}** niche, multiplied by audience tier weights. Actual earnings vary based on click rates (CTR), ad types, and seasonality.
               </div>
 
             </div>
-
-          </div>
+          </ClientOnly>
 
           <ToolSEOSection
             title="Understanding YouTube Monetization & CPM Rates"
