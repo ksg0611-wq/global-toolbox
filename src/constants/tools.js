@@ -239,4 +239,15 @@ export const TOOLS = [
     comingSoon:  false,
     openModal:   true,
   },
+  {
+    id:          'youtube-script-generator',
+    title:       'AI YouTube Script Generator',
+    description: 'Generate structured, high-converting video script outlines (Hook, Intro, Body, Outro) customized by topic, audience, and tone using AI.',
+    category:    'AI',
+    iconName:    'IconSparkle',
+    badge:       'New',
+    href:        '/tools/youtube-script-generator',
+    comingSoon:  false,
+    openModal:   true,
+  },
 ];

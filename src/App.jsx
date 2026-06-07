@@ -23,6 +23,7 @@ import ThumbnailPreviewer from './components/tools/ThumbnailPreviewer';
 import YouTubeDescriptionGenerator from './components/tools/YouTubeDescriptionGenerator';
 import HashtagGenerator from './components/tools/HashtagGenerator';
 import YouTubeThumbnailDownloader from './components/tools/YouTubeThumbnailDownloader';
+import YouTubeScriptGenerator from './components/tools/YouTubeScriptGenerator';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import About from './pages/About';
@@ -78,7 +79,7 @@ export default function App() {
   useEffect(() => {
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator', 'hashtag-generator', 'my-toolbox', 'suggest-tool', 'youtube-thumbnail-downloader'].includes(activeTool)) {
+      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator', 'hashtag-generator', 'my-toolbox', 'suggest-tool', 'youtube-thumbnail-downloader', 'youtube-script-generator'].includes(activeTool)) {
         let mappedTool = activeTool;
         if (mappedTool === 'privacy-policy') mappedTool = 'privacy';
         if (mappedTool === 'terms-of-service') mappedTool = 'terms';
@@ -344,6 +345,9 @@ export default function App() {
       )}
       {activeTool === 'youtube-thumbnail-downloader' && (
         <YouTubeThumbnailDownloader onClose={() => setActiveTool(null)} />
+      )}
+      {activeTool === 'youtube-script-generator' && (
+        <YouTubeScriptGenerator onClose={() => setActiveTool(null)} />
       )}
       {activeTool === 'contact' && (
         <Contact onClose={() => setActiveTool(null)} />
