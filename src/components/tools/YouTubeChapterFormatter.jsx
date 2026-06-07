@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
+import AffiliateCard from '../common/AffiliateCard';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
@@ -229,6 +230,13 @@ Raw notes: ${rawNotes}`;
 
             </div>
           </ClientOnly>
+
+          <AffiliateCard
+            title="🚀 Want to rank #1 on YouTube Search?"
+            description="Discover hidden keywords, spy on competitors' tags, and optimize your videos 10x faster with TubeBuddy's free browser extension."
+            buttonText="Get TubeBuddy for Free"
+            linkUrl="https://www.tubebuddy.com"
+          />
 
           <ToolSEOSection
             title="Why YouTube Timestamps & Video Chapters Matter for SEO"

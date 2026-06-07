@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
+import AffiliateCard from '../common/AffiliateCard';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -383,6 +384,13 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
 
             </div>
           </ClientOnly>
+
+          <AffiliateCard
+            title="🚀 Want to rank #1 on YouTube Search?"
+            description="Discover hidden keywords, spy on competitors' tags, and optimize your videos 10x faster with TubeBuddy's free browser extension."
+            buttonText="Get TubeBuddy for Free"
+            linkUrl="https://www.tubebuddy.com"
+          />
 
           <ToolSEOSection
             title="The Importance of Metadata Optimization in YouTube SEO"
