@@ -27,6 +27,9 @@ function errorResponse(message, status = 400) {
   return jsonResponse({ error: { message } }, status);
 }
 
+// IP별 요청 타임스탬프 기록을 관리하기 위한 글로벌 인메모리 Map
+const ipRequestHistory = new Map();
+
 export async function onRequest(context) {
   const { request, env } = context;
 
@@ -38,6 +41,24 @@ export async function onRequest(context) {
   if (request.method !== 'POST') {
     return errorResponse('Method Not Allowed. Only POST is supported.', 405);
   }
+
+  // IP 기반 Rate Limiting (동일 IP당 분당 최대 5회 제한)
+  const clientIp = request.headers.get('cf-connecting-ip') || 'unknown';
+  const now = Date.now();
+  const oneMinuteAgo = now - 60000;
+
+  let requestTimestamps = ipRequestHistory.get(clientIp) || [];
+  
+  // 1분 이상 지난 오래된 기록 필터링
+  requestTimestamps = requestTimestamps.filter(timestamp => timestamp > oneMinuteAgo);
+
+  if (requestTimestamps.length >= 5) {
+    return jsonResponse({ error: "Too many requests. Please try again after a minute." }, 429);
+  }
+
+  // 새로운 요청 타임스탬프 기록 및 맵 업데이트
+  requestTimestamps.push(now);
+  ipRequestHistory.set(clientIp, requestTimestamps);
 
   // Get webhook URL from environment variables
   const webhookUrl = env.FEEDBACK_WEBHOOK_URL;
