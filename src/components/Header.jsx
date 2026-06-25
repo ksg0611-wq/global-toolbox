@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { HEADER } from '../constants/strings';
-import { IconSun, IconMoon, IconGlobe, IconMenu, IconX } from './icons';
+import { IconSun, IconMoon, IconMenu, IconX } from './icons';
 import { auth } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
 import { trackEvent } from '../utils/analytics';
-
 const LIME = '#deff9a';
 
 // 구글 G 로고 컴포넌트
@@ -18,7 +17,7 @@ const IconGoogle = () => (
   </svg>
 );
 
-export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox, onOpenSuggestTool }) {
+export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox, onOpenSuggestTool, onOpenBlog, onOpenPrompts }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -86,6 +85,10 @@ export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox, onOp
       onOpenAbout();
     } else if (href === '#my-toolbox' && onOpenMyToolbox) {
       onOpenMyToolbox();
+    } else if (href === '/blog' && onOpenBlog) {
+      onOpenBlog();
+    } else if (href === '/prompts' && onOpenPrompts) {
+      onOpenPrompts();
     } else if (href === '#suggest-tool' && onOpenSuggestTool) {
       onOpenSuggestTool();
     } else if (href === '#suggest-tool') {
@@ -97,9 +100,11 @@ export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox, onOp
 
   const navLinks = [
     { label: HEADER.navTools, href: '#tools' },
+    { label: HEADER.navBlog,  href: '/blog' },
+    { label: HEADER.navPrompts, href: '/prompts' },
     { label: 'My Toolbox', href: '#my-toolbox' },
     { label: HEADER.navAbout, href: '#about' },
-    { label: HEADER.navBlog,  href: '#suggest-tool' },
+    { label: HEADER.navSuggestTool, href: '#suggest-tool' },
   ];
 
   return (
@@ -134,12 +139,6 @@ export default function Header({ onOpenAbout, onOpenTools, onOpenMyToolbox, onOp
 
           {/* ── Controls ── */}
           <div className="flex items-center gap-2">
-            {/* Language placeholder */}
-            <button className="hidden sm:flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 text-sm font-semibold text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
-              <IconGlobe />
-              <span>{HEADER.langButton}</span>
-            </button>
-
             {/* Google Authentication Control */}
             {user ? (
               <div className="flex items-center gap-2">

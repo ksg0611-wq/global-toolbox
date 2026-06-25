@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
 import { db, auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
@@ -384,9 +387,14 @@ export default function AIPromptBuilder({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
+      <SEOMeta
+        title="Professional AI Prompt Builder | Optimize ChatGPT & Gemini"
+        description="Generate structured, high-performing prompts for ChatGPT, Claude, and Gemini. Use templates, adjust roles, tones, and export easily."
+        url="/tools/ai-prompt-builder"
+      />
       <div className="relative w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-2xl
         bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700
         shadow-2xl shadow-black/40 flex flex-col">
@@ -422,6 +430,7 @@ export default function AIPromptBuilder({ onClose }) {
 
         {/* ── 바디 ── */}
         <div className="p-6 flex flex-col gap-6">
+          <ClientOnly>
 
           {/* ── Quick Templates ── */}
           <div className="flex flex-col gap-2">
@@ -689,62 +698,28 @@ export default function AIPromptBuilder({ onClose }) {
               </div>
             )}
           </div>
+          </ClientOnly>
 
           {/* ── SEO 아티클 ── */}
-          <article className="rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              How to Write Better AI Prompts: Best Practices for LLMs
-            </h2>
-            <p className="text-sm leading-relaxed">
-              Prompt engineering is the practice of designing effective inputs for large language models (LLMs)
-              like ChatGPT, Google Gemini, and Claude. A well-crafted prompt dramatically improves output
-              quality, consistency, and relevance — transforming a generic AI response into a precisely
-              tailored, professional result.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              The Role-Task-Format Framework
-            </h3>
-            <p className="text-sm leading-relaxed">
-              The most effective prompts follow a clear structure: <strong className="text-slate-800 dark:text-zinc-200">Role</strong> (who the AI should act as),
-              <strong className="text-slate-800 dark:text-zinc-200"> Task</strong> (what it should do), and <strong className="text-slate-800 dark:text-zinc-200">Format</strong> (how it should structure
-              the output). By assigning a specific expert persona — such as "Senior SEO Strategist" or
-              "Master Python Developer" — you activate domain-specific knowledge and writing style
-              patterns embedded in the model's training data.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Choosing the Right AI Engine
-            </h3>
-            <ul className="text-sm space-y-1.5 list-none">
-              {[
-                ['ChatGPT (GPT-4o)', 'Best for creative writing, brainstorming, customer-facing content, and general-purpose tasks.'],
-                ['Google Gemini',    'Excels at research synthesis, real-time web data, multimodal tasks, and Google Workspace integration.'],
-                ['Claude (Sonnet)',  'Superior for long-document analysis, nuanced reasoning, coding reviews, and maintaining consistent tone over extended outputs.'],
-                ['Genspark AI',     'Optimized for agentic workflows, multi-step research, and auto-generated reports with citations.'],
-              ].map(([name, desc]) => (
-                <li key={name} className="flex flex-col gap-0.5">
-                  <code className="text-xs font-mono text-[#8fc400] bg-[#deff9a]/10 px-1.5 py-0.5 rounded w-fit">{name}</code>
-                  <span>{desc}</span>
-                </li>
-              ))}
-            </ul>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Key Principles for High-Quality Prompts
-            </h3>
-            <ul className="text-sm space-y-1.5 list-disc list-inside">
-              <li><strong className="text-slate-800 dark:text-zinc-200">Be Specific:</strong> Vague prompts produce vague outputs. Include context, audience, constraints, and measurable goals.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Define the Output:</strong> Specify format (Markdown, JSON, table), length (word count), and structure (sections, headers).</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Use Chain-of-Thought:</strong> For complex tasks, add "Think step by step" to encourage logical reasoning before answering.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Iterate:</strong> Treat prompt writing as a process. Refine based on outputs and save effective prompts as reusable templates.</li>
-            </ul>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              All processing is done entirely in your browser. No prompt data is sent to any server — your ideas stay private.
-            </p>
-          </article>
+          <ToolSEOSection
+            title="AI Prompt Builder & Templates - Everything You Need to Know"
+            description="Prompt engineering is the practice of designing effective inputs for large language models (LLMs) like ChatGPT, Google Gemini, and Claude. A well-crafted prompt dramatically improves output quality, consistency, and relevance — transforming a generic AI response into a precisely tailored, professional result."
+            howToUse={[
+              "Choose a ready-made template from the Quick Templates bar, or construct your prompt from scratch.",
+              "Assign an expert persona/role, select the target LLM engine, define the task, specify tone and output format.",
+              "Review the compiled structured prompt in the right column, copy it, or save it to your local library."
+            ]}
+            faqs={[
+              {
+                question: "What is the Role-Task-Format framework?",
+                answer: "It is a structural prompt design principle where you specify: who the AI should act as (Role), what it should do (Task), and how to format the output (Format). This activation primes LLM neural networks for precise, structured domain outputs."
+              },
+              {
+                question: "Where is my saved prompt library stored?",
+                answer: "If logged in, prompts are securely synced with your profile. If anonymous, prompts are kept locally in your browser storage. We respect user confidentiality."
+              }
+            ]}
+          />
         </div>
       </div>
 

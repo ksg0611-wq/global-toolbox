@@ -68,7 +68,7 @@ export default function YouTubeThumbnailDownloader({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
@@ -134,8 +134,9 @@ export default function YouTubeThumbnailDownloader({ onClose }) {
                 </form>
 
                 {error && (
-                  <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                    ⚠️ {error}
+                  <div className="flex gap-2.5 p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-300 text-xs leading-relaxed text-left">
+                    <span className="flex-shrink-0 text-red-400 select-none">⚠️</span>
+                    <div className="whitespace-pre-line">{error}</div>
                   </div>
                 )}
               </div>

@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
+
 
 // ── 브랜드 컬러 ──────────────────────────────────────────────────────────────
 const LIME = '#deff9a';
@@ -116,12 +120,18 @@ export default function TextFormatter({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose?.();
       }}
     >
+      <SEOMeta
+        title="Best Free Text Formatter Online | Word Count & Case Converter"
+        description="Format, clean, and convert text instantly. Convert cases (UPPERCASE, camelCase), remove extra spaces or line breaks, and track word counts 100% locally."
+        url="/tools/text-formatter"
+      />
+
       <div
         className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
         style={{ background: '#111118', border: '1px solid rgba(222,255,154,0.18)' }}
@@ -129,7 +139,7 @@ export default function TextFormatter({ onClose }) {
         {/* 라임색 상단 강조선 */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-          style={{ background: `linear-gradient(90deg, transparent, ${LIME}, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent, \${LIME}, transparent)` }}
         />
 
         {/* 헤더 */}
@@ -154,183 +164,181 @@ export default function TextFormatter({ onClose }) {
 
         {/* 바디 */}
         <div className="px-6 pb-6 flex flex-col gap-5">
-          {/* 입력 섹션 */}
-          <div className="flex flex-col gap-2">
-            {/* 상단 통계 뱃지 */}
-            <div className="flex flex-wrap items-center gap-2 justify-between">
-              <label
-                htmlFor="input-text"
-                className="text-xs font-semibold uppercase tracking-wider"
-                style={{ color: LIME }}
-              >
-                Source Text
-              </label>
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                  Characters: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.charCount}</span>
-                </span>
-                <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                  Words: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.wordCount}</span>
-                </span>
-                <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                  Lines: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.lineCount}</span>
-                </span>
+          
+          <ClientOnly>
+            {/* 입력 섹션 */}
+            <div className="flex flex-col gap-2">
+              {/* 상단 통계 뱃지 */}
+              <div className="flex flex-wrap items-center gap-2 justify-between">
+                <label
+                  htmlFor="input-text"
+                  className="text-xs font-semibold uppercase tracking-wider"
+                  style={{ color: LIME }}
+                >
+                  Source Text
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
+                    Characters: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.charCount}</span>
+                  </span>
+                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
+                    Words: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.wordCount}</span>
+                  </span>
+                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
+                    Lines: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.lineCount}</span>
+                  </span>
+                </div>
+              </div>
+
+              <textarea
+                id="input-text"
+                rows="6"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder="Paste or type your text here..."
+                className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  borderColor: 'rgba(222,255,154,0.15)',
+                  color: '#f1f5f9',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = LIME;
+                  e.target.style.boxShadow = `0 0 0 3px \${LIME_DIM}`;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(222,255,154,0.15)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+            </div>
+
+            {/* 중앙 변환 액션 버튼들 */}
+            <div className="flex flex-col gap-2">
+              <span className="text-xxs font-bold uppercase tracking-wider text-slate-500">
+                Transform Actions
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <button
+                  onClick={handleUppercase}
+                  disabled={!inputText}
+                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  UPPERCASE
+                </button>
+                <button
+                  onClick={handleLowercase}
+                  disabled={!inputText}
+                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  lowercase
+                </button>
+                <button
+                  onClick={handleCamelCase}
+                  disabled={!inputText}
+                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  camelCase
+                </button>
+                <button
+                  onClick={handleRemoveExtraSpaces}
+                  disabled={!inputText}
+                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
+                >
+                  Remove Spaces
+                </button>
+                <button
+                  onClick={handleRemoveLineBreaks}
+                  disabled={!inputText}
+                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
+                >
+                  Remove Lines
+                </button>
               </div>
             </div>
 
-            <textarea
-              id="input-text"
-              rows="6"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Paste or type your text here..."
-              className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                borderColor: 'rgba(222,255,154,0.15)',
-                color: '#f1f5f9',
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = LIME;
-                e.target.style.boxShadow = `0 0 0 3px ${LIME_DIM}`;
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = 'rgba(222,255,154,0.15)';
-                e.target.style.boxShadow = 'none';
-              }}
-            />
-          </div>
+            {/* 출력 섹션 */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="output-text"
+                className="text-xs font-semibold uppercase tracking-wider"
+                style={{ color: LIME }}
+              >
+                Formatted Output
+              </label>
+              <textarea
+                id="output-text"
+                rows="6"
+                readOnly
+                value={outputText}
+                placeholder="Your formatted text will appear here..."
+                className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
+                style={{
+                  background: 'rgba(255,255,255,0.02)',
+                  borderColor: 'rgba(255,255,255,0.08)',
+                  color: outputText ? '#f1f5f9' : '#64748b',
+                }}
+              />
+            </div>
 
-          {/* 중앙 변환 액션 버튼들 */}
-          <div className="flex flex-col gap-2">
-            <span className="text-xxs font-bold uppercase tracking-wider text-slate-500">
-              Transform Actions
-            </span>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            {/* 하단 제어 버튼 */}
+            <div className="flex items-center gap-3 mt-2">
               <button
-                onClick={handleUppercase}
-                disabled={!inputText}
-                className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={handleClear}
+                disabled={!inputText && !outputText}
+                className="flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-350 transition-all hover:text-white hover:bg-white/5 border border-white/10 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                UPPERCASE
+                <IconTrash /> Clear
               </button>
+
               <button
-                onClick={handleLowercase}
-                disabled={!inputText}
-                className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={handleCopy}
+                disabled={!outputText}
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
+                  border: `1px solid \${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
+                  color: copied ? '#4ade80' : LIME,
+                }}
               >
-                lowercase
-              </button>
-              <button
-                onClick={handleCamelCase}
-                disabled={!inputText}
-                className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                camelCase
-              </button>
-              <button
-                onClick={handleRemoveExtraSpaces}
-                disabled={!inputText}
-                className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
-              >
-                Remove Spaces
-              </button>
-              <button
-                onClick={handleRemoveLineBreaks}
-                disabled={!inputText}
-                className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
-              >
-                Remove Lines
+                {copied ? (
+                  <>
+                    <IconCheck /> Copied!
+                  </>
+                ) : (
+                  <>
+                    <IconCopy /> Copy to Clipboard
+                  </>
+                )}
               </button>
             </div>
-          </div>
+          </ClientOnly>
 
-          {/* 출력 섹션 */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="output-text"
-              className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: LIME }}
-            >
-              Formatted Output
-            </label>
-            <textarea
-              id="output-text"
-              rows="6"
-              readOnly
-              value={outputText}
-              placeholder="Your formatted text will appear here..."
-              className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                borderColor: 'rgba(255,255,255,0.08)',
-                color: outputText ? '#f1f5f9' : '#64748b',
-              }}
-            />
-          </div>
-
-          {/* 하단 제어 버튼 */}
-          <div className="flex items-center gap-3 mt-2">
-            <button
-              onClick={handleClear}
-              disabled={!inputText && !outputText}
-              className="flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-350 transition-all hover:text-white hover:bg-white/5 border border-white/10 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <IconTrash /> Clear
-            </button>
-
-            <button
-              onClick={handleCopy}
-              disabled={!outputText}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{
-                background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
-                border: `1px solid ${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
-                color: copied ? '#4ade80' : LIME,
-              }}
-            >
-              {copied ? (
-                <>
-                  <IconCheck /> Copied!
-                </>
-              ) : (
-                <>
-                  <IconCopy /> Copy to Clipboard
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* SEO Optimized Description (Thin Content Defense) */}
-          <article className="mt-6 pt-6 border-t border-white/10 text-xs text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-white mb-2">
-              What is the Online Text Formatter Tool?
-            </h2>
-            <p className="leading-relaxed">
-              The Online Text Formatter is a client-side string editing tool that allows developers, copywriters, and marketers to modify raw text formatting instantly. With native support for case conversions, line removal, and whitespace management, this utility operates 100% serverless. It ensures that sensitive texts, codes, and data structures are processed securely inside your browser without any remote logs.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              Key Features & Benefits of Text Cases Conversion
-            </h3>
-            <p className="leading-relaxed">
-              Formatting text for databases, HTML, or copy-pasting has never been simpler:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Multiple Case Transformations:</strong> Convert sentences instantly into UPPERCASE, lowercase, or camelCase formatting with one click.</li>
-              <li><strong>Whitespace Cleanup:</strong> Strip out multiple tabulations or double-spaces, replacing them with standard single spacing.</li>
-              <li><strong>Line Break Stripping:</strong> Flatten paragraph blocks into a single continuous sentence block.</li>
-              <li><strong>Real-time Word & Character Counters:</strong> Track character, word, and line metrics dynamically as you type.</li>
-            </ul>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              How to Format Your Text
-            </h3>
-            <ol className="list-decimal pl-5 space-y-1.5">
-              <li>Paste or type your content into the <strong>Source Text</strong> area.</li>
-              <li>Choose a conversion action (e.g., UPPERCASE, lowercase, camelCase, Remove Spaces, Remove Lines).</li>
-              <li>Review the real-time conversion in the <strong>Formatted Output</strong> text field.</li>
-              <li>Click <strong>Copy to Clipboard</strong> to copy the output, or <strong>Clear</strong> to start over.</li>
-            </ol>
-          </article>
+          {/* SEO Section */}
+          <ToolSEOSection
+            title="Best Online Text Formatter & Case Converter"
+            description="The Online Text Formatter is a client-side string editing tool that allows developers, copywriters, and marketers to modify raw text formatting instantly. With native support for case conversions, line removal, and whitespace management, this utility operates 100% serverless. It ensures that sensitive texts, codes, and data structures are processed securely inside your browser without any remote logs."
+            howToUse={[
+              "Paste or type your content into the Source Text area.",
+              "Choose a conversion action (e.g., UPPERCASE, lowercase, camelCase, Remove Spaces, Remove Lines).",
+              "Review the real-time conversion in the Formatted Output text field.",
+              "Click Copy to Clipboard to copy the output, or Clear to start over."
+            ]}
+            faqs={[
+              {
+                question: "Is my text data private?",
+                answer: "Yes, absolutely. All formatting transformations are performed locally within your browser using JavaScript. No text is sent to any servers, making it safe for processing sensitive notes or code blocks."
+              },
+              {
+                question: "What does CamelCase conversion do?",
+                answer: "CamelCase conversion removes spaces, underscores, and dashes, and capitalizes the first letter of each subsequent word (e.g., 'hello world' becomes 'helloWorld'). This is widely used in coding languages for variable naming."
+              },
+              {
+                question: "How does the space removal option work?",
+                answer: "The 'Remove Spaces' action reduces multiple consecutive spaces or tabs into a single space, and trims any leading or trailing whitespace from the overall text block."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

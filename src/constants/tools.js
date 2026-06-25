@@ -31,13 +31,13 @@ export const TOOLS = [
     openModal:   true,   // 클릭 시 인라인 모달로 열림
   },
   {
-    id:          'youtube-revenue-calculator',
+    id:          'adsense-estimator',
     title:       'YouTube & AdSense Revenue Estimator',
     description: 'Calculate your estimated YouTube channel earnings and AdSense revenue. Adjust daily views, channel niche, and audience tiers to see potential daily, monthly, and yearly profits.',
     category:    'Finance',
     iconName:    'IconCalculator',
     badge:       'New',
-    href:        '/tools/youtube-revenue-calculator',
+    href:        '/tools/adsense-estimator',
     comingSoon:  false,
     openModal:   true,
   },
@@ -64,13 +64,13 @@ export const TOOLS = [
     openModal:   true,
   },
   {
-    id:          'margin-calculator',
+    id:          'cpa-calculator',
     title:       'CPA Margin Calculator',
     description: 'Real-time CPA profit analysis: enter payout, ad spend, and conversions to instantly see Gross Revenue, Net Profit, ROI, and Margin — all in your browser.',
     category:    'Finance',
     iconName:    'IconCalculator',
     badge:       'New',
-    href:        '/tools/margin-calculator',
+    href:        '/tools/cpa-calculator',
     comingSoon:  false,
     openModal:   true,   // 클릭 시 인라인 모달로 열림
   },

@@ -3,7 +3,9 @@ import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
 import SaveToToolboxButton from '../common/SaveToToolboxButton';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import FeedbackButtons from '../common/FeedbackButtons';
+import { generateGeminiContent } from '../../utils/gemini';
+import { getFriendlyErrorMessage } from '../../utils/errorHelper';
 
 const PLATFORMS = [
   { id: 'instagram', label: 'Instagram' },
@@ -142,19 +144,11 @@ export default function HashtagGenerator({ onClose }) {
     setIndividualCopied({});
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('Gemini API key is not configured. (VITE_GEMINI_API_KEY가 설정되지 않았습니다.)');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
-
       const platformLabels = selectedPlatforms.map(id => PLATFORMS.find(p => p.id === id)?.label).join(', ');
       
       const promptText = `You are an expert social media growth hacker. Generate 30 highly relevant, active hashtags for ${platformLabels} based on the topic: "${topic}". Use a ${strategy} strategy (mix of high-volume, mid-volume, and niche tags if balanced). Output ONLY the hashtags separated by spaces, grouped by platform if multiple platforms are selected. Do not include any introductory or concluding text.`;
 
-      const result = await model.generateContent(promptText);
+      const result = await generateGeminiContent(promptText, { model: 'gemini-2.5-flash-lite' });
       const response = await result.response;
       const text = response.text();
 
@@ -171,7 +165,7 @@ export default function HashtagGenerator({ onClose }) {
       setHashtags(parsed);
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Something went wrong while communicating with the Gemini API.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -208,7 +202,7 @@ export default function HashtagGenerator({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
@@ -362,8 +356,9 @@ export default function HashtagGenerator({ onClose }) {
                   </div>
 
                   {error && (
-                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                      ⚠️ {error}
+                    <div className="flex gap-2.5 p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-300 text-xs leading-relaxed text-left">
+                      <span className="flex-shrink-0 text-red-400 select-none">⚠️</span>
+                      <div className="whitespace-pre-line">{error}</div>
                     </div>
                   )}
 
@@ -384,34 +379,42 @@ export default function HashtagGenerator({ onClose }) {
                   )}
 
                   {!loading && hashtags && (
-                    <div className="space-y-6 max-h-[380px] overflow-y-auto pr-1">
-                      {Object.entries(hashtags).map(([platformId, tags]) => {
-                        if (tags.length === 0) return null;
-                        const platformLabel = PLATFORMS.find(p => p.id === platformId)?.label || platformId;
-                        return (
-                          <div key={platformId} className="space-y-2.5">
-                            <h4 className="text-xs font-extrabold text-zinc-450 border-l-2 border-indigo-400 pl-2 tracking-wide uppercase">
-                              {platformLabel} Tags
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {tags.map((tag, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => handleCopyTag(tag, idx)}
-                                  className={`text-xs px-2.5 py-1.5 rounded-lg font-mono font-medium border transition-all active:scale-95 cursor-pointer flex items-center gap-1 ${
-                                    individualCopied[tag]
-                                      ? 'bg-emerald-500 border-emerald-500 text-white'
-                                      : 'bg-zinc-800/80 hover:bg-zinc-750 border-zinc-750 text-zinc-300'
-                                  }`}
-                                >
-                                  {tag}
-                                </button>
-                              ))}
+                    <>
+                      <div className="space-y-6 max-h-[380px] overflow-y-auto pr-1">
+                        {Object.entries(hashtags).map(([platformId, tags]) => {
+                          if (tags.length === 0) return null;
+                          const platformLabel = PLATFORMS.find(p => p.id === platformId)?.label || platformId;
+                          return (
+                            <div key={platformId} className="space-y-2.5">
+                              <h4 className="text-xs font-extrabold text-zinc-450 border-l-2 border-indigo-400 pl-2 tracking-wide uppercase">
+                                {platformLabel} Tags
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {tags.map((tag, idx) => (
+                                  <button
+                                    key={idx}
+                                    onClick={() => handleCopyTag(tag, idx)}
+                                    className={`text-xs px-2.5 py-1.5 rounded-lg font-mono font-medium border transition-all active:scale-95 cursor-pointer flex items-center gap-1 ${
+                                      individualCopied[tag]
+                                        ? 'bg-emerald-500 border-emerald-500 text-white'
+                                        : 'bg-zinc-800/80 hover:bg-zinc-750 border-zinc-750 text-zinc-300'
+                                    }`}
+                                  >
+                                    {tag}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* Feedback row */}
+                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3 mt-4">
+                        <span className="text-xxs text-zinc-400 font-semibold">Were these hashtags helpful?</span>
+                        <FeedbackButtons toolName="Multi-platform AI Hashtag Generator" />
+                      </div>
+                    </>
                   )}
 
                 </div>

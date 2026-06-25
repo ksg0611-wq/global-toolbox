@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import SEO from '../components/SEO';
 
 export default function About() {
-  useEffect(() => {
-    document.title = "About Us | Global ToolBox";
-  }, []);
-
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 md:py-20 text-slate-800 dark:text-zinc-200">
+      <SEO
+        title="About Us"
+        description="Welcome to Global ToolBox, a high-performance hub of free, client-side web utility applications designed specifically for creators, developers, and digital marketers worldwide."
+        url="/about"
+      />
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent dark:from-white dark:to-indigo-200">
         About Global ToolBox
       </h1>

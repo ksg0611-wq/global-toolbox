@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 /* ─── Cheat Sheet Data ──────────────────────────────────────────────────── */
 const CHEAT_SHEET = [
@@ -220,8 +223,13 @@ export default function RegexTester({ onClose }) {
 
   /* ─────────────────────── RENDER ─────────────────────────────────────── */
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    <div className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <SEOMeta
+        title="Best Online Regex Tester & Debugger | Real-time Highlight"
+        description="Test and debug regular expressions with real-time match highlighting, regex flag controllers, pattern presets, and an interactive cheat sheet."
+        url="/tools/regex-tester"
+      />
       <div className="relative w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-2xl
         bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700
         shadow-2xl shadow-black/40 flex flex-col">
@@ -253,9 +261,9 @@ export default function RegexTester({ onClose }) {
 
         {/* ── Body ───────────────────────────────────────────────────── */}
         <div className="p-6 flex flex-col gap-6">
-
-          {/* ── Two-column layout ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+          <ClientOnly>
+            {/* ── Two-column layout ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
 
             {/* ── LEFT: Main Tester ── */}
             <div className="flex flex-col gap-5">
@@ -435,70 +443,29 @@ export default function RegexTester({ onClose }) {
               </div>
             </div>
           </div>
+          </ClientOnly>
 
-          {/* ── SEO Article ─────────────────────────────────────────────── */}
-          <article className="rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              What is a Regular Expression (Regex)?
-            </h2>
-            <p className="text-sm leading-relaxed">
-              A <strong className="text-slate-800 dark:text-zinc-200">regular expression</strong> (regex or regexp)
-              is a sequence of characters that defines a search pattern. They are used in programming
-              languages, text editors, and command-line tools to find, validate, extract, and replace
-              text. From validating email addresses to parsing log files, regex is an indispensable tool
-              in every developer's toolkit.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              How Regex Flags Change Behavior
-            </h3>
-            <ul className="text-sm space-y-1.5 list-none">
-              {[
-                ['g (Global)',      'Finds all matches instead of stopping after the first one.'],
-                ['i (Ignore case)', 'Makes the match case-insensitive, so /hello/i matches "HELLO".'],
-                ['m (Multiline)',   'Makes ^ and $ match the start/end of each line, not the whole string.'],
-                ['s (Dot-all)',     'Makes the dot (.) match newline characters as well.'],
-              ].map(([flag, desc]) => (
-                <li key={flag} className="flex flex-col gap-0.5">
-                  <code className="text-xs font-mono font-bold text-[#8fc400] bg-[#deff9a]/10 px-1.5 py-0.5 rounded w-fit">{flag}</code>
-                  <span>{desc}</span>
-                </li>
-              ))}
-            </ul>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Common Regex Use Cases
-            </h3>
-            <ul className="text-sm space-y-1.5 list-disc list-inside">
-              <li><strong className="text-slate-800 dark:text-zinc-200">Form Validation</strong> — Email, phone numbers, postal codes, and passwords.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Data Extraction</strong> — Pull URLs, dates, IPs, and prices from raw text.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Search &amp; Replace</strong> — Bulk-rename files or refactor code in editors like VS Code.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Log Analysis</strong> — Filter server logs by status code, IP, or timestamp pattern.</li>
-              <li><strong className="text-slate-800 dark:text-zinc-200">Web Scraping</strong> — Match specific HTML patterns or structured data formats.</li>
-            </ul>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Regex Performance Tips
-            </h3>
-            <p className="text-sm leading-relaxed">
-              Avoid <strong className="text-slate-800 dark:text-zinc-200">catastrophic backtracking</strong> by
-              using non-greedy quantifiers (<code className="font-mono text-xs text-[#8fc400]">*?</code>,{' '}
-              <code className="font-mono text-xs text-[#8fc400]">+?</code>) and anchoring patterns with{' '}
-              <code className="font-mono text-xs text-[#8fc400]">^</code> and{' '}
-              <code className="font-mono text-xs text-[#8fc400]">$</code> where possible.
-              Use non-capturing groups{' '}
-              <code className="font-mono text-xs text-[#8fc400]">(?:...)</code> instead of{' '}
-              <code className="font-mono text-xs text-[#8fc400]">(...)</code> when you don't need to reference
-              the captured group — this reduces memory overhead significantly in large-scale text processing.
-            </p>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              All processing is done entirely in your browser using JavaScript's built-in{' '}
-              <code className="font-mono text-[#8fc400]">RegExp</code> object.
-              No text is ever sent to a server — your data stays private.
-            </p>
-          </article>
+          {/* ── SEO Section ── */}
+          <ToolSEOSection
+            title="Best Online Regex Tester & Debugger - Everything You Need to Know"
+            description="A regular expression (regex or regexp) is a sequence of characters that defines a search pattern. They are used in programming languages, text editors, and command-line tools to find, validate, extract, and replace text. From validating email addresses to parsing log files, regex is an indispensable tool in every developer's toolkit."
+            howToUse={[
+              "Type or paste your regular expression in the Regular Expression input field.",
+              "Adjust the regex flags (g, i, m, s) according to your needs.",
+              "Type or paste your test string in the Test String area to inspect real-time matches.",
+              "Use the Cheat Sheet on the right to build expressions, or click any token to append it."
+            ]}
+            faqs={[
+              {
+                question: "How do regex flags change behavior?",
+                answer: "Flags modify the search behavior: 'g' finds all matches instead of stopping after the first, 'i' ignore cases, 'm' enables multiline anchors (^ and $), and 's' allows dot (.) to match newlines."
+              },
+              {
+                question: "Is my test data safe?",
+                answer: "Yes. All regex compilation and matching are processed locally in your browser using JavaScript's native RegExp object. No text is sent to a server."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

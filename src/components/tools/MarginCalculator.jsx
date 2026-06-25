@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { MARGIN_CALC } from '../../constants/strings';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 // ── 포인트 컬러 토큰 ─────────────────────────────────────────────────────────
 const LIME   = '#deff9a';   // 브랜드 포인트 컬러
@@ -183,10 +186,16 @@ export default function MarginCalculator({ onClose }) {
   return (
     /* ── Overlay ── */
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="High ROI CPA Margin Calculator | Profit & ROAS Analyst"
+        description="Compute Gross Revenue, Net Profit, ROI, and margins in real-time. Calculate campaign profitability instantly for media buyers and advertisers."
+        url="/tools/cpa-calculator"
+      />
+
       {/* ── Modal Panel ── */}
       <div
         className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
@@ -215,135 +224,127 @@ export default function MarginCalculator({ onClose }) {
         </div>
 
         {/* ── Body: 2-column grid on md+ ── */}
-        <div className="grid md:grid-cols-2 gap-6 px-6 pb-6">
-
-          {/* ── LEFT: Inputs ── */}
-          <div className="flex flex-col gap-5">
-            <InputField
-              id="payout" label={MARGIN_CALC.labelPayout}
-              placeholder={MARGIN_CALC.placeholderPayout}
-              unit={MARGIN_CALC.unitPayout}
-              value={payout} onChange={setPayout}
-            />
-            <InputField
-              id="adspend" label={MARGIN_CALC.labelAdSpend}
-              placeholder={MARGIN_CALC.placeholderAdSpend}
-              unit={MARGIN_CALC.unitAdSpend}
-              value={adSpend} onChange={setAdSpend}
-            />
-            <InputField
-              id="conversions" label={MARGIN_CALC.labelConversions}
-              placeholder={MARGIN_CALC.placeholderConversions}
-              unit={MARGIN_CALC.unitConversions}
-              value={conversions} onChange={setConversions}
-            />
-            <InputField
-              id="fees" label={MARGIN_CALC.labelFees}
-              placeholder={MARGIN_CALC.placeholderFees}
-              unit={MARGIN_CALC.unitFees}
-              hint={MARGIN_CALC.feesHint}
-              value={fees} onChange={setFees}
-            />
-          </div>
-
-          {/* ── RIGHT: Results ── */}
-          <div className="flex flex-col gap-3">
-            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: LIME }}>
-              {MARGIN_CALC.outputTitle}
-            </p>
-
-            {result ? (
-              <>
-                <ResultRow
-                  label={MARGIN_CALC.labelGrossRevenue}
-                  value={result.grossRevenue}
-                  prefix="$"
-                />
-                <ResultRow
-                  label={MARGIN_CALC.labelNetProfit}
-                  value={result.netProfit}
-                  prefix="$"
-                  highlight
-                  positive={result.netProfitPositive}
-                />
-                <ResultRow
-                  label={MARGIN_CALC.labelROI}
-                  value={result.roi}
-                  suffix="%"
-                  positive={result.roiPositive}
-                />
-                <ResultRow
-                  label={MARGIN_CALC.labelMargin}
-                  value={result.margin}
-                  suffix="%"
-                  positive={result.marginPositive}
-                />
-              </>
-            ) : (
-              <div className="flex flex-1 items-center justify-center rounded-xl py-12 text-sm text-slate-500 text-center"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.08)' }}>
-                {MARGIN_CALC.emptyHint}
-              </div>
-            )}
-
-            {/* ── Action Buttons ── */}
-            <div className="mt-auto pt-2 flex gap-3">
-              <button
-                onClick={handleReset}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-300 transition-all hover:text-white active:scale-95"
-                style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
-              >
-                <IconReset /> {MARGIN_CALC.btnReset}
-              </button>
-
-              <button
-                onClick={handleCopy}
-                disabled={!result}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{
-                  background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
-                  border: `1px solid ${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
-                  color: copied ? '#4ade80' : LIME,
-                }}
-              >
-                {copied ? <><IconCheck /> {MARGIN_CALC.btnCopied}</> : <><IconCopy /> {MARGIN_CALC.btnCopy}</>}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* SEO Optimized Description (Thin Content Defense) */}
         <div className="px-6 pb-6">
-          <article className="pt-6 border-t border-white/10 text-xs text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-white mb-2">
-              What is the CPA Margin Calculator?
-            </h2>
-            <p className="leading-relaxed">
-              The CPA Margin Calculator is an interactive financial utility for media buyers, affiliate marketers, and e-commerce advertisers. It calculates critical advertising performance metrics—such as Gross Revenue, Net Profit, Return on Ad Spend (ROAS/ROI), and Net Margin—in real-time. By computing conversion payouts against ad spend and extra transactional fees, this serverless calculator helps marketers evaluate profitability and optimize bidding strategies client-side.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              Key Features & Benefits of CPA Advertising Math
-            </h3>
-            <p className="leading-relaxed">
-              Managing media budgets requires accurate, real-time math. This CPA calculator offers:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Real-time Margin Audits:</strong> Enter your ad spend, payout, and conversions to instantly see net profitability updates.</li>
-              <li><strong>Customizable Extra Fees:</strong> Account for network commissions, agency cuts, or handling fees by applying optional percentage-based inputs.</li>
-              <li><strong>Color-Coded Status:</strong> Positive margins display in clean green, while negative outcomes show in red, providing immediate feedback on ROI.</li>
-              <li><strong>Zero Tracking Privacy:</strong> Financial inputs are kept entirely inside your browser cache, maintaining campaign confidentiality.</li>
-            </ul>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              How to Calculate CPA Margins
-            </h3>
-            <ol className="list-decimal pl-5 space-y-1.5">
-              <li>Enter the <strong>Payout per Lead ($)</strong> received from your ad network.</li>
-              <li>Type the <strong>Total Ad Spend ($)</strong> invested in your campaign.</li>
-              <li>Input the <strong>Total Conversions</strong> count generated during the run.</li>
-              <li>(Optional) Add any percentage-based <strong>Extra Fees (%)</strong> to reflect deductions.</li>
-              <li>Review the computed Net Profit and ROI. Click <strong>Copy Results</strong> to save details.</li>
-            </ol>
-          </article>
+          <ClientOnly>
+            <div className="grid md:grid-cols-2 gap-6">
+
+              {/* ── LEFT: Inputs ── */}
+              <div className="flex flex-col gap-5">
+                <InputField
+                  id="payout" label={MARGIN_CALC.labelPayout}
+                  placeholder={MARGIN_CALC.placeholderPayout}
+                  unit={MARGIN_CALC.unitPayout}
+                  value={payout} onChange={setPayout}
+                />
+                <InputField
+                  id="adspend" label={MARGIN_CALC.labelAdSpend}
+                  placeholder={MARGIN_CALC.placeholderAdSpend}
+                  unit={MARGIN_CALC.unitAdSpend}
+                  value={adSpend} onChange={setAdSpend}
+                />
+                <InputField
+                  id="conversions" label={MARGIN_CALC.labelConversions}
+                  placeholder={MARGIN_CALC.placeholderConversions}
+                  unit={MARGIN_CALC.unitConversions}
+                  value={conversions} onChange={setConversions}
+                />
+                <InputField
+                  id="fees" label={MARGIN_CALC.labelFees}
+                  placeholder={MARGIN_CALC.placeholderFees}
+                  unit={MARGIN_CALC.unitFees}
+                  hint={MARGIN_CALC.feesHint}
+                  value={fees} onChange={setFees}
+                />
+              </div>
+
+              {/* ── RIGHT: Results ── */}
+              <div className="flex flex-col gap-3">
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: LIME }}>
+                  {MARGIN_CALC.outputTitle}
+                </p>
+
+                {result ? (
+                  <>
+                    <ResultRow
+                      label={MARGIN_CALC.labelGrossRevenue}
+                      value={result.grossRevenue}
+                      prefix="$"
+                    />
+                    <ResultRow
+                      label={MARGIN_CALC.labelNetProfit}
+                      value={result.netProfit}
+                      prefix="$"
+                      highlight
+                      positive={result.netProfitPositive}
+                    />
+                    <ResultRow
+                      label={MARGIN_CALC.labelROI}
+                      value={result.roi}
+                      suffix="%"
+                      positive={result.roiPositive}
+                    />
+                    <ResultRow
+                      label={MARGIN_CALC.labelMargin}
+                      value={result.margin}
+                      suffix="%"
+                      positive={result.marginPositive}
+                    />
+                  </>
+                ) : (
+                  <div className="flex flex-grow items-center justify-center rounded-xl py-12 text-sm text-slate-500 text-center"
+                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+                    {MARGIN_CALC.emptyHint}
+                  </div>
+                )}
+
+                {/* ── Action Buttons ── */}
+                <div className="mt-auto pt-2 flex gap-3">
+                  <button
+                    onClick={handleReset}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-300 transition-all hover:text-white active:scale-95"
+                    style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+                  >
+                    <IconReset /> {MARGIN_CALC.btnReset}
+                  </button>
+
+                  <button
+                    onClick={handleCopy}
+                    disabled={!result}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{
+                      background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
+                      border: `1px solid ${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
+                      color: copied ? '#4ade80' : LIME,
+                    }}
+                  >
+                    {copied ? <><IconCheck /> {MARGIN_CALC.btnCopied}</> : <><IconCopy /> {MARGIN_CALC.btnCopy}</>}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ClientOnly>
+
+          <ToolSEOSection
+            title="High ROI CPA Margin Calculator - Everything You Need to Know"
+            description="The CPA Margin Calculator is an interactive financial utility for media buyers, affiliate marketers, and e-commerce advertisers. It calculates critical advertising performance metrics—such as Gross Revenue, Net Profit, Return on Ad Spend (ROAS/ROI), and Net Margin—in real-time. By computing conversion payouts against ad spend and extra transactional fees, this serverless calculator helps marketers evaluate profitability and optimize bidding strategies client-side."
+            howToUse={[
+              "Enter the Payout per Lead ($) received from your ad network.",
+              "Type the Total Ad Spend ($) invested in your campaign.",
+              "Input the Total Conversions count generated during the run.",
+              "(Optional) Add any percentage-based Extra Fees (%) to reflect deductions.",
+              "Review the computed Net Profit and ROI. Click Copy Results to save details."
+            ]}
+            faqs={[
+              {
+                question: "How do you calculate CPA margins?",
+                answer: "CPA margin is calculated by taking your Net Profit (Gross Revenue minus Ad Spend and Fees) and dividing it by the Gross Revenue, expressed as a percentage."
+              },
+              {
+                question: "Is campaign data stored on any server?",
+                answer: "No. All calculation formulas are run inside your browser cache locally, ensuring 100% campaign confidentiality."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

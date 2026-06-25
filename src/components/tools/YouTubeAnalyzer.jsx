@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { YT_ANALYZER } from '../../constants/strings';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 // ── 색상 토큰 ────────────────────────────────────────────────────────────────
 const YT_RED   = '#ff0033';
@@ -118,7 +121,7 @@ function Spinner() {
 // ── 통계 카드 ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, value }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80">
+    <div className="flex flex-col items-center gap-1.5 rounded-2xl px-4 py-4 bg-slate-550 dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80">
       <div className="flex items-center gap-1.5 text-slate-550 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider">
         {icon}<span>{label}</span>
       </div>
@@ -132,8 +135,8 @@ function MetaRow({ icon, label, value }) {
   if (!value) return null;
   return (
     <div className="flex items-start gap-2.5 text-sm">
-      <span className="flex-shrink-0 mt-0.5 text-slate-500">{icon}</span>
-      <span className="text-slate-500 font-medium min-w-[90px]">{label}</span>
+      <span className="flex-shrink-0 mt-0.5 text-slate-550">{icon}</span>
+      <span className="text-slate-550 font-medium min-w-[90px]">{label}</span>
       <span className="text-slate-300 break-all">{value}</span>
     </div>
   );
@@ -210,13 +213,19 @@ export default function YouTubeAnalyzer({ onClose }) {
   return (
     /* ── Overlay ── */
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
+      <SEOMeta
+        title="Best Free YouTube Video & Channel Analyzer Tool Online"
+        description="Analyze YouTube video performance and channel metadata. Track views, likes, subscriber counts, and extract tags instantly. Optimize your video SEO locally."
+        url="/tools/youtube-analyzer"
+      />
+
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-950 border border-slate-250 dark:border-zinc-800/80"
+        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl flex flex-col bg-white dark:bg-zinc-955 border border-slate-250 dark:border-zinc-800/80"
       >
         {/* 상단 빨간 accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
@@ -242,252 +251,252 @@ export default function YouTubeAnalyzer({ onClose }) {
           </button>
         </div>
 
-        {/* ── Mode Toggle ── */}
-        <div className="px-6 pb-4 flex-shrink-0">
-          <div className="inline-flex rounded-xl p-1 gap-1 bg-slate-100 dark:bg-zinc-900">
-            {['video', 'channel'].map((m) => (
-              <button key={m}
-                onClick={() => { setMode(m); handleReset(); }}
-                className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  mode === m ? '' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-                style={mode === m
-                  ? { background: YT_RED, color: '#fff', boxShadow: `0 0 14px ${YT_RED}55` }
-                  : {}}>
-                {m === 'video' ? YT_ANALYZER.modeVideo : YT_ANALYZER.modeChannel}
-              </button>
-            ))}
+        <ClientOnly>
+          {/* ── Mode Toggle ── */}
+          <div className="px-6 pb-4 flex-shrink-0">
+            <div className="inline-flex rounded-xl p-1 gap-1 bg-slate-105 dark:bg-zinc-900">
+              {['video', 'channel'].map((m) => (
+                <button key={m}
+                  onClick={() => { setMode(m); handleReset(); }}
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    mode === m ? '' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  style={mode === m
+                    ? { background: YT_RED, color: '#fff', boxShadow: `0 0 14px ${YT_RED}55` }
+                    : {}}>
+                  {m === 'video' ? YT_ANALYZER.modeVideo : YT_ANALYZER.modeChannel}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* ── Input Area ── */}
-        <div className="px-6 pb-4 flex-shrink-0">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => handleInputChange(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={mode === 'video'
-                  ? YT_ANALYZER.inputPlaceholderVideo
-                  : YT_ANALYZER.inputPlaceholderChannel}
-                className={`w-full rounded-xl border py-3 pl-4 pr-4 text-sm font-medium outline-none transition-all bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 ${
-                  error ? 'border-red-400' : 'border-slate-205 dark:border-zinc-800'
-                } focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]/20`}
-              />
+          {/* ── Input Area ── */}
+          <div className="px-6 pb-4 flex-shrink-0">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => handleInputChange(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={mode === 'video'
+                    ? YT_ANALYZER.inputPlaceholderVideo
+                    : YT_ANALYZER.inputPlaceholderChannel}
+                  className={`w-full rounded-xl border py-3 pl-4 pr-4 text-sm font-medium outline-none transition-all bg-white dark:bg-zinc-900 text-slate-900 dark:text-zinc-100 ${
+                    error ? 'border-red-400' : 'border-slate-205 dark:border-zinc-800'
+                  } focus:border-[#ff0033] focus:ring-2 focus:ring-[#ff0033]/20`}
+                />
+              </div>
+
+              {/* Analyze 버튼 */}
+              <button
+                onClick={handleAnalyze}
+                disabled={loading}
+                className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all duration-200 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
+                style={{
+                  background: loading ? 'rgba(255,0,51,0.5)' : YT_RED,
+                  boxShadow: loading ? 'none' : `0 4px 20px ${YT_RED}44`,
+                }}
+              >
+                {loading ? <><Spinner />{YT_ANALYZER.btnAnalyzing}</> : <><IconSearch />{YT_ANALYZER.btnAnalyze}</>}
+              </button>
             </div>
 
-            {/* Analyze 버튼 */}
-            <button
-              onClick={handleAnalyze}
-              disabled={loading}
-              className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all duration-200 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex-shrink-0"
-              style={{
-                background: loading ? 'rgba(255,0,51,0.5)' : YT_RED,
-                boxShadow: loading ? 'none' : `0 4px 20px ${YT_RED}44`,
-              }}
-            >
-              {loading ? <><Spinner />{YT_ANALYZER.btnAnalyzing}</> : <><IconSearch />{YT_ANALYZER.btnAnalyze}</>}
-            </button>
+            {/* 힌트 / 에러 메시지 */}
+            {error ? (
+              <p className="mt-2 text-xs font-semibold text-red-400 flex items-center gap-1.5">
+                <span>⚠</span> {error}
+              </p>
+            ) : (
+              <p className="mt-2 text-xs text-slate-500">
+                {mode === 'video' ? YT_ANALYZER.inputHintVideo : YT_ANALYZER.inputHintChannel}
+              </p>
+            )}
           </div>
 
-          {/* 힌트 / 에러 메시지 */}
-          {error ? (
-            <p className="mt-2 text-xs font-semibold text-red-400 flex items-center gap-1.5">
-              <span>⚠</span> {error}
-            </p>
-          ) : (
-            <p className="mt-2 text-xs text-slate-600">
-              {mode === 'video' ? YT_ANALYZER.inputHintVideo : YT_ANALYZER.inputHintChannel}
-            </p>
-          )}
-        </div>
+          {/* ── Results Area ── */}
+          <div className="px-6 pb-6 flex-1">
 
-        {/* ── Results Area ── */}
-        <div className="px-6 pb-6 flex-1">
-
-          {/* 로딩 상태 */}
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-16 gap-4">
-              <div className="relative">
-                <div className="h-16 w-16 rounded-full animate-ping absolute inset-0"
-                  style={{ background: `${YT_RED}20` }} />
-                <div className="h-16 w-16 rounded-full flex items-center justify-center relative"
-                  style={{ background: YT_RED_DIM, border: `1px solid ${YT_RED}44` }}>
-                  <div style={{ color: YT_RED }}>
-                    <Spinner />
+            {/* 로딩 상태 */}
+            {loading && (
+              <div className="flex flex-col items-center justify-center py-16 gap-4">
+                <div className="relative">
+                  <div className="h-16 w-16 rounded-full animate-ping absolute inset-0"
+                    style={{ background: `${YT_RED}20` }} />
+                  <div className="h-16 w-16 rounded-full flex items-center justify-center relative"
+                    style={{ background: YT_RED_DIM, border: `1px solid ${YT_RED}44` }}>
+                    <div style={{ color: YT_RED }}>
+                      <Spinner />
+                    </div>
                   </div>
                 </div>
+                <p className="text-sm font-semibold" style={{ color: YT_RED }}>
+                  {YT_ANALYZER.btnAnalyzing}
+                </p>
               </div>
-              <p className="text-sm font-semibold" style={{ color: YT_RED }}>
-                {YT_ANALYZER.btnAnalyzing}
-              </p>
-            </div>
-          )}
+            )}
 
-          {/* 빈 상태 */}
-          {!loading && !result && !error && (
-            <div className="flex flex-col items-center justify-center py-14 text-center"
-              style={{ border: '1px dashed rgba(255,0,51,0.15)', borderRadius: '16px', background: 'rgba(255,0,51,0.03)' }}>
-              <div className="mb-3" style={{ color: `${YT_RED}66` }}>
-                <IconYouTube />
-              </div>
-              <p className="text-sm text-slate-600">{YT_ANALYZER.emptyHint}</p>
-            </div>
-          )}
-
-          {/* ── 결과 카드: VIDEO ── */}
-          {!loading && result?.type === 'video' && (
-            <div className="flex flex-col gap-5">
-
-              {/* 썸네일 + 제목 */}
-              <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
-                {result.thumbnail && (
-                  <img
-                    src={result.thumbnail}
-                    alt={result.title}
-                    className="w-full object-cover"
-                    style={{ maxHeight: '220px', objectPosition: 'center' }}
-                  />
-                )}
-                <div className="absolute inset-0"
-                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)' }} />
-                <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
-                  <p className="text-white font-bold text-base leading-snug line-clamp-2">
-                    {result.title}
-                  </p>
-                  <p className="text-slate-400 text-xs mt-1">{result.channelTitle}</p>
+            {/* 빈 상태 */}
+            {!loading && !result && !error && (
+              <div className="flex flex-col items-center justify-center py-14 text-center"
+                style={{ border: '1px dashed rgba(255,0,51,0.15)', borderRadius: '16px', background: 'rgba(255,0,51,0.03)' }}>
+                <div className="mb-3" style={{ color: `${YT_RED}66` }}>
+                  <IconYouTube />
                 </div>
+                <p className="text-sm text-slate-600">{YT_ANALYZER.emptyHint}</p>
               </div>
+            )}
 
-              {/* 통계 3-Grid */}
-              <div className="grid grid-cols-3 gap-3">
-                <StatCard icon={<IconEye />}   label={YT_ANALYZER.labelViews}    value={fmtNum(result.statistics?.viewCount)} />
-                <StatCard icon={<IconThumb />}  label={YT_ANALYZER.labelLikes}    value={fmtNum(result.statistics?.likeCount)} />
-                <StatCard icon={<IconMsg />}    label={YT_ANALYZER.labelComments} value={fmtNum(result.statistics?.commentCount)} />
+            {/* ── 결과 카드: VIDEO ── */}
+            {!loading && result?.type === 'video' && (
+              <div className="flex flex-col gap-5">
+
+                {/* 썸네일 + 제목 */}
+                <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
+                  {result.thumbnail && (
+                    <img
+                      src={result.thumbnail}
+                      alt={result.title}
+                      className="w-full object-cover"
+                      style={{ maxHeight: '220px', objectPosition: 'center' }}
+                    />
+                  )}
+                  <div className="absolute inset-0"
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)' }} />
+                  <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+                    <p className="text-white font-bold text-base leading-snug line-clamp-2">
+                      {result.title}
+                    </p>
+                    <p className="text-slate-400 text-xs mt-1">{result.channelTitle}</p>
+                  </div>
+                </div>
+
+                {/* 통계 3-Grid */}
+                <div className="grid grid-cols-3 gap-3">
+                  <StatCard icon={<IconEye />}   label={YT_ANALYZER.labelViews}    value={fmtNum(result.statistics?.viewCount)} />
+                  <StatCard icon={<IconThumb />}  label={YT_ANALYZER.labelLikes}    value={fmtNum(result.statistics?.likeCount)} />
+                  <StatCard icon={<IconMsg />}    label={YT_ANALYZER.labelComments} value={fmtNum(result.statistics?.commentCount)} />
+                </div>
+
+                <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+                  <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelChannel}   value={result.channelTitle} />
+                  <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelPublished}  value={fmtDate(result.publishedAt)} />
+                  <MetaRow icon={<IconClock />}    label={YT_ANALYZER.labelDuration}   value={parseDuration(result.duration)} />
+                </div>
+
+                {/* 태그 */}
+                {result.tags?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                      {YT_ANALYZER.labelTags}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {result.tags.slice(0, 20).map((tag) => (
+                        <span key={tag}
+                          className="rounded-lg px-2.5 py-1 text-xs font-medium text-slate-650 dark:text-slate-400 bg-slate-100 dark:bg-zinc-900">
+                          #{tag}
+                        </span>
+                      ))}
+                      {result.tags.length > 20 && (
+                        <span className="text-xs text-slate-600 self-center">
+                          +{result.tags.length - 20} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
+            )}
 
-              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
-                <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelChannel}   value={result.channelTitle} />
-                <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelPublished}  value={fmtDate(result.publishedAt)} />
-                <MetaRow icon={<IconClock />}    label={YT_ANALYZER.labelDuration}   value={parseDuration(result.duration)} />
-              </div>
+            {/* ── 결과 카드: CHANNEL ── */}
+            {!loading && result?.type === 'channel' && (
+              <div className="flex flex-col gap-5">
 
-              {/* 태그 */}
-              {result.tags?.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                    {YT_ANALYZER.labelTags}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {result.tags.slice(0, 20).map((tag) => (
-                      <span key={tag}
-                        className="rounded-lg px-2.5 py-1 text-xs font-medium text-slate-650 dark:text-slate-400 bg-slate-100 dark:bg-zinc-900">
-                        #{tag}
-                      </span>
-                    ))}
-                    {result.tags.length > 20 && (
-                      <span className="text-xs text-slate-600 self-center">
-                        +{result.tags.length - 20} more
-                      </span>
+                <div className="flex items-center gap-4 rounded-2xl p-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+                  {result.thumbnail ? (
+                    <img src={result.thumbnail} alt={result.title}
+                      className="h-16 w-16 rounded-full object-cover flex-shrink-0"
+                      style={{ border: `2px solid ${YT_RED}55` }} />
+                  ) : (
+                    <div className="h-16 w-16 rounded-full flex items-center justify-center flex-shrink-0 text-xl font-bold text-white"
+                      style={{ background: YT_RED }}>
+                      {result.title?.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">{result.title}</h3>
+                    {result.customUrl && (
+                      <p className="text-sm font-medium mt-0.5" style={{ color: YT_RED }}>
+                        {result.customUrl}
+                      </p>
+                    )}
+                    {result.description && (
+                      <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                        {result.description}
+                      </p>
                     )}
                   </div>
                 </div>
-              )}
-            </div>
-          )}
 
-          {/* ── 결과 카드: CHANNEL ── */}
-          {!loading && result?.type === 'channel' && (
-            <div className="flex flex-col gap-5">
+                {/* 통계 3-Grid */}
+                <div className="grid grid-cols-3 gap-3">
+                  <StatCard
+                    icon={<IconUsers />}
+                    label={YT_ANALYZER.labelSubscribers}
+                    value={result.statistics?.hiddenSubscriberCount
+                      ? YT_ANALYZER.hiddenSubs
+                      : fmtNum(result.statistics?.subscriberCount)}
+                  />
+                  <StatCard icon={<IconVideo />} label={YT_ANALYZER.labelVideos}     value={fmtNum(result.statistics?.videoCount)} />
+                  <StatCard icon={<IconEye />}   label={YT_ANALYZER.labelTotalViews}  value={fmtNum(result.statistics?.viewCount)} />
+                </div>
 
-              <div className="flex items-center gap-4 rounded-2xl p-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
-                {result.thumbnail ? (
-                  <img src={result.thumbnail} alt={result.title}
-                    className="h-16 w-16 rounded-full object-cover flex-shrink-0"
-                    style={{ border: `2px solid ${YT_RED}55` }} />
-                ) : (
-                  <div className="h-16 w-16 rounded-full flex items-center justify-center flex-shrink-0 text-xl font-bold text-white"
-                    style={{ background: YT_RED }}>
-                    {result.title?.charAt(0)}
-                  </div>
-                )}
-                <div>
-                  <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">{result.title}</h3>
-                  {result.customUrl && (
-                    <p className="text-sm font-medium mt-0.5" style={{ color: YT_RED }}>
-                      {result.customUrl}
-                    </p>
-                  )}
-                  {result.description && (
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                      {result.description}
-                    </p>
-                  )}
+                <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+                  <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelJoined}  value={fmtDate(result.publishedAt)} />
+                  <MetaRow icon={<IconGlobe />}    label={YT_ANALYZER.labelCountry} value={result.country} />
+                  <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelHandle}  value={result.customUrl} />
                 </div>
               </div>
+            )}
 
-              {/* 통계 3-Grid */}
-              <div className="grid grid-cols-3 gap-3">
-                <StatCard
-                  icon={<IconUsers />}
-                  label={YT_ANALYZER.labelSubscribers}
-                  value={result.statistics?.hiddenSubscriberCount
-                    ? YT_ANALYZER.hiddenSubs
-                    : fmtNum(result.statistics?.subscriberCount)}
-                />
-                <StatCard icon={<IconVideo />} label={YT_ANALYZER.labelVideos}     value={fmtNum(result.statistics?.videoCount)} />
-                <StatCard icon={<IconEye />}   label={YT_ANALYZER.labelTotalViews}  value={fmtNum(result.statistics?.viewCount)} />
-              </div>
+            {/* Reset 버튼 (결과 표시 후) */}
+            {result && !loading && (
+              <button
+                onClick={handleReset}
+                className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-655 dark:text-slate-450 bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-all active:scale-95 border border-slate-200 dark:border-zinc-800"
+              >
+                <IconReset /> {YT_ANALYZER.btnReset}
+              </button>
+            )}
+          </div>
+        </ClientOnly>
 
-              <div className="flex flex-col gap-3 rounded-2xl px-4 py-4 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
-                <MetaRow icon={<IconCalendar />} label={YT_ANALYZER.labelJoined}  value={fmtDate(result.publishedAt)} />
-                <MetaRow icon={<IconGlobe />}    label={YT_ANALYZER.labelCountry} value={result.country} />
-                <MetaRow icon={<IconVideo />}    label={YT_ANALYZER.labelHandle}  value={result.customUrl} />
-              </div>
-            </div>
-          )}
-
-          {/* Reset 버튼 (결과 표시 후) */}
-          {result && !loading && (
-            <button
-              onClick={handleReset}
-              className="mt-5 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-450 bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 transition-all active:scale-95 border border-slate-200 dark:border-zinc-800"
-            >
-              <IconReset /> {YT_ANALYZER.btnReset}
-            </button>
-          )}
-
-          <article className="mt-8 pt-6 border-t border-slate-250 dark:border-zinc-800/80 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
-              What is the YouTube Analyzer Tool?
-            </h2>
-            <p className="leading-relaxed">
-              The YouTube Analyzer is an online web utility designed for digital marketers, content creators, and SEO strategists to analyze YouTube video performance and channel metadata. By inspecting key performance indicators directly from the official YouTube Data API v3, it provides real-time statistics on videos and channels without sending any user data to remote servers. This edge-deployed tool helps optimize YouTube search visibility, analyze competitor metrics, and benchmark video performance.
-            </p>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              Key Features & Benefits of YouTube SEO Audit
-            </h3>
-            <p className="leading-relaxed">
-              Auditing your video and channel performance is crucial to growing an audience. Key benefits include:
-            </p>
-            <ul className="list-disc pl-5 space-y-1.5">
-              <li><strong>Instant Metadata Extraction:</strong> Instantly fetch views, likes, comments, and publish date for videos, and subscriber counts, video counts, and view statistics for channels.</li>
-              <li><strong>Competitor Tag Analysis:</strong> Uncover hidden tags of any video to learn what keywords drive their traffic and optimize your own video tags accordingly.</li>
-              <li><strong>Lightning-Fast Response:</strong> Deployed on Cloudflare Edge, this tool processes requests directly at the edge, offering unmatched speed for creators globally.</li>
-              <li><strong>100% Secure & Serverless:</strong> No personal credentials or tokens are tracked, ensuring complete privacy during campaign research.</li>
-            </ul>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 mt-4 mb-2">
-              How to Use the YouTube Analyzer
-            </h3>
-            <ol className="list-decimal pl-5 space-y-1.5">
-              <li>Select either the <strong>Video</strong> or <strong>Channel</strong> analysis tab.</li>
-              <li>Paste a valid YouTube URL (e.g., https://youtu.be/dQw4w9WgXcQ), video ID, channel handle (e.g., @MrBeast), or Channel ID.</li>
-              <li>Click the <strong>Analyze</strong> button to load real-time statistics instantly.</li>
-              <li>Inspect tags, stats, and metadata to optimize your content strategy.</li>
-            </ol>
-          </article>
+        {/* SEO Section */}
+        <div className="px-6 pb-6">
+          <ToolSEOSection
+            title="Free YouTube Video & Channel Analyzer Online"
+            description="The YouTube Analyzer is an online web utility designed for digital marketers, content creators, and SEO strategists to analyze YouTube video performance and channel metadata. By inspecting key performance indicators directly from the official YouTube Data API v3, it provides real-time statistics on videos and channels without sending any user data to remote servers. This edge-deployed tool helps optimize YouTube search visibility, analyze competitor metrics, and benchmark video performance."
+            howToUse={[
+              "Select either the Video or Channel analysis tab.",
+              "Paste a valid YouTube URL (e.g., https://youtu.be/dQw4w9WgXcQ), video ID, channel handle (e.g., @MrBeast), or Channel ID.",
+              "Click the Analyze button to load real-time statistics instantly.",
+              "Inspect tags, stats, and metadata to optimize your content strategy."
+            ]}
+            faqs={[
+              {
+                question: "How does the tag analyzer benefit my video SEO?",
+                answer: "It extracts the tags and keywords that competitor videos use. Understanding these tags can help you write better titles, descriptions, and tag structures to rank higher in YouTube searches and recommended feeds."
+              },
+              {
+                question: "Are the subscriber and view counts accurate?",
+                answer: "Yes, the data is fetched directly in real-time from the official YouTube Data API v3, ensuring high accuracy, though subscriber counts might be rounded/abbreviated by YouTube's API design."
+              },
+              {
+                question: "Do you store any analyzed URLs or logs?",
+                answer: "No. The analyzer processes all requests client-side or via stateless edge workers. We do not store or track the channels or videos you search."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

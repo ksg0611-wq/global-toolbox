@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/common/Footer';
 import AdBanner from './components/AdBanner';
+import SEO from './components/SEO';
 import ToolCard from './components/ToolCard';
 import MarginCalculator from './components/tools/MarginCalculator';
 import YouTubeAnalyzer from './components/tools/YouTubeAnalyzer';
@@ -31,6 +32,10 @@ import Contact from './components/pages/Contact';
 import MyToolbox from './pages/MyToolbox';
 import SuggestTool from './pages/SuggestTool';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import BlogList from './pages/BlogList';
+import BlogPost from './pages/BlogPost';
+import PromptLibrary from './pages/PromptLibrary';
+import PromptDetail from './pages/PromptDetail';
 import { HERO, TOOLS_SECTION } from './constants/strings';
 import { TOOLS } from './constants/tools';
 import { IconSpark, IconFilter, IconSearch } from './components/icons';
@@ -39,16 +44,72 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(TOOLS_SECTION.filterAll);
   
+  // 즐겨찾기(Pin) 툴 ID 목록 상태 관리
+  const [pinnedToolIds, setPinnedToolIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('pinnedToolIds');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  // 변경 시 localStorage 동기화
+  useEffect(() => {
+    localStorage.setItem('pinnedToolIds', JSON.stringify(pinnedToolIds));
+  }, [pinnedToolIds]);
+
+  const handleTogglePin = (id) => {
+    setPinnedToolIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleClearAllPins = () => {
+    if (window.confirm('Are you sure you want to unpin all tools?')) {
+      setPinnedToolIds([]);
+    }
+  };
+
+  // 즐겨찾기된 툴 목록
+  const pinnedTools = useMemo(() => {
+    return TOOLS.filter((tool) => pinnedToolIds.includes(tool.id));
+  }, [pinnedToolIds, TOOLS]);
+  
   // 현재 열려 있는 모달 도구 ID (URL 경로 분석 후 설정)
   const [activeTool, setActiveTool] = useState(() => {
     const path = window.location.pathname;
     if (path.startsWith('/tools/')) {
-      return path.substring(7);
+      const toolId = path.substring(7);
+      if (toolId === 'margin-calculator') return 'cpa-calculator';
+      if (toolId === 'youtube-revenue-calculator') return 'adsense-estimator';
+      return toolId;
+    } else if (path.startsWith('/blog/')) {
+      return 'blog-post';
+    } else if (path.startsWith('/prompts/')) {
+      return 'prompt-detail';
+    } else if (path === '/blog') {
+      return 'blog';
+    } else if (path === '/prompts') {
+      return 'prompts';
     } else if (path.startsWith('/') && path.length > 1) {
       const page = path.substring(1);
       if (page === 'privacy-policy') return 'privacy';
       if (page === 'terms-of-service') return 'terms';
+      if (page === 'youtube-revenue-calculator') return 'adsense-estimator';
+      if (page === 'margin-calculator') return 'cpa-calculator';
       return page;
+    }
+    return null;
+  });
+
+  // 현재 활성화된 블로그 글 혹은 프롬프트 slug
+  const [activeSlug, setActiveSlug] = useState(() => {
+    const path = window.location.pathname;
+    if (path.startsWith('/blog/')) {
+      return path.substring(6); // '/blog/'는 6글자
+    } else if (path.startsWith('/prompts/')) {
+      return path.substring(9); // '/prompts/'는 9글자
     }
     return null;
   });
@@ -58,18 +119,42 @@ export default function App() {
     const handlePopState = () => {
       const path = window.location.pathname;
       if (path.startsWith('/tools/')) {
-        setActiveTool(path.substring(7));
+        const toolId = path.substring(7);
+        if (toolId === 'margin-calculator') {
+          setActiveTool('cpa-calculator');
+        } else if (toolId === 'youtube-revenue-calculator') {
+          setActiveTool('adsense-estimator');
+        } else {
+          setActiveTool(toolId);
+        }
+      } else if (path.startsWith('/blog/')) {
+        setActiveTool('blog-post');
+        setActiveSlug(path.substring(6));
+      } else if (path.startsWith('/prompts/')) {
+        setActiveTool('prompt-detail');
+        setActiveSlug(path.substring(9));
+      } else if (path === '/blog') {
+        setActiveTool('blog');
+        setActiveSlug(null);
+      } else if (path === '/prompts') {
+        setActiveTool('prompts');
+        setActiveSlug(null);
       } else if (path.startsWith('/') && path.length > 1) {
         const page = path.substring(1);
         if (page === 'privacy-policy') {
           setActiveTool('privacy');
         } else if (page === 'terms-of-service') {
           setActiveTool('terms');
+        } else if (page === 'youtube-revenue-calculator') {
+          setActiveTool('adsense-estimator');
+        } else if (page === 'margin-calculator') {
+          setActiveTool('cpa-calculator');
         } else {
           setActiveTool(page);
         }
       } else {
         setActiveTool(null);
+        setActiveSlug(null);
       }
     };
     window.addEventListener('popstate', handlePopState);
@@ -78,9 +163,26 @@ export default function App() {
 
   // activeTool 변경 시 브라우저 주소창 및 메타 태그 동적 업데이트
   useEffect(() => {
+    if (activeTool === 'margin-calculator') {
+      setActiveTool('cpa-calculator');
+      return;
+    }
+    if (activeTool === 'youtube-revenue-calculator') {
+      setActiveTool('adsense-estimator');
+      return;
+    }
+
     let newPath = '/';
     if (activeTool) {
-      if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'youtube-revenue-calculator', 'youtube-analyzer', 'viral-hook-generator', 'brand-deal-pitch-builder', 'youtube-chapter-formatter', 'youtube-thumbnail-preview', 'youtube-description-generator', 'hashtag-generator', 'my-toolbox', 'suggest-tool', 'youtube-thumbnail-downloader', 'youtube-script-generator'].includes(activeTool)) {
+      if (activeTool === 'blog') {
+        newPath = '/blog';
+      } else if (activeTool === 'prompts') {
+        newPath = '/prompts';
+      } else if (activeTool === 'blog-post') {
+        newPath = `/blog/${activeSlug}`;
+      } else if (activeTool === 'prompt-detail') {
+        newPath = `/prompts/${activeSlug}`;
+      } else if (['about', 'contact', 'privacy', 'terms', 'privacy-policy', 'terms-of-service', 'my-toolbox', 'suggest-tool'].includes(activeTool)) {
         let mappedTool = activeTool;
         if (mappedTool === 'privacy-policy') mappedTool = 'privacy';
         if (mappedTool === 'terms-of-service') mappedTool = 'terms';
@@ -116,33 +218,8 @@ export default function App() {
 
       const twDesc = document.querySelector('meta[name="twitter:description"]');
       if (twDesc) twDesc.setAttribute('content', tool.description);
-    } else if (activeTool) {
-      const capitalized = activeTool.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-      document.title = `${capitalized} | Global ToolBox`;
-    } else {
-      document.title = 'Global ToolBox - Free Web Utilities for Creators & Developers';
-
-      const defaultDesc = 'Global ToolBox is a high-performance hub of free, fast, and secure web utilities for creators and developers, including YouTube tag analyzer, margin calculators, JSON formatter, QR generator, WebP image compressor, and AI prompt builders.';
-
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) metaDesc.setAttribute('content', defaultDesc);
-
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.setAttribute('content', 'Global ToolBox - Free Web Utilities for Creators & Developers');
-
-      const ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) ogDesc.setAttribute('content', defaultDesc);
-
-      const ogUrl = document.querySelector('meta[property="og:url"]');
-      if (ogUrl) ogUrl.setAttribute('content', 'https://global-toolbox.com');
-
-      const twTitle = document.querySelector('meta[name="twitter:title"]');
-      if (twTitle) twTitle.setAttribute('content', 'Global ToolBox - Free Web Utilities for Creators & Developers');
-
-      const twDesc = document.querySelector('meta[name="twitter:description"]');
-      if (twDesc) twDesc.setAttribute('content', defaultDesc);
     }
-  }, [activeTool]);
+  }, [activeTool, activeSlug]);
 
   const categories = useMemo(
     () => [TOOLS_SECTION.filterAll, ...new Set(TOOLS.map((t) => t.category))],
@@ -170,6 +247,8 @@ export default function App() {
         onOpenTools={() => setActiveTool(null)} 
         onOpenMyToolbox={() => setActiveTool('my-toolbox')} 
         onOpenSuggestTool={() => setActiveTool('suggest-tool')}
+        onOpenBlog={() => { setActiveTool('blog'); setActiveSlug(null); }}
+        onOpenPrompts={() => { setActiveTool('prompts'); }}
       />
 
       {/* 2. Top Ad Banner — VITE_SHOW_ADS=true 일 때만 렌더링 */}
@@ -177,16 +256,86 @@ export default function App() {
 
       {/* 3. Main */}
       <main id="main" className="flex-grow">
-        {['about', 'privacy', 'terms', 'my-toolbox', 'suggest-tool'].includes(activeTool) ? (
-          <div className="bg-gray-55 dark:bg-zinc-955 transition-colors duration-300">
+        {activeTool ? (
+          <div className="bg-gray-50 dark:bg-zinc-955 transition-colors duration-300">
+            {/* Pages */}
             {activeTool === 'about' && <About />}
             {activeTool === 'privacy' && <PrivacyPolicy />}
             {activeTool === 'terms' && <TermsOfService />}
             {activeTool === 'my-toolbox' && <MyToolbox />}
             {activeTool === 'suggest-tool' && <SuggestTool />}
+            {activeTool === 'contact' && <Contact onClose={() => setActiveTool(null)} />}
+            {activeTool === 'blog' && (
+              <BlogList 
+                onNavigate={(slug) => { 
+                  setActiveTool('blog-post'); 
+                  setActiveSlug(slug); 
+                }} 
+              />
+            )}
+            {activeTool === 'prompts' && (
+              <PromptLibrary 
+                onNavigate={(slug) => {
+                  setActiveTool('prompt-detail');
+                  setActiveSlug(slug);
+                }}
+              />
+            )}
+            {activeTool === 'prompt-detail' && (
+              <PromptDetail
+                slug={activeSlug}
+                onNavigateBack={() => {
+                  setActiveTool('prompts');
+                  setActiveSlug(null);
+                }}
+                onNavigateToTool={(toolId) => {
+                  setActiveTool(toolId);
+                  setActiveSlug(null);
+                }}
+              />
+            )}
+            {activeTool === 'blog-post' && (
+              <BlogPost 
+                slug={activeSlug} 
+                onNavigateBack={() => { 
+                  setActiveTool('blog'); 
+                  setActiveSlug(null); 
+                }} 
+                onNavigateToTool={(toolId) => { 
+                  setActiveTool(toolId); 
+                  setActiveSlug(null); 
+                }} 
+              />
+            )}
+
+            {/* Tools */}
+            <div className="notranslate">
+              {activeTool === 'cpa-calculator' && <MarginCalculator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-analyzer' && <YouTubeAnalyzer onClose={() => setActiveTool(null)} />}
+              {activeTool === 'text-formatter' && <TextFormatter onClose={() => setActiveTool(null)} />}
+              {activeTool === 'json-formatter' && <JsonFormatter onClose={() => setActiveTool(null)} />}
+              {activeTool === 'qr-generator' && <QrGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'password-generator' && <PasswordGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'image-compressor' && <ImageCompressor onClose={() => setActiveTool(null)} />}
+              {activeTool === 'seo-meta-generator' && <SeoMetaGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'regex-tester' && <RegexTester onClose={() => setActiveTool(null)} />}
+              {activeTool === 'ai-prompt-builder' && <AIPromptBuilder onClose={() => setActiveTool(null)} />}
+              {activeTool === 'code-image-generator' && <CodeImageGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'markdown-editor' && <MarkdownEditor onClose={() => setActiveTool(null)} />}
+              {activeTool === 'adsense-estimator' && <RevenueEstimator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'viral-hook-generator' && <ViralHookGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'brand-deal-pitch-builder' && <BrandDealPitchBuilder onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-chapter-formatter' && <YouTubeChapterFormatter onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-thumbnail-preview' && <ThumbnailPreviewer onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-description-generator' && <YouTubeDescriptionGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'hashtag-generator' && <HashtagGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-thumbnail-downloader' && <YouTubeThumbnailDownloader onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-script-generator' && <YouTubeScriptGenerator onClose={() => setActiveTool(null)} />}
+            </div>
           </div>
         ) : (
           <>
+            <SEO />
             {/* ── Hero Section ── */}
             <section className="relative overflow-hidden px-4 sm:px-6 lg:px-8 pt-12 pb-10 text-center">
               <div className="pointer-events-none absolute inset-0 -z-10">
@@ -212,6 +361,37 @@ export default function App() {
               </div>
             </section>
 
+            {/* ── My Toolbox (Pinned Tools) Section ── */}
+            {pinnedTools.length > 0 && (
+              <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8 pt-4">
+                <div className="mb-6 border-b border-slate-200 dark:border-zinc-800/85 pb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <span className="text-amber-500">★</span> My Toolbox
+                    </h2>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">Quick access to your favorite pinned utilities</p>
+                  </div>
+                  <button 
+                    onClick={handleClearAllPins}
+                    className="text-xs text-red-500 hover:text-red-600 dark:hover:text-red-400 font-semibold transition-colors cursor-pointer"
+                  >
+                    Clear All Pinned
+                  </button>
+                </div>
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                  {pinnedTools.map((tool) => (
+                    <ToolCard
+                      key={`pinned-${tool.id}`}
+                      {...tool}
+                      isPinned={true}
+                      onTogglePin={() => handleTogglePin(tool.id)}
+                      onLaunch={tool.openModal ? () => setActiveTool(tool.id) : null}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* ── Tools Grid Section ── */}
             <section id="tools" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
 
@@ -234,7 +414,7 @@ export default function App() {
                       className={`rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${
                         activeCategory === cat
                           ? 'bg-slate-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-sm'
-                          : 'border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
+                          : 'border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-655 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
                       }`}>
                       {cat}
                     </button>
@@ -260,6 +440,8 @@ export default function App() {
                     <ToolCard
                       key={tool.id}
                       {...tool}
+                      isPinned={pinnedToolIds.includes(tool.id)}
+                      onTogglePin={() => handleTogglePin(tool.id)}
                       onLaunch={tool.openModal ? () => setActiveTool(tool.id) : null}
                     />
                   ))}
@@ -282,78 +464,8 @@ export default function App() {
         )}
       </main>
 
-      {/* 4. Bottom Ad Banner — VITE_SHOW_ADS=true 일 때만 렌더링 */}
-      {import.meta.env.VITE_SHOW_ADS === 'true' && <AdBanner />}
-
-      {/* 5. Footer */}
+      {/* 4. Footer */}
       <Footer onNavigate={setActiveTool} />
-
-      {activeTool === 'margin-calculator' && (
-        <MarginCalculator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-analyzer' && (
-        <YouTubeAnalyzer onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'text-formatter' && (
-        <TextFormatter onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'json-formatter' && (
-        <JsonFormatter onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'qr-generator' && (
-        <QrGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'password-generator' && (
-        <PasswordGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'image-compressor' && (
-        <ImageCompressor onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'seo-meta-generator' && (
-        <SeoMetaGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'regex-tester' && (
-        <RegexTester onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'ai-prompt-builder' && (
-        <AIPromptBuilder onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'code-image-generator' && (
-        <CodeImageGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'markdown-editor' && (
-        <MarkdownEditor onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-revenue-calculator' && (
-        <RevenueEstimator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'viral-hook-generator' && (
-        <ViralHookGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'brand-deal-pitch-builder' && (
-        <BrandDealPitchBuilder onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-chapter-formatter' && (
-        <YouTubeChapterFormatter onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-thumbnail-preview' && (
-        <ThumbnailPreviewer onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-description-generator' && (
-        <YouTubeDescriptionGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'hashtag-generator' && (
-        <HashtagGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-thumbnail-downloader' && (
-        <YouTubeThumbnailDownloader onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'youtube-script-generator' && (
-        <YouTubeScriptGenerator onClose={() => setActiveTool(null)} />
-      )}
-      {activeTool === 'contact' && (
-        <Contact onClose={() => setActiveTool(null)} />
-      )}
 
       </div>
     </ErrorBoundary>

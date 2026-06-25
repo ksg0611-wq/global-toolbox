@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import SEOMeta from '../components/common/SEOMeta';
+import SEO from '../components/SEO';
 
 const LIME = '#deff9a';
 
@@ -49,9 +49,10 @@ export default function SuggestTool() {
 
   return (
     <div className="min-h-[80vh] py-12 bg-gray-50 dark:bg-zinc-955 transition-colors duration-300 flex items-center">
-      <SEOMeta 
+      <SEO 
         title="Suggest a Tool" 
         description="What AI tool would make your creator journey easier? Let us know, and we might build it next!" 
+        url="/suggest-tool"
       />
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 w-full">

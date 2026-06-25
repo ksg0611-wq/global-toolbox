@@ -3,7 +3,9 @@ import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
 import SaveToToolboxButton from '../common/SaveToToolboxButton';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import FeedbackButtons from '../common/FeedbackButtons';
+import { generateGeminiContent } from '../../utils/gemini';
+import { getFriendlyErrorMessage } from '../../utils/errorHelper';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
@@ -80,24 +82,16 @@ export default function YouTubeScriptGenerator({ onClose }) {
     setRawMarkdown('');
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('Gemini API key is not configured. (VITE_GEMINI_API_KEY가 설정되지 않았습니다.)');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
-
       const promptText = `You are an expert YouTube scriptwriter. Create a highly engaging, structured script outline for a video about ${topic}. Target audience: ${audience}. Tone: ${tone}. Format the output clearly into 4 sections: 1. Hook (First 15 seconds to grab attention), 2. Intro (Value proposition), 3. Main Body (3-4 key bullet points with brief explanations), 4. Outro & Call to Action. Output in clean Markdown without any conversational filler.`;
 
-      const result = await model.generateContent(promptText);
+      const result = await generateGeminiContent(promptText, { model: 'gemini-2.5-flash-lite' });
       const response = await result.response;
       const text = response.text();
 
       setRawMarkdown(text.trim());
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Something went wrong while communicating with Gemini API.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -105,7 +99,7 @@ export default function YouTubeScriptGenerator({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
@@ -321,8 +315,9 @@ export default function YouTubeScriptGenerator({ onClose }) {
                   </div>
 
                   {error && (
-                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                      ⚠️ {error}
+                    <div className="flex gap-2.5 p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-300 text-xs leading-relaxed text-left">
+                      <span className="flex-shrink-0 text-red-400 select-none">⚠️</span>
+                      <div className="whitespace-pre-line">{error}</div>
                     </div>
                   )}
 
@@ -359,6 +354,12 @@ export default function YouTubeScriptGenerator({ onClose }) {
                           </div>
                         </div>
                       )}
+                      
+                      {/* Feedback row */}
+                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3 mt-3">
+                        <span className="text-xxs text-zinc-400 font-semibold">Was this script helpful?</span>
+                        <FeedbackButtons toolName="AI YouTube Script Generator" />
+                      </div>
                     </div>
                   )}
 

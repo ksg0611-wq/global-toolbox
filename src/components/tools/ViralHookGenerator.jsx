@@ -3,7 +3,9 @@ import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
 import SaveToToolboxButton from '../common/SaveToToolboxButton';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import FeedbackButtons from '../common/FeedbackButtons';
+import { generateGeminiContent } from '../../utils/gemini';
+import { getFriendlyErrorMessage } from '../../utils/errorHelper';
 
 // ── 데이터 토큰 ──────────────────────────────────────────────────────────────
 const PLATFORMS = {
@@ -109,20 +111,11 @@ export default function ViralHookGenerator({ onClose }) {
     setHooks([]);
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('Gemini API key is not configured. (VITE_GEMINI_API_KEY가 설정되지 않았습니다.)');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      // 사용자 지정 모델: gemini-3.5-flash
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
-
       const platformLabel = PLATFORMS[platform];
       const toneLabel = TONES[tone];
       const promptText = `You are an expert short-form video copywriter. Write 5 viral, engaging 3-second hooks for a ${platformLabel} video about "${topic}". The tone should be ${toneLabel}. Output ONLY the 5 hooks in English as a numbered list, without any extra text.`;
 
-      const result = await model.generateContent(promptText);
+      const result = await generateGeminiContent(promptText, { model: 'gemini-2.5-flash-lite' });
       const response = await result.response;
       const text = response.text();
 
@@ -144,7 +137,7 @@ export default function ViralHookGenerator({ onClose }) {
       setHooks(parsed.slice(0, 5));
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Something went wrong while communicating with Gemini API.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -152,7 +145,7 @@ export default function ViralHookGenerator({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
@@ -293,8 +286,9 @@ export default function ViralHookGenerator({ onClose }) {
                   </div>
 
                   {error && (
-                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                      ⚠️ {error}
+                    <div className="flex gap-2.5 p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-300 text-xs leading-relaxed text-left">
+                      <span className="flex-shrink-0 text-red-400 select-none">⚠️</span>
+                      <div className="whitespace-pre-line">{error}</div>
                     </div>
                   )}
 
@@ -315,11 +309,19 @@ export default function ViralHookGenerator({ onClose }) {
                   )}
 
                   {!loading && hooks.length > 0 && (
-                    <div className="space-y-3">
-                      {hooks.map((hook, idx) => (
-                        <HookItem key={idx} hook={hook} index={idx} />
-                      ))}
-                    </div>
+                    <>
+                      <div className="space-y-3">
+                        {hooks.map((hook, idx) => (
+                          <HookItem key={idx} hook={hook} index={idx} />
+                        ))}
+                      </div>
+                      
+                      {/* Feedback row */}
+                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3 mt-4">
+                        <span className="text-xxs text-zinc-400 font-semibold">Were these hooks helpful?</span>
+                        <FeedbackButtons toolName="Short-form Viral Hook Generator" />
+                      </div>
+                    </>
                   )}
 
                 </div>

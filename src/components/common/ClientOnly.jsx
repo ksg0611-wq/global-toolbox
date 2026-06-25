@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-/**
- * ClientOnly Component
- * 
- * 📌 Guard wrapper to prevent React hydration mismatches on parts of the DOM
- * that are highly interactive, modified by browser extensions, or have dynamic states.
- * Renders null on server/pre-render and initial client-side render, 
- * then renders children once client-side mounting is complete.
- */
 export default function ClientOnly({ children }) {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
+    setIsMounted(true);
   }, []);
 
-  // react-snap (Puppeteer) 빌드 환경이거나 SSR 환경인 경우 무조건 null 반환
-  const isSSROrSnap = typeof window === 'undefined' || 
-                      !!window.__snap || 
-                      (typeof navigator !== 'undefined' && /HeadlessChrome|puppeteer/i.test(navigator.userAgent));
+  // react-snap(Puppeteer headless 환경)이거나 마운트 전이라면 무조건 null을 반환하여 정적 HTML을 완전히 비워둠
+  const isSnapEnvironment = typeof window !== 'undefined' && (navigator.webdriver || window.__snapshot);
 
-  if (isSSROrSnap || !hasMounted) {
+  if (!isMounted || isSnapEnvironment) {
     return null;
   }
 

@@ -1,6 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 /* ─── 브랜드 색상 및 스타일 상수 ────────────────────────────────────────── */
 const LIME = '#deff9a';
@@ -148,9 +151,14 @@ export default function CodeImageGenerator({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
+      <SEOMeta
+        title="Beautiful Code Snippet Image Generator | Code to PNG"
+        description="Convert your source code into high-resolution, beautifully styled images. Customize syntax theme, padding, background gradients, and export to PNG."
+        url="/tools/code-image-generator"
+      />
       <div className="relative w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-2xl
         bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700
         shadow-2xl shadow-black/40 flex flex-col">
@@ -186,9 +194,9 @@ export default function CodeImageGenerator({ onClose }) {
 
         {/* ── 바디 ── */}
         <div className="p-6 flex flex-col gap-6">
-
-          {/* ── 2컬럼 레이아웃 ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <ClientOnly>
+            {/* ── 2컬럼 레이아웃 ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
             {/* ── 좌측: 설정 및 입력 (5 columns) ── */}
             <div className="lg:col-span-5 flex flex-col gap-5">
@@ -406,48 +414,30 @@ export default function CodeImageGenerator({ onClose }) {
                 )}
               </button>
             </div>
-
           </div>
+        </ClientOnly>
 
           {/* ── SEO 아티클 ── */}
-          <article className="rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              Why Share Code Snippets as Images?
-            </h2>
-            <p className="text-sm leading-relaxed">
-              When publishing coding blogs, technical newsletters, or sharing snippets on social media platforms like X, LinkedIn, and Instagram, readability and aesthetic presentation are paramount. Standard text formatting often strips styling, ruins indentation, and fails to maintain syntax highlighting across varying display screen sizes. Converting your code into a beautiful image ensures that it renders identically on every client device.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Best Practices for Code Snippet Sharing
-            </h3>
-            <p className="text-sm leading-relaxed">
-              To maximize accessibility and search engine optimization (SEO) when sharing code snippet images, consider the following rules:
-            </p>
-            <ul className="text-sm space-y-1.5 list-disc list-inside">
-              <li>
-                <strong className="text-slate-800 dark:text-zinc-200">Provide Alt Text:</strong> Always supply a detailed ALT tag with the exact text representation of your code to ensure assistive tech (screen readers) and search engines can read the content.
-              </li>
-              <li>
-                <strong className="text-slate-800 dark:text-zinc-200">Include Line Numbers:</strong> Adding line numbers assists references and makes reviewing, explanations, and debugging walkthrough discussions significantly easier.
-              </li>
-              <li>
-                <strong className="text-slate-800 dark:text-zinc-200">Maintain Monospace Aspect:</strong> Monospace fonts prevent horizontal alignment glitches, aligning structural formatting like brackets and curly braces vertically.
-              </li>
-            </ul>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              High Resolution Rendering (Retina Display Support)
-            </h3>
-            <p className="text-sm leading-relaxed">
-              This code-to-image screenshot tool uses the light `html-to-image` package to convert the raw DOM structure directly into a PNG. By enforcing a `pixelRatio: 2`, the exported image is optimized for high-DPI retina displays, preventing blurriness when zoomed in or embedded in online blogs. Since the rendering runs completely client-side in the browser engine, no code is ever uploaded to any servers, guaranteeing absolute privacy and data protection.
-            </p>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              All rendering operations are executed locally. Your source code remains confidential and private.
-            </p>
-          </article>
+          <ToolSEOSection
+            title="Beautiful Code Snippet Image Generator - Everything You Need to Know"
+            description="When publishing coding blogs, technical newsletters, or sharing snippets on social media platforms like X, LinkedIn, and Instagram, readability and aesthetic presentation are paramount. Standard text formatting often strips styling, ruins indentation, and fails to maintain syntax highlighting across varying display screen sizes. Converting your code into a beautiful image ensures that it renders identically on every client device."
+            howToUse={[
+              "Choose the target Programming Language and select a custom Background Theme.",
+              "Adjust window settings (padding, window style, show line numbers, etc.) to your preference.",
+              "Type or paste your source code snippet into the Code editor area.",
+              "Click 'Export to PNG' to generate and download a high-resolution retina-ready image."
+            ]}
+            faqs={[
+              {
+                question: "Why should I share code snippets as images?",
+                answer: "Images preserve syntax highlighting, line numbers, monospace font layout, and code indentation exactly, shielding your snippets from social media text stripping and varying browser displays."
+              },
+              {
+                question: "Is my source code uploaded to any server?",
+                answer: "No. This generator is completely serverless. Code rendering is processed entirely inside your browser locally using the Canvas API and HTML5, protecting your data confidentiality."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

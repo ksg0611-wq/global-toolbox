@@ -2,6 +2,10 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
+
 
 /* ─── 브랜드 색상 및 스타일 상수 ────────────────────────────────────────── */
 const LIME = '#deff9a';
@@ -112,9 +116,15 @@ export default function MarkdownEditor({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
+      <SEOMeta
+        title="Best Free Markdown to HTML Editor | Live Render & Sanitizer"
+        description="Write Markdown and preview rendered HTML in real-time. Fast, secure, and client-side formatting with DOMPurify sanitization. Direct HTML copy-paste."
+        url="/tools/markdown-editor"
+      />
+
       {/* 컴포넌트 스타일 태그로 샌드박스 내부 HTML 디자인 주입 (Tailwind Prose 대용) */}
       <style>{`
         .markdown-preview h1 {
@@ -265,109 +275,108 @@ export default function MarkdownEditor({ onClose }) {
         {/* ── 바디 ── */}
         <div className="p-6 flex flex-col gap-6">
 
-          {/* ── 5:5 분할 에디터 레이아웃 ── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]">
+          <ClientOnly>
+            {/* ── 5:5 분할 에디터 레이아웃 ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]">
 
-            {/* 좌측: 마크다운 입력창 */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold"
-                    style={{ background: LIME_DIM, color: LIME }}>1</span>
-                  Markdown Source
-                </span>
-                <span className="text-[10px] bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded font-mono text-slate-400">
-                  {markdown.length} chars
-                </span>
-              </div>
-              <textarea
-                value={markdown}
-                onChange={(e) => setMarkdown(e.target.value)}
-                placeholder="Type your markdown here..."
-                className="w-full flex-1 min-h-[350px] font-mono text-xs leading-relaxed p-4 rounded-xl border
-                  bg-slate-50 dark:bg-zinc-950 border-slate-200 dark:border-zinc-800
-                  text-slate-800 dark:text-zinc-200 outline-none
-                  focus:ring-2 focus:ring-[#deff9a]/40 focus:border-[#8fc400] transition-all resize-y"
-              />
-            </div>
-
-            {/* 우측: 실시간 HTML 프리뷰 */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold"
-                    style={{ background: LIME_DIM, color: LIME }}>2</span>
-                  Live Preview
-                </span>
-                <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
-                  Sanitized HTML
-                </span>
-              </div>
-              <div className="w-full flex-1 min-h-[350px] overflow-y-auto rounded-xl border
-                bg-white dark:bg-zinc-950/60 border-slate-200 dark:border-zinc-800 p-6 text-slate-800 dark:text-zinc-300">
-                <div
-                  className="markdown-preview markdown-prose"
-                  dangerouslySetInnerHTML={{ __html: rawHtml }}
+              {/* 좌측: 마크다운 입력창 */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold"
+                      style={{ background: LIME_DIM, color: LIME }}>1</span>
+                    Markdown Source
+                  </span>
+                  <span className="text-[10px] bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded font-mono text-slate-400">
+                    {markdown.length} chars
+                  </span>
+                </div>
+                <textarea
+                  value={markdown}
+                  onChange={(e) => setMarkdown(e.target.value)}
+                  placeholder="Type your markdown here..."
+                  className="w-full flex-1 min-h-[350px] font-mono text-xs leading-relaxed p-4 rounded-xl border
+                    bg-slate-50 dark:bg-zinc-950 border-slate-200 dark:border-zinc-800
+                    text-slate-800 dark:text-zinc-200 outline-none
+                    focus:ring-2 focus:ring-[#deff9a]/40 focus:border-[#8fc400] transition-all resize-y"
                 />
               </div>
+
+              {/* 우측: 실시간 HTML 프리뷰 */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-md flex items-center justify-center text-xs font-bold"
+                      style={{ background: LIME_DIM, color: LIME }}>2</span>
+                    Live Preview
+                  </span>
+                  <span className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded font-bold uppercase tracking-wider">
+                    Sanitized HTML
+                  </span>
+                </div>
+                <div className="w-full flex-1 min-h-[350px] overflow-y-auto rounded-xl border
+                  bg-white dark:bg-zinc-950/60 border-slate-200 dark:border-zinc-800 p-6 text-slate-800 dark:text-zinc-300">
+                  <div
+                    className="markdown-preview markdown-prose"
+                    dangerouslySetInnerHTML={{ __html: rawHtml }}
+                  />
+                </div>
+              </div>
+
             </div>
 
-          </div>
+            {/* ── 하단 복사 버튼 ── */}
+            <button
+              onClick={handleCopy}
+              disabled={!markdown.trim()}
+              className="w-full flex items-center justify-center gap-2
+                py-3.5 rounded-xl font-bold text-sm text-[#1a1a1a]
+                disabled:opacity-40 disabled:cursor-not-allowed
+                active:scale-[0.98] transition-all duration-200 cursor-pointer"
+              style={{
+                background: copied ? '#4ade80' : LIME,
+                boxShadow: `0 4px 20px rgba(222,255,154,0.35)`,
+              }}
+            >
+              {copied ? (
+                <>
+                  <IconCheck />
+                  Copied to Clipboard!
+                </>
+              ) : (
+                <>
+                  <IconCopy />
+                  Copy HTML
+                </>
+              )}
+            </button>
+          </ClientOnly>
 
-          {/* ── 하단 복사 버튼 ── */}
-          <button
-            onClick={handleCopy}
-            disabled={!markdown.trim()}
-            className="w-full flex items-center justify-center gap-2
-              py-3.5 rounded-xl font-bold text-sm text-[#1a1a1a]
-              disabled:opacity-40 disabled:cursor-not-allowed
-              active:scale-[0.98] transition-all duration-200 cursor-pointer"
-            style={{
-              background: copied ? '#4ade80' : LIME,
-              boxShadow: `0 4px 20px rgba(222,255,154,0.35)`,
-            }}
-          >
-            {copied ? (
-              <>
-                <IconCheck />
-                Copied to Clipboard!
-              </>
-            ) : (
-              <>
-                <IconCopy />
-                Copy HTML
-              </>
-            )}
-          </button>
-
-          {/* ── SEO 아티클 ── */}
-          <article className="rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              What is Markdown and How Does It Work?
-            </h2>
-            <p className="text-sm leading-relaxed">
-              Markdown is a lightweight markup language created by John Gruber in 2004. Designed to be easy-to-read and easy-to-write, Markdown allows you to structure plain text using simple symbols—like asterisks for bolding, hashtags for headings, and dashes for lists. These raw formatting layouts compile seamlessly into semantic HTML tags, making it the preferred markup format for programmers, bloggers, and technical copywriters.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Why Use a Live Markdown to HTML Editor?
-            </h3>
-            <p className="text-sm leading-relaxed">
-              A side-by-side live editor provides instant visual feedback, helping writers detect rendering problems, syntax validation issues, or missing list indentations before compiling the final document. The instant translation eliminates the slow feedback loop of switching screens. Additionally, exporting the raw, sanitized HTML code ensures copy compatibility with content management systems (CMS) like WordPress, Shopify, Ghost, or digital newsletter software.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Security and Cross-Site Scripting (XSS) Prevention
-            </h3>
-            <p className="text-sm leading-relaxed">
-              Since parsing Markdown involves generating direct raw HTML outputs, developers must implement security checks against malicious code injection (XSS attacks). If a user imports raw markdown text containing unsafe scripts or HTML elements, compiling it raw can lead to security vulnerabilities. This live converter integrates a deep security sanitization step using the robust `DOMPurify` library, ensuring that any malicious scripting payloads are neutralized locally within the client browser.
-            </p>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              Your data remains completely safe. All markdown processing is run entirely client-side without sending content to external servers.
-            </p>
-          </article>
+          {/* ── SEO Section ── */}
+          <ToolSEOSection
+            title="Best Free Markdown to HTML Editor Online"
+            description="Markdown is a lightweight markup language created to make writing text with formatting easy. This browser utility allows you to draft content in Markdown and instantly preview the rendered HTML code side-by-side. It features deep security checks to prevent malicious script injection while ensuring fast, local-only compilation."
+            howToUse={[
+              "Type or paste your Markdown content into the Markdown Source editor.",
+              "Inspect the rendered HTML instantly in the Live Preview pane.",
+              "Verify structural formatting, tables, headings, blockquotes, and code blocks.",
+              "Click Copy HTML to save the sanitized HTML code to your clipboard."
+            ]}
+            faqs={[
+              {
+                question: "Is my markdown content sent to any server?",
+                answer: "No, all conversion and sanitization happen locally in your web browser. Your draft text is 100% private and secure."
+              },
+              {
+                question: "What security measures are implemented here?",
+                answer: "The tool utilizes the marked parser combined with the DOMPurify library. This sanitizes the generated HTML, removing any script tags or malicious payloads (preventing XSS attacks) before previewing or copying."
+              },
+              {
+                question: "Can I use standard HTML tags inside Markdown?",
+                answer: "Yes, standard Markdown allows inline HTML. However, unsafe elements like script, iframe, or event handlers will be sanitized and removed for security."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

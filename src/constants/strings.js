@@ -23,7 +23,9 @@ export const HEADER = {
   logoBadge:      'Hub',
   navTools:       'Tools',
   navAbout:       'About',
-  navBlog:        'Suggest Tool',
+  navBlog:        'Blog',
+  navPrompts:     'Prompts',
+  navSuggestTool: 'Suggest Tool',
   langButton:     'EN',
   themeAriaLabel: 'Toggle dark / light mode',
 };
@@ -34,8 +36,8 @@ export const HEADER = {
 export const FOOTER = {
   logoName:    'Global ToolBox',
   tagline:     'Lightweight & serverless utility hub',
-  linkPrivacy: 'Privacy Policy',
-  linkTerms:   'Terms of Service',
+  linkPrivacy: '개인정보 처리방침 (Privacy Policy)',
+  linkTerms:   '이용약관 (Terms of Service)',
   linkCookies: 'Cookie Settings',
   linkContact: 'Contact',
   githubAriaLabel: 'GitHub Repository',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import SEO from '../components/SEO';
 
 const LIME = '#deff9a';
 
@@ -122,6 +123,11 @@ export default function MyToolbox() {
 
   return (
     <div className="min-h-[80vh] py-12 bg-gray-50 dark:bg-zinc-955 transition-colors duration-300">
+      <SEO
+        title="My Saved Toolbox"
+        description="View and manage your saved utilities and prompts in your personal toolbox on Global ToolBox."
+        url="/my-toolbox"
+      />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Title */}

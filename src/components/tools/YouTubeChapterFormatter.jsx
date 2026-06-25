@@ -3,7 +3,9 @@ import ToolSEOSection from '../common/ToolSEOSection';
 import SEOMeta from '../common/SEOMeta';
 import ClientOnly from '../common/ClientOnly';
 import AffiliateCard from '../common/AffiliateCard';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import FeedbackButtons from '../common/FeedbackButtons';
+import { generateGeminiContent } from '../../utils/gemini';
+import { getFriendlyErrorMessage } from '../../utils/errorHelper';
 
 // ── 아이콘 컴포넌트 ────────────────────────────────────────────────────────────
 const IconClose = () => (
@@ -60,28 +62,20 @@ export default function YouTubeChapterFormatter({ onClose }) {
     setFormattedResult('');
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('Gemini API key is not configured. (VITE_GEMINI_API_KEY가 설정되지 않았습니다.)');
-      }
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
-
       const promptText = `You are a YouTube SEO assistant. Convert the following messy notes into a perfectly formatted YouTube video chapters list.
 Rule 1: The list MUST strictly start with '00:00'.
 Rule 2: Format as 'MM:SS Chapter Title' or 'HH:MM:SS Chapter Title'.
 Rule 3: Output ONLY the formatted list, no conversational text.
 Raw notes: ${rawNotes}`;
 
-      const result = await model.generateContent(promptText);
+      const result = await generateGeminiContent(promptText, { model: 'gemini-2.5-flash-lite' });
       const response = await result.response;
       const text = response.text();
 
       setFormattedResult(text.trim());
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Something went wrong while communicating with Gemini API.');
+      setError(getFriendlyErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -89,7 +83,7 @@ Raw notes: ${rawNotes}`;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
@@ -190,8 +184,9 @@ Raw notes: ${rawNotes}`;
                   </div>
 
                   {error && (
-                    <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/10 text-red-400 text-xs leading-relaxed">
-                      ⚠️ {error}
+                    <div className="flex gap-2.5 p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-red-300 text-xs leading-relaxed text-left">
+                      <span className="flex-shrink-0 text-red-400 select-none">⚠️</span>
+                      <div className="whitespace-pre-line">{error}</div>
                     </div>
                   )}
 
@@ -214,9 +209,15 @@ Raw notes: ${rawNotes}`;
                   {!loading && formattedResult && (
                     <div className="space-y-1.5 flex-grow flex flex-col text-sm text-left">
                       <span className="text-xxs font-bold uppercase tracking-wider text-zinc-500">YouTube Ready Outputs</span>
-                      <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-[#deff9a] font-mono select-all whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[280px]">
+                      <pre className="bg-zinc-880/90 px-4 py-4 rounded-xl border border-zinc-800 text-[#deff9a] font-mono select-all whitespace-pre-wrap leading-relaxed flex-grow text-xs overflow-y-auto max-h-[280px] mb-2">
                         {formattedResult}
                       </pre>
+                      
+                      {/* Feedback row */}
+                      <div className="flex items-center justify-between border-t border-zinc-800/80 pt-3">
+                        <span className="text-xxs text-zinc-400 font-semibold">Was this chapter formatting helpful?</span>
+                        <FeedbackButtons toolName="YouTube Timestamp & Chapter Formatter" />
+                      </div>
                     </div>
                   )}
 

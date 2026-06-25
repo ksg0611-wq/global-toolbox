@@ -1,5 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
+
 
 /* ─── helpers ─────────────────────────────────────────────────────────── */
 const formatBytes = (bytes) => {
@@ -157,8 +161,15 @@ export default function ImageCompressor({ onClose }) {
 
   /* ─────────────────────────── RENDER ─────────────────────────────────── */
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+    <div className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}>
+      
+      <SEOMeta
+        title="Free Online Image Compressor | Convert JPG & PNG to WebP"
+        description="Compress images and convert to WebP, JPEG, or PNG locally in your browser. Speed up your website with premium visual quality and 100% privacy."
+        url="/tools/image-compressor"
+      />
+
       <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl
         bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700
         shadow-2xl shadow-black/40 flex flex-col">
@@ -190,287 +201,254 @@ export default function ImageCompressor({ onClose }) {
 
         {/* ── Body ── */}
         <div className="p-6 flex flex-col gap-6">
+          <ClientOnly>
+            {/* Hidden canvas for processing */}
+            <canvas ref={canvasRef} className="hidden" />
 
-          {/* Hidden canvas for processing */}
-          <canvas ref={canvasRef} className="hidden" />
-
-          {/* ── Drop Zone ── */}
-          {!original ? (
-            <div
-              onDragOver={onDragOver}
-              onDragLeave={onDragLeave}
-              onDrop={onDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`relative flex flex-col items-center justify-center gap-4
-                rounded-2xl border-2 border-dashed cursor-pointer
-                transition-all duration-200 py-16 px-8
-                ${dragging
-                  ? 'border-[#deff9a] bg-[#deff9a]/10 scale-[1.01]'
-                  : 'border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 hover:border-[#deff9a]/60 hover:bg-[#deff9a]/5'
-                }`}>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                className="hidden"
-                onChange={(e) => loadFile(e.target.files?.[0])}
-              />
-              <div className={`transition-colors ${dragging ? 'text-[#deff9a]' : 'text-slate-400 dark:text-zinc-500'}`}>
-                <IconUpload />
-              </div>
-              <div className="text-center">
-                <p className="font-semibold text-slate-700 dark:text-zinc-300">
-                  {dragging ? 'Drop to load image' : 'Drag & drop an image here'}
-                </p>
-                <p className="text-sm text-slate-400 dark:text-zinc-500 mt-1">
-                  or click to browse · JPG, PNG, WebP supported
-                </p>
-              </div>
-            </div>
-          ) : (
-            <>
-              {/* ── Controls ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                {/* Quality Slider */}
-                <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <label className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
-                      Quality
-                    </label>
-                    <span className="text-sm font-bold text-[#8fc400] tabular-nums">
-                      {format === 'PNG' ? 'Lossless' : `${quality}%`}
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="10" max="100" step="1"
-                    value={quality}
-                    disabled={format === 'PNG'}
-                    onChange={(e) => setQuality(Number(e.target.value))}
-                    className="w-full h-2 rounded-full appearance-none cursor-pointer
-                      bg-slate-200 dark:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed
-                      accent-[#deff9a]"
-                  />
-                  <div className="flex justify-between text-xs text-slate-400 dark:text-zinc-500 mt-1">
-                    <span>Smaller</span><span>Higher quality</span>
-                  </div>
+            {/* ── Drop Zone ── */}
+            {!original ? (
+              <div
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`relative flex flex-col items-center justify-center gap-4
+                  rounded-2xl border-2 border-dashed cursor-pointer
+                  transition-all duration-200 py-16 px-8
+                  \${dragging
+                    ? 'border-[#deff9a] bg-[#deff9a]/10 scale-[1.01]'
+                    : 'border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/50 hover:border-[#deff9a]/60 hover:bg-[#deff9a]/5'
+                  }`}>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={(e) => loadFile(e.target.files?.[0])}
+                />
+                <div className={`transition-colors \${dragging ? 'text-[#deff9a]' : 'text-slate-400 dark:text-zinc-500'}`}>
+                  <IconUpload />
                 </div>
-
-                {/* Format Toggle */}
-                <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 p-4">
-                  <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300 mb-3">
-                    Output Format
+                <div className="text-center">
+                  <p className="font-semibold text-slate-700 dark:text-zinc-300">
+                    {dragging ? 'Drop to load image' : 'Drag & drop an image here'}
                   </p>
-                  <div className="flex gap-2">
-                    {FORMATS.map((f) => (
-                      <button
-                        key={f}
-                        onClick={() => setFormat(f)}
-                        className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all duration-200
-                          ${format === f
-                            ? 'bg-[#deff9a] text-zinc-900 shadow-md shadow-[#deff9a]/20'
-                            : 'bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-300 dark:hover:bg-zinc-600'
-                          }`}>
-                        {f}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-slate-400 dark:text-zinc-500 mt-2">
-                    {format === 'WebP'
-                      ? '🌐 Best web compression · wide browser support'
-                      : format === 'JPEG'
-                      ? '📷 Universal compatibility · photos'
-                      : '🖼️ Lossless · transparent backgrounds'}
+                  <p className="text-sm text-slate-400 dark:text-zinc-500 mt-1">
+                    or click to browse · JPG, PNG, WebP supported
                   </p>
                 </div>
               </div>
+            ) : (
+              <>
+                {/* ── Controls ── */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-              {/* ── Compress Button ── */}
-              <button
-                onClick={compress}
-                disabled={processing}
-                className="w-full py-3.5 rounded-xl font-bold text-sm
-                  bg-[#deff9a] hover:bg-[#ccef7a] active:scale-[0.98]
-                  text-zinc-900 shadow-lg shadow-[#deff9a]/20
-                  disabled:opacity-60 disabled:cursor-not-allowed
-                  transition-all duration-200 flex items-center justify-center gap-2">
-                {processing
-                  ? (<><span className="w-4 h-4 border-2 border-zinc-700 border-t-transparent rounded-full animate-spin" />Processing...</>)
-                  : '⚡ Compress & Convert'}
-              </button>
-
-              {/* ── Before / After Preview ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Original */}
-                <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-700">
-                  <div className="flex items-center justify-between px-4 py-2.5
-                    bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
-                    <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
-                      Original
-                    </span>
-                    <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300 tabular-nums">
-                      {formatBytes(original.size)}
-                    </span>
-                  </div>
-                  <div className="bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center p-2"
-                    style={{ minHeight: '180px' }}>
-                    <img
-                      src={original.url}
-                      alt="Original"
-                      className="max-h-48 max-w-full rounded object-contain"
-                    />
-                  </div>
-                  <div className="px-4 py-2 text-xs text-slate-400 dark:text-zinc-500 bg-slate-50 dark:bg-zinc-800/30">
-                    {original.w} × {original.h} px
-                  </div>
-                </div>
-
-                {/* Compressed */}
-                <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-700">
-                  <div className="flex items-center justify-between px-4 py-2.5
-                    bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
-                    <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
-                      Compressed
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {compressed && (
-                        <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md
-                          ${savingPct > 0
-                            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                            : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'}`}>
-                          {savingPct > 0 ? `−${savingPct}%` : `+${Math.abs(savingPct)}%`}
-                        </span>
-                      )}
-                      <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300 tabular-nums">
-                        {compressed ? formatBytes(compressed.size) : '—'}
+                  {/* Quality Slider */}
+                  <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+                        Quality
+                      </label>
+                      <span className="text-sm font-bold text-[#8fc400] tabular-nums">
+                        {format === 'PNG' ? 'Lossless' : `\${quality}%`}
                       </span>
                     </div>
+                    <input
+                      type="range"
+                      min="10" max="100" step="1"
+                      value={quality}
+                      disabled={format === 'PNG'}
+                      onChange={(e) => setQuality(Number(e.target.value))}
+                      className="w-full h-2 rounded-full appearance-none cursor-pointer
+                        bg-slate-200 dark:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed
+                        accent-[#deff9a]"
+                    />
+                    <div className="flex justify-between text-xs text-slate-400 dark:text-zinc-500 mt-1">
+                      <span>Smaller</span><span>Higher quality</span>
+                    </div>
                   </div>
-                  <div className="bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center p-2"
-                    style={{ minHeight: '180px' }}>
-                    {compressed ? (
-                      <img
-                        src={compressed.url}
-                        alt="Compressed"
-                        className="max-h-48 max-w-full rounded object-contain"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center gap-2 text-slate-400 dark:text-zinc-600">
-                        <IconImage />
-                        <span className="text-xs">Press Compress to preview</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="px-4 py-2 text-xs text-slate-400 dark:text-zinc-500 bg-slate-50 dark:bg-zinc-800/30">
-                    {compressed ? `${format} · ${quality}% quality` : '—'}
+
+                  {/* Format Toggle */}
+                  <div className="rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 p-4">
+                    <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300 mb-3">
+                      Output Format
+                    </p>
+                    <div className="flex gap-2">
+                      {FORMATS.map((f) => (
+                        <button
+                          key={f}
+                          onClick={() => setFormat(f)}
+                          className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all duration-200
+                            \${format === f
+                              ? 'bg-[#deff9a] text-zinc-900 shadow-md shadow-[#deff9a]/20'
+                              : 'bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-zinc-400 hover:bg-slate-300 dark:hover:bg-zinc-600'
+                            }`}>
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs text-slate-400 dark:text-zinc-500 mt-2">
+                      {format === 'WebP'
+                        ? '🌐 Best web compression · wide browser support'
+                        : format === 'JPEG'
+                        ? '📷 Universal compatibility · photos'
+                        : '🖼️ Lossless · transparent backgrounds'}
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              {/* ── Action Buttons ── */}
-              <div className="flex flex-wrap gap-3">
-                {compressed && (
+                {/* ── Compress Button ── */}
+                <button
+                  onClick={compress}
+                  disabled={processing}
+                  className="w-full py-3.5 rounded-xl font-bold text-sm
+                    bg-[#deff9a] hover:bg-[#ccef7a] active:scale-[0.98]
+                    text-zinc-900 shadow-lg shadow-[#deff9a]/20
+                    disabled:opacity-60 disabled:cursor-not-allowed
+                    transition-all duration-200 flex items-center justify-center gap-2">
+                  {processing
+                    ? (<><span className="w-4 h-4 border-2 border-zinc-700 border-t-transparent rounded-full animate-spin" />Processing...</>)
+                    : '⚡ Compress & Convert'}
+                </button>
+
+                {/* ── Before / After Preview ── */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Original */}
+                  <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-700">
+                    <div className="flex items-center justify-between px-4 py-2.5
+                      bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
+                      <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                        Original
+                      </span>
+                      <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300 tabular-nums">
+                        {formatBytes(original.size)}
+                      </span>
+                    </div>
+                    <div className="bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center p-2"
+                      style={{ minHeight: '180px' }}>
+                      <img
+                        src={original.url}
+                        alt="Original"
+                        className="max-h-48 max-w-full rounded object-contain"
+                      />
+                    </div>
+                    <div className="px-4 py-2 text-xs text-slate-400 dark:text-zinc-500 bg-slate-50 dark:bg-zinc-800/30">
+                      {original.w} × {original.h} px
+                    </div>
+                  </div>
+
+                  {/* Compressed */}
+                  <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-700">
+                    <div className="flex items-center justify-between px-4 py-2.5
+                      bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
+                      <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
+                        Compressed
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {compressed && (
+                          <span className={`text-xs font-bold px-1.5 py-0.5 rounded-md
+                            \${savingPct > 0
+                              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                              : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'}`}>
+                            {savingPct > 0 ? `−\${savingPct}%` : `+\${Math.abs(savingPct)}%`}
+                          </span>
+                        )}
+                        <span className="text-xs font-semibold text-slate-700 dark:text-zinc-300 tabular-nums">
+                          {compressed ? formatBytes(compressed.size) : '—'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="bg-slate-200/50 dark:bg-zinc-800/50 flex items-center justify-center p-2"
+                      style={{ minHeight: '180px' }}>
+                      {compressed ? (
+                        <img
+                          src={compressed.url}
+                          alt="Compressed"
+                          className="max-h-48 max-w-full rounded object-contain"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-slate-400 dark:text-zinc-600">
+                          <IconImage />
+                          <span className="text-xs">Press Compress to preview</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="px-4 py-2 text-xs text-slate-400 dark:text-zinc-500 bg-slate-50 dark:bg-zinc-800/30">
+                      {compressed ? `\${format} · \${quality}% quality` : '—'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Action Buttons ── */}
+                <div className="flex flex-wrap gap-3">
+                  {compressed && (
+                    <button
+                      onClick={download}
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl
+                        bg-[#deff9a] hover:bg-[#ccef7a] active:scale-[0.98]
+                        text-zinc-900 text-sm font-bold
+                        shadow-md shadow-[#deff9a]/20 transition-all">
+                      <IconDownload />
+                      Download {format}
+                    </button>
+                  )}
                   <button
-                    onClick={download}
+                    onClick={() => { fileInputRef.current?.click(); }}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                      bg-[#deff9a] hover:bg-[#ccef7a] active:scale-[0.98]
-                      text-zinc-900 text-sm font-bold
-                      shadow-md shadow-[#deff9a]/20 transition-all">
-                    <IconDownload />
-                    Download {format}
+                      border border-slate-300 dark:border-zinc-700
+                      bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700
+                      text-slate-700 dark:text-zinc-300 text-sm font-semibold
+                      active:scale-[0.98] transition-all">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="hidden"
+                      onChange={(e) => { loadFile(e.target.files?.[0]); setCompressed(null); }}
+                    />
+                    📁 Load Another Image
                   </button>
-                )}
-                <button
-                  onClick={() => { fileInputRef.current?.click(); }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                    border border-slate-300 dark:border-zinc-700
-                    bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700
-                    text-slate-700 dark:text-zinc-300 text-sm font-semibold
-                    active:scale-[0.98] transition-all">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    className="hidden"
-                    onChange={(e) => { loadFile(e.target.files?.[0]); setCompressed(null); }}
-                  />
-                  📁 Load Another Image
-                </button>
-                <button
-                  onClick={reset}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl
-                    border border-slate-300 dark:border-zinc-700
-                    bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700
-                    text-slate-500 dark:text-zinc-400 text-sm font-semibold
-                    active:scale-[0.98] transition-all">
-                  ✕ Clear
-                </button>
-              </div>
-            </>
-          )}
+                  <button
+                    onClick={reset}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl
+                      border border-slate-300 dark:border-zinc-700
+                      bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700
+                      text-slate-500 dark:text-zinc-400 text-sm font-semibold
+                      active:scale-[0.98] transition-all">
+                    ✕ Clear
+                  </button>
+                </div>
+              </>
+            )}
+          </ClientOnly>
 
-          {/* ── SEO Article ── */}
-          <article className="mt-2 rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              What is this Image Compressor & WebP Converter?
-            </h2>
-            <p className="text-sm leading-relaxed">
-              This free, browser-based tool lets you compress images and convert them to WebP,
-              JPEG, or PNG format — all without uploading a single file to any server. Your
-              images are processed entirely within your own browser using the HTML5 Canvas API,
-              giving you full privacy and instant results.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Why Convert to WebP?
-            </h3>
-            <p className="text-sm leading-relaxed">
-              WebP is Google's modern image format designed specifically for the web. Compared
-              to JPEG and PNG, WebP files are typically <strong className="text-slate-800 dark:text-zinc-200">25–35% smaller</strong> at the same visual
-              quality. Smaller images mean faster page load times, lower bandwidth costs, and
-              better Core Web Vitals scores — all critical factors for SEO ranking and user
-              experience on both desktop and mobile.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Key Features &amp; Benefits
-            </h3>
-            <ul className="text-sm space-y-1.5 list-none">
-              {[
-                '🔒 100% client-side — images never leave your device',
-                '⚡ Instant compression with adjustable quality (10%–100%)',
-                '🌐 Convert to WebP for maximum web performance',
-                '📷 JPEG output for universal compatibility',
-                '🖼️ PNG output for lossless quality & transparency',
-                '📊 Real-time file size comparison with savings percentage',
-                '💾 One-click download of the optimized image',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              How to Use
-            </h3>
-            <ol className="text-sm space-y-1.5 list-decimal list-inside">
-              <li>Drag &amp; drop your JPG, PNG, or WebP image into the upload zone, or click to browse files.</li>
-              <li>Choose your desired output format: <strong className="text-slate-800 dark:text-zinc-200">WebP</strong>, <strong className="text-slate-800 dark:text-zinc-200">JPEG</strong>, or <strong className="text-slate-800 dark:text-zinc-200">PNG</strong>.</li>
-              <li>Adjust the quality slider to balance file size vs. visual quality.</li>
-              <li>Click <strong className="text-slate-800 dark:text-zinc-200">Compress &amp; Convert</strong> to process the image instantly.</li>
-              <li>Compare the original vs. compressed size in the preview panel.</li>
-              <li>Click <strong className="text-slate-800 dark:text-zinc-200">Download</strong> to save the optimized file to your device.</li>
-            </ol>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              This tool uses the browser's native <code className="font-mono text-[#8fc400]">HTMLCanvasElement.toBlob()</code> API
-              to compress and convert images. No external libraries or server-side processing are required.
-              Supported input formats: JPEG, PNG, WebP.
-            </p>
-          </article>
+          {/* ── SEO Section ── */}
+          <ToolSEOSection
+            title="Free Online Image Compressor & WebP Converter"
+            description="This free, browser-based tool lets you compress images and convert them to WebP, JPEG, or PNG format — all without uploading a single file to any server. Your images are processed entirely within your own browser using the HTML5 Canvas API, giving you full privacy and instant results."
+            howToUse={[
+              "Drag & drop your JPG, PNG, or WebP image into the upload zone, or click to browse files.",
+              "Choose your desired output format: WebP, JPEG, or PNG.",
+              "Adjust the quality slider to balance file size vs. visual quality.",
+              "Click Compress & Convert to process the image instantly.",
+              "Compare the original vs. compressed size in the preview panel.",
+              "Click Download to save the optimized file to your device."
+            ]}
+            faqs={[
+              {
+                question: "Why convert images to WebP?",
+                answer: "WebP is Google's modern image format designed specifically for the web. Compared to JPEG and PNG, WebP files are typically 25–35% smaller at the same visual quality. Smaller images mean faster page load times, lower bandwidth costs, and better Core Web Vitals scores, which directly improve your site's SEO ranking."
+              },
+              {
+                question: "Is my image data private and secure?",
+                answer: "Yes, absolutely. All processing is done locally in your browser using JavaScript and Canvas. Your images are never uploaded to any backend server, ensuring 100% data privacy."
+              },
+              {
+                question: "Does this tool support transparent backgrounds?",
+                answer: "Yes, when converting to PNG or WebP, the tool preserves transparency. If you choose JPEG, transparent areas will automatically receive a white background because the JPEG format does not support transparency."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>

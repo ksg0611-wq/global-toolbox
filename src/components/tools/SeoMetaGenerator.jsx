@@ -1,5 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { trackEvent } from '../../utils/analytics';
+import SEOMeta from '../common/SEOMeta';
+import ClientOnly from '../common/ClientOnly';
+import ToolSEOSection from '../common/ToolSEOSection';
+
 
 /* ─── helpers ───────────────────────────────────────────────────────────── */
 const clamp = (str, max) => (str.length > max ? str.slice(0, max) + '…' : str);
@@ -271,8 +275,14 @@ export default function SeoMetaGenerator({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <SEOMeta
+        title="Free SEO Meta Tag Generator & Preview Online"
+        description="Generate, customize, and preview Google, Open Graph (Facebook), and Twitter Card meta tags instantly. Optimize titles and descriptions to boost CTR."
+        url="/tools/seo-meta-generator"
+      />
+
       <div className="relative w-full max-w-6xl max-h-[92vh] overflow-y-auto rounded-2xl
         bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700
         shadow-2xl shadow-black/40 flex flex-col">
@@ -305,314 +315,279 @@ export default function SeoMetaGenerator({ onClose }) {
         {/* ── Body ─────────────────────────────────────────────────────── */}
         <div className="p-6 flex flex-col gap-6">
 
-          {/* ── Main Two-Column Layout ── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ClientOnly>
+            {/* ── Main Two-Column Layout ── */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            {/* ── LEFT: Input Form ── */}
-            <div className="flex flex-col gap-5">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">1</span>
-                Page Information
-              </h3>
+              {/* ── LEFT: Input Form ── */}
+              <div className="flex flex-col gap-5">
+                <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">1</span>
+                  Page Information
+                </h3>
 
-              {/* Page Title */}
-              <Field
-                label="Page Title"
-                id="seo-title"
-                hint={<Counter value={titleLen} max={TITLE_MAX} />}>
-                <input
+                {/* Page Title */}
+                <Field
+                  label="Page Title"
                   id="seo-title"
-                  type="text"
-                  placeholder="My Amazing Page Title"
-                  value={form.title}
-                  onChange={set('title')}
-                  className={`${inputCls} ${titleLen > TITLE_MAX ? 'border-red-400 dark:border-red-500 focus:ring-red-400/30' : ''}`}
-                />
-                {titleLen > TITLE_MAX && (
-                  <p className="text-xs text-red-500">⚠️ Title exceeds {TITLE_MAX} characters — Google may truncate it in search results.</p>
-                )}
-              </Field>
+                  hint={<Counter value={titleLen} max={TITLE_MAX} />}>
+                  <input
+                    id="seo-title"
+                    type="text"
+                    placeholder="My Amazing Page Title"
+                    value={form.title}
+                    onChange={set('title')}
+                    className={`\${inputCls} \${titleLen > TITLE_MAX ? 'border-red-400 dark:border-red-500 focus:ring-red-400/30' : ''}`}
+                  />
+                  {titleLen > TITLE_MAX && (
+                    <p className="text-xs text-red-500">⚠️ Title exceeds {TITLE_MAX} characters — Google may truncate it in search results.</p>
+                  )}
+                </Field>
 
-              {/* Meta Description */}
-              <Field
-                label="Meta Description"
-                id="seo-desc"
-                hint={<Counter value={descLen} max={DESC_MAX} />}>
-                <textarea
+                {/* Meta Description */}
+                <Field
+                  label="Meta Description"
                   id="seo-desc"
-                  rows={3}
-                  placeholder="A brief, compelling description of your page (aim for 120–160 characters)."
-                  value={form.desc}
-                  onChange={set('desc')}
-                  className={`${inputCls} ${descLen > DESC_MAX ? 'border-red-400 dark:border-red-500 focus:ring-red-400/30' : ''}`}
-                />
-                {descLen > DESC_MAX && (
-                  <p className="text-xs text-red-500">⚠️ Description exceeds {DESC_MAX} characters — it will be truncated in SERPs.</p>
-                )}
-              </Field>
+                  hint={<Counter value={descLen} max={DESC_MAX} />}>
+                  <textarea
+                    id="seo-desc"
+                    rows={3}
+                    placeholder="A brief, compelling description of your page (aim for 120–160 characters)."
+                    value={form.desc}
+                    onChange={set('desc')}
+                    className={`\${inputCls} \${descLen > DESC_MAX ? 'border-red-400 dark:border-red-500 focus:ring-red-400/30' : ''}`}
+                  />
+                  {descLen > DESC_MAX && (
+                    <p className="text-xs text-red-500">⚠️ Description exceeds {DESC_MAX} characters — it will be truncated in SERPs.</p>
+                  )}
+                </Field>
 
-              {/* Keywords */}
-              <Field label="Keywords (comma-separated)" id="seo-keywords">
-                <input
-                  id="seo-keywords"
-                  type="text"
-                  placeholder="seo, meta tags, open graph, web tools"
-                  value={form.keywords}
-                  onChange={set('keywords')}
-                  className={inputCls}
-                />
-              </Field>
-
-              <hr className="border-slate-200 dark:border-zinc-800" />
-              <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">2</span>
-                Social Sharing
-              </h3>
-
-              {/* Image URL */}
-              <Field label="Social Image URL (og:image)" id="seo-image">
-                <input
-                  id="seo-image"
-                  type="url"
-                  placeholder="https://example.com/og-image.jpg  (1200×630 recommended)"
-                  value={form.imageUrl}
-                  onChange={set('imageUrl')}
-                  className={inputCls}
-                />
-              </Field>
-
-              {/* Site URL */}
-              <Field label="Canonical URL" id="seo-url">
-                <input
-                  id="seo-url"
-                  type="url"
-                  placeholder="https://example.com/your-page"
-                  value={form.siteUrl}
-                  onChange={set('siteUrl')}
-                  className={inputCls}
-                />
-              </Field>
-
-              <div className="grid grid-cols-2 gap-3">
-                {/* Site Name */}
-                <Field label="Site Name" id="seo-sitename">
+                {/* Keywords */}
+                <Field label="Keywords (comma-separated)" id="seo-keywords">
                   <input
-                    id="seo-sitename"
+                    id="seo-keywords"
                     type="text"
-                    placeholder="My Website"
-                    value={form.siteName}
-                    onChange={set('siteName')}
+                    placeholder="seo, meta tags, open graph, web tools"
+                    value={form.keywords}
+                    onChange={set('keywords')}
                     className={inputCls}
                   />
                 </Field>
-                {/* Twitter Handle */}
-                <Field label="Twitter Handle" id="seo-twitter">
+
+                <hr className="border-slate-200 dark:border-zinc-800" />
+                <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">2</span>
+                  Social Sharing
+                </h3>
+
+                {/* Image URL */}
+                <Field label="Social Image URL (og:image)" id="seo-image">
                   <input
-                    id="seo-twitter"
-                    type="text"
-                    placeholder="@mywebsite"
-                    value={form.twitterHandle}
-                    onChange={set('twitterHandle')}
+                    id="seo-image"
+                    type="url"
+                    placeholder="https://example.com/og-image.jpg  (1200×630 recommended)"
+                    value={form.imageUrl}
+                    onChange={set('imageUrl')}
                     className={inputCls}
                   />
                 </Field>
-              </div>
-            </div>
 
-            {/* ── RIGHT: Preview ── */}
-            <div className="flex flex-col gap-4">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">3</span>
-                Live Preview
-              </h3>
-
-              {/* Preview tabs */}
-              <div className="flex gap-1 rounded-lg bg-slate-100 dark:bg-zinc-800 p-1">
-                {[
-                  { key: 'google',   label: '🔍 Google'   },
-                  { key: 'facebook', label: '👥 Facebook' },
-                  { key: 'twitter',  label: '🐦 Twitter'  },
-                ].map(({ key, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setTab(key)}
-                    className={`flex-1 py-1.5 rounded-md text-xs font-semibold transition-all duration-200
-                      ${tab === key
-                        ? 'bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-sm'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200'
-                      }`}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Preview Card */}
-              <div className="flex-1">
-                {tab === 'google' && (
-                  <GooglePreview
-                    title={form.title}
-                    desc={form.desc}
-                    siteUrl={form.siteUrl}
+                {/* Site URL */}
+                <Field label="Canonical URL" id="seo-url">
+                  <input
+                    id="seo-url"
+                    type="url"
+                    placeholder="https://example.com/your-page"
+                    value={form.siteUrl}
+                    onChange={set('siteUrl')}
+                    className={inputCls}
                   />
-                )}
-                {tab === 'facebook' && (
-                  <FacebookPreview
-                    title={form.title}
-                    desc={form.desc}
-                    imageUrl={form.imageUrl}
-                    siteUrl={form.siteUrl}
-                  />
-                )}
-                {tab === 'twitter' && (
-                  <TwitterPreview
-                    title={form.title}
-                    desc={form.desc}
-                    imageUrl={form.imageUrl}
-                    twitterHandle={form.twitterHandle}
-                  />
-                )}
-              </div>
+                </Field>
 
-              {/* Tips box */}
-              <div className="rounded-xl bg-[#deff9a]/10 border border-[#deff9a]/30 p-4 space-y-2">
-                <p className="text-xs font-bold text-[#8fc400]">💡 Quick Tips</p>
-                <ul className="text-xs text-slate-600 dark:text-zinc-400 space-y-1">
-                  <li className={`flex items-center gap-1.5 ${titleLen > 0 && titleLen <= TITLE_MAX ? 'text-green-600 dark:text-green-400' : ''}`}>
-                    <span>{titleLen > 0 && titleLen <= TITLE_MAX ? '✅' : '◻️'}</span>
-                    Title: {titleLen}/{TITLE_MAX} chars (50–60 is ideal)
-                  </li>
-                  <li className={`flex items-center gap-1.5 ${descLen > 0 && descLen <= DESC_MAX ? 'text-green-600 dark:text-green-400' : ''}`}>
-                    <span>{descLen > 0 && descLen <= DESC_MAX ? '✅' : '◻️'}</span>
-                    Description: {descLen}/{DESC_MAX} chars (120–160 is ideal)
-                  </li>
-                  <li className={`flex items-center gap-1.5 ${form.imageUrl ? 'text-green-600 dark:text-green-400' : ''}`}>
-                    <span>{form.imageUrl ? '✅' : '◻️'}</span>
-                    Social image added (1200×630px recommended)
-                  </li>
-                  <li className={`flex items-center gap-1.5 ${form.keywords ? 'text-green-600 dark:text-green-400' : ''}`}>
-                    <span>{form.keywords ? '✅' : '◻️'}</span>
-                    Keywords defined
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* ── Generated HTML Code ── */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">4</span>
-                Generated HTML
-              </h3>
-              <button
-                onClick={handleCopy}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold
-                  transition-all duration-200 active:scale-95
-                  ${copied
-                    ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30'
-                    : 'bg-[#deff9a] hover:bg-[#ccef7a] text-zinc-900 shadow-sm shadow-[#deff9a]/20'
-                  }`}>
-                {copied ? <><IconCheck /> Copied!</> : <><IconCopy /> Copy HTML</>}
-              </button>
-            </div>
-
-            <div className="relative rounded-xl border border-slate-200 dark:border-zinc-700 overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Site Name */}
+                  <Field label="Site Name" id="seo-sitename">
+                    <input
+                      id="seo-sitename"
+                      type="text"
+                      placeholder="My Website"
+                      value={form.siteName}
+                      onChange={set('siteName')}
+                      className={inputCls}
+                    />
+                  </Field>
+                  {/* Twitter Handle */}
+                  <Field label="Twitter Handle" id="seo-twitter">
+                    <input
+                      id="seo-twitter"
+                      type="text"
+                      placeholder="@mywebsite"
+                      value={form.twitterHandle}
+                      onChange={set('twitterHandle')}
+                      className={inputCls}
+                    />
+                  </Field>
                 </div>
-                <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">index.html — &lt;head&gt;</span>
               </div>
-              <pre className="p-4 overflow-x-auto text-xs leading-relaxed font-mono
-                text-slate-700 dark:text-zinc-300 bg-slate-50 dark:bg-zinc-950
-                max-h-64 overflow-y-auto">
-                {generatedHTML.split('\n').map((line, i) => {
-                  if (line.startsWith('<!--')) {
-                    return <span key={i} className="text-slate-400 dark:text-zinc-500">{line}{'\n'}</span>;
-                  }
-                  if (line === '') return <span key={i}>{'\n'}</span>;
-                  // Colour attributes
-                  const parts = line.match(/^(<[^>]+>)(.*)$/);
-                  if (parts) {
-                    const tag = parts[1].replace(
-                      /(property|name|content|http-equiv|charset)="([^"]+)"/g,
-                      (_, attr, val) =>
-                        `<span style="color:#8fc400">${attr}</span>="<span style="color:#e879f9">${val}</span>"`
-                    );
-                    return <span key={i} dangerouslySetInnerHTML={{ __html: tag + '\n' }} />;
-                  }
-                  return <span key={i}>{line}{'\n'}</span>;
-                })}
-              </pre>
+
+              {/* ── RIGHT: Preview ── */}
+              <div className="flex flex-col gap-4">
+                <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">3</span>
+                  Live Preview
+                </h3>
+
+                {/* Preview tabs */}
+                <div className="flex gap-1 rounded-lg bg-slate-100 dark:bg-zinc-800 p-1">
+                  {[
+                    { key: 'google',   label: '🔍 Google'   },
+                    { key: 'facebook', label: '👥 Facebook' },
+                    { key: 'twitter',  label: '🐦 Twitter'  },
+                  ].map(({ key, label }) => (
+                    <button
+                      key={key}
+                      onClick={() => setTab(key)}
+                      className={`flex-1 py-1.5 rounded-md text-xs font-semibold transition-all duration-200
+                        \${tab === key
+                          ? 'bg-white dark:bg-zinc-700 text-slate-900 dark:text-white shadow-sm'
+                          : 'text-slate-500 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-zinc-200'
+                        }`}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Preview Card */}
+                <div className="flex-1">
+                  {tab === 'google' && (
+                    <GooglePreview
+                      title={form.title}
+                      desc={form.desc}
+                      siteUrl={form.siteUrl}
+                    />
+                  )}
+                  {tab === 'facebook' && (
+                    <FacebookPreview
+                      title={form.title}
+                      desc={form.desc}
+                      imageUrl={form.imageUrl}
+                      siteUrl={form.siteUrl}
+                    />
+                  )}
+                  {tab === 'twitter' && (
+                    <TwitterPreview
+                      title={form.title}
+                      desc={form.desc}
+                      imageUrl={form.imageUrl}
+                      twitterHandle={form.twitterHandle}
+                    />
+                  )}
+                </div>
+
+                {/* Tips box */}
+                <div className="rounded-xl bg-[#deff9a]/10 border border-[#deff9a]/30 p-4 space-y-2">
+                  <p className="text-xs font-bold text-[#8fc400]">💡 Quick Tips</p>
+                  <ul className="text-xs text-slate-600 dark:text-zinc-400 space-y-1">
+                    <li className={`flex items-center gap-1.5 \${titleLen > 0 && titleLen <= TITLE_MAX ? 'text-green-600 dark:text-green-400' : ''}`}>
+                      <span>{titleLen > 0 && titleLen <= TITLE_MAX ? '✅' : '◻️'}</span>
+                      Title: {titleLen}/{TITLE_MAX} chars (50–60 is ideal)
+                    </li>
+                    <li className={`flex items-center gap-1.5 \${descLen > 0 && descLen <= DESC_MAX ? 'text-green-600 dark:text-green-400' : ''}`}>
+                      <span>{descLen > 0 && descLen <= DESC_MAX ? '✅' : '◻️'}</span>
+                      Description: {descLen}/{DESC_MAX} chars (120–160 is ideal)
+                    </li>
+                    <li className={`flex items-center gap-1.5 \${form.imageUrl ? 'text-green-600 dark:text-green-400' : ''}`}>
+                      <span>{form.imageUrl ? '✅' : '◻️'}</span>
+                      Social image added (1200×630px recommended)
+                    </li>
+                    <li className={`flex items-center gap-1.5 \${form.keywords ? 'text-green-600 dark:text-green-400' : ''}`}>
+                      <span>{form.keywords ? '✅' : '◻️'}</span>
+                      Keywords defined
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* ── SEO Article ── */}
-          <article className="rounded-2xl border border-slate-200 dark:border-zinc-800
-            bg-slate-50 dark:bg-zinc-800/40 p-6 text-slate-600 dark:text-zinc-400 space-y-4">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-zinc-200">
-              Why Meta Tags Matter for SEO &amp; Social Sharing
-            </h2>
-            <p className="text-sm leading-relaxed">
-              Meta tags are snippets of HTML that describe your page's content to search engines
-              and social media platforms. While they are invisible to regular visitors, they play
-              a crucial role in how your page appears in search engine results pages (SERPs) and
-              when shared on platforms like Facebook, LinkedIn, and Twitter/X.
-            </p>
+            {/* ── Generated HTML Code ── */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-md bg-[#deff9a]/20 text-[#8fc400] flex items-center justify-center text-xs">4</span>
+                  Generated HTML
+                </h3>
+                <button
+                  onClick={handleCopy}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold
+                    transition-all duration-200 active:scale-95
+                    \${copied
+                      ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30'
+                      : 'bg-[#deff9a] hover:bg-[#ccef7a] text-zinc-900 shadow-sm shadow-[#deff9a]/20'
+                    }`}>
+                  {copied ? <><IconCheck /> Copied!</> : <><IconCopy /> Copy HTML</>}
+                </button>
+              </div>
 
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              The Most Important Meta Tags for SEO
-            </h3>
-            <ul className="text-sm space-y-2 list-none">
-              {[
-                ['<title>', 'The most critical on-page SEO element. Aim for 50–60 characters. Include your primary keyword near the beginning.'],
-                ['<meta name="description">', 'Although not a direct ranking factor, a compelling description improves click-through rate (CTR), which is an indirect signal of quality. Keep it under 160 characters.'],
-                ['<meta name="robots">', 'Tells search engine crawlers whether to index the page and follow its links. "index, follow" is the default for public pages.'],
-              ].map(([tag, desc]) => (
-                <li key={tag} className="flex flex-col gap-0.5">
-                  <code className="text-xs font-mono text-[#8fc400] bg-[#deff9a]/10 px-1.5 py-0.5 rounded w-fit">{tag}</code>
-                  <span>{desc}</span>
-                </li>
-              ))}
-            </ul>
+              <div className="relative rounded-xl border border-slate-200 dark:border-zinc-700 overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">index.html — &lt;head&gt;</span>
+                </div>
+                <pre className="p-4 overflow-x-auto text-xs leading-relaxed font-mono
+                  text-slate-700 dark:text-zinc-300 bg-slate-50 dark:bg-zinc-950
+                  max-h-64 overflow-y-auto">
+                  {generatedHTML.split('\n').map((line, i) => {
+                    if (line.startsWith('<!--')) {
+                      return <span key={i} className="text-slate-400 dark:text-zinc-500">{line}{'\n'}</span>;
+                    }
+                    if (line === '') return <span key={i}>{'\n'}</span>;
+                    // Colour attributes
+                    const parts = line.match(/^(<[^>]+>)(.*)$/);
+                    if (parts) {
+                      const tag = parts[1].replace(
+                        /(property|name|content|http-equiv|charset)="([^"]+)"/g,
+                        (_, attr, val) =>
+                          `<span style="color:#8fc400">\${attr}</span>="<span style="color:#e879f9">\${val}</span>"`
+                      );
+                      return <span key={i} dangerouslySetInnerHTML={{ __html: tag + '\n' }} />;
+                    }
+                    return <span key={i}>{line}{'\n'}</span>;
+                  })}
+                </pre>
+              </div>
+            </div>
+          </ClientOnly>
 
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              How Open Graph (og:) Tags Work
-            </h3>
-            <p className="text-sm leading-relaxed">
-              Open Graph (OG) is a protocol originally created by Facebook that enables any web page
-              to become a rich object in a social graph. When someone shares your URL on Facebook,
-              LinkedIn, or Slack, their crawlers read your <code className="font-mono text-xs text-[#8fc400]">og:title</code>,{' '}
-              <code className="font-mono text-xs text-[#8fc400]">og:description</code>, and{' '}
-              <code className="font-mono text-xs text-[#8fc400]">og:image</code> tags to generate the rich preview card.
-              Using a high-quality{' '}<strong className="text-slate-800 dark:text-zinc-200">1200×630px image</strong> dramatically
-              increases engagement compared to posts with no image.
-            </p>
-
-            <h3 className="text-base font-semibold text-slate-700 dark:text-zinc-300">
-              Twitter Cards &amp; Key Features
-            </h3>
-            <ul className="text-sm space-y-1.5 list-none">
-              {[
-                '🔍 Optimized title & description improve Google click-through rates',
-                '👥 Open Graph tags control how your link looks on Facebook & LinkedIn',
-                '🐦 Twitter cards with large images get significantly more retweets',
-                '🔗 Canonical URL prevents duplicate content penalties in search rankings',
-                '📸 A dedicated 1200×630px social image is critical for brand recognition',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2">{item}</li>
-              ))}
-            </ul>
-
-            <p className="text-xs text-slate-400 dark:text-zinc-500 pt-2 border-t border-slate-200 dark:border-zinc-700">
-              All processing is done in your browser. No data is sent to any server.
-              Paste the generated code into your HTML <code className="font-mono text-[#8fc400]">&lt;head&gt;</code> section for
-              immediate SEO and social sharing improvements.
-            </p>
-          </article>
+          {/* ── SEO Section ── */}
+          <ToolSEOSection
+            title="Free SEO Meta Tag Generator & Social Card Preview"
+            description="Meta tags are snippets of HTML that describe your page's content to search engines and social media platforms. While they are invisible to regular visitors, they play a crucial role in how your page appears in search engine results pages (SERPs) and when shared on platforms like Facebook, LinkedIn, and Twitter/X."
+            howToUse={[
+              "Enter your Page Title and target Meta Description. Keep an eye on the character counts.",
+              "Provide keywords (optional) and Canonical URL to avoid duplicate content penalties.",
+              "Provide a Social Image URL (og:image) for Open Graph previews (recommended 1200x630px).",
+              "Switch between Google, Facebook, and Twitter tabs to preview live social cards.",
+              "Click Copy HTML to copy the resulting tags to your clipboard."
+            ]}
+            faqs={[
+              {
+                question: "What is the recommended length for titles and descriptions?",
+                answer: "Google typically displays the first 50–60 characters of a page title and 120–160 characters of a meta description. Staying within these limits prevents your text from being truncated in search results."
+              },
+              {
+                question: "Why should I include Open Graph tags?",
+                answer: "Open Graph tags control how your content appears when shared on platforms like Facebook, LinkedIn, and Slack. Adding them ensures your links generate high-engagement social preview cards rather than plain text links."
+              },
+              {
+                question: "What is a Canonical URL?",
+                answer: "A canonical URL tells search engines which version of a URL is the primary page. This prevents search engines from indexing duplicate or similar pages under different URLs, helping protect your organic ranking."
+              }
+            ]}
+          />
         </div>
       </div>
     </div>
