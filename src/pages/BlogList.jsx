@@ -34,7 +34,7 @@ export default function BlogList({ onNavigate }) {
                 Global ToolBox <span className="text-[#8fc400] dark:text-[#deff9a]">Blog</span>
               </h1>
               <p className="text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-                Level up your digital presence, master monetization metrics, and optimize your developer workflow with our free, high-value technical guides.
+                Level up your digital presence, master monetization metrics, and optimize your developer workflow with our high-value technical guides.
               </p>
             </div>
 

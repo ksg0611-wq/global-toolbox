@@ -147,7 +147,7 @@ export default function BlogPost({ slug, onNavigateBack, onNavigateToTool }) {
                   <span 
                     className="text-[10px] font-bold uppercase tracking-widest text-[#8fc400] dark:text-[#deff9a]"
                   >
-                    ⚡ Related Free Tool
+                    ⚡ Related Tool
                   </span>
                   <p className="text-sm text-slate-700 dark:text-zinc-300 leading-relaxed font-semibold">
                     {cta.text}

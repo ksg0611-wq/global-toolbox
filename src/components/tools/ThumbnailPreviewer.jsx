@@ -64,7 +64,6 @@ export default function ThumbnailPreviewer({ onClose }) {
         title="YouTube Title & Thumbnail Preview Simulator"
         description="Simulate how your video title and thumbnail will look on YouTube Mobile and Desktop feeds in real-time. Test line-clamp truncation instantly."
         url="/tools/youtube-thumbnail-preview"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Thumbnail+Preview"
       />
       {/* ── Modal Panel ── */}
       <div

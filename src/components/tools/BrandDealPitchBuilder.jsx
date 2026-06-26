@@ -123,7 +123,6 @@ export default function BrandDealPitchBuilder({ onClose }) {
         title="Brand Deal Email Pitch Builder"
         description="Generate professional, persuasive cold email pitches to brands and secure sponsorships using AI. Customize creator name, platform size, brand targets, and pitch contexts."
         url="/tools/brand-deal-pitch-builder"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=Brand+Deal+Email+Pitch+Builder"
       />
       {/* ── Modal Panel ── */}
       <div

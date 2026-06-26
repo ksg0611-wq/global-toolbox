@@ -132,7 +132,7 @@ export default function PromptDetail({ slug, onNavigateBack, onNavigateToTool })
               
               <div className="space-y-2 max-w-xl relative">
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#8fc400] dark:text-[#deff9a]">
-                  🔗 Related Free Utility Tool
+                  🔗 Related Utility Tool
                 </span>
                 <h4 className="text-lg font-bold tracking-tight">
                   Automate this prompt with {relatedTool.title}

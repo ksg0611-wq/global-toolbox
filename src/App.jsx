@@ -309,7 +309,7 @@ export default function App() {
             )}
 
             {/* Tools */}
-            <div className="notranslate">
+            <>
               {activeTool === 'cpa-calculator' && <MarginCalculator onClose={() => setActiveTool(null)} />}
               {activeTool === 'youtube-analyzer' && <YouTubeAnalyzer onClose={() => setActiveTool(null)} />}
               {activeTool === 'text-formatter' && <TextFormatter onClose={() => setActiveTool(null)} />}
@@ -331,7 +331,7 @@ export default function App() {
               {activeTool === 'hashtag-generator' && <HashtagGenerator onClose={() => setActiveTool(null)} />}
               {activeTool === 'youtube-thumbnail-downloader' && <YouTubeThumbnailDownloader onClose={() => setActiveTool(null)} />}
               {activeTool === 'youtube-script-generator' && <YouTubeScriptGenerator onClose={() => setActiveTool(null)} />}
-            </div>
+            </>
           </div>
         ) : (
           <>

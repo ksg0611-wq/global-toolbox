@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
 const SEO = ({ title, description, image, url }) => {
-  const defaultTitle = "Global ToolBox | 21+ Essential Web Utilities";
-  const defaultDesc = "Free, blazing fast, and ad-free web utility platform with 21+ tools and a curated AI prompt library.";
+  const defaultTitle = "Global ToolBox | 24+ Essential Web Utilities";
+  const defaultDesc = "Instant access to professional web utilities with 24+ tools and a curated AI prompt library.";
   const defaultImage = "https://global-toolbox.com/assets/og-default.png"; 
   const defaultUrl = "https://global-toolbox.com";
 

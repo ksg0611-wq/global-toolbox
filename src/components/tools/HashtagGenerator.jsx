@@ -209,7 +209,6 @@ export default function HashtagGenerator({ onClose }) {
         title="Multi-platform AI Hashtag Generator"
         description="Generate highly relevant, active hashtags for Instagram, TikTok, and YouTube Shorts using AI. Choose topic, platform, and strategy."
         url="/tools/hashtag-generator"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=AI+Hashtag+Generator"
       />
       
       {/* ── Modal Panel ── */}

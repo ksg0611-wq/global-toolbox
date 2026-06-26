@@ -70,7 +70,7 @@ export const HERO = {
   badge:    '100% Serverless · Edge-Deployed',
   title1:   'Instant Web Utilities for',
   title2:   'Global Creators & Developers',
-  subtitle: 'No sign-up. No tracking. Open-source tools running on Cloudflare Edge — blazing fast for every timezone.',
+  subtitle: 'Instant access. Optional cloud save. Open-source tools running on Cloudflare Edge — blazing fast for every timezone.',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

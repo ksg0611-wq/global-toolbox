@@ -103,10 +103,9 @@ export default function YouTubeScriptGenerator({ onClose }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
-        title="Free AI YouTube Script Generator | Outline Maker"
+        title="AI YouTube Script Generator | Outline Maker"
         description="Create highly engaging YouTube video scripts and outlines tailored by audience and tone with AI. Boost video watch time and pacing instantly."
         url="/tools/youtube-script-generator"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Script+Generator"
       />
 
       {/* Inject Markdown Preview Custom CSS */}

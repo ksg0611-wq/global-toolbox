@@ -71,6 +71,9 @@
       "/tools/hashtag-generator",
       "/tools/youtube-thumbnail-downloader",
       "/tools/youtube-script-generator",
+      "/tools/youtube-thumbnail-ab-tester",
+      "/tools/utm-link-builder",
+      "/tools/word-counter",
       "/blog",
       "/prompts",
       "/blog/how-to-analyze-youtube-tags",
@@ -85,6 +88,9 @@
       "/blog/the-ultimate-guide-to-html-meta-tags-for-seo-boosting-ctr",
       "/blog/beyond-strong-passwords-beginners-guide-to-web-security-and-base64-encoding",
       "/blog/mastering-ai-prompts-how-to-structure-context-for-chatgpt-gemini-and-claude",
+      "/blog/the-psychology-of-high-ctr-youtube-thumbnails-ab-testing-secrets",
+      "/blog/avoid-bad-campaign-data-guide-to-ga4-utm-tagging-best-practices",
+      "/blog/write-for-humans-optimize-for-seo-word-count-and-reading-time-formulas",
       "/prompts/expert-react-vite-reviewer",
       "/prompts/sql-query-optimizer",
       "/prompts/meta-google-ads-copywriter",
@@ -94,7 +100,12 @@
       "/prompts/midjourney-v6-architecture-generator",
       "/prompts/tailwind-component-generator",
       "/prompts/chain-of-thought-solver",
-      "/prompts/python-automation-architect"
+      "/prompts/python-automation-architect",
+      "/prompts/full-stack-api-security-auditor",
+      "/prompts/seo-keyword-clustering-gap-analyzer",
+      "/prompts/high-converting-landing-page-copywriter",
+      "/prompts/ui-ux-wireframe-user-flow-generator",
+      "/prompts/meeting-transcript-synthesizer"
     ]
   }
 }

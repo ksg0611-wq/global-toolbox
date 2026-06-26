@@ -107,7 +107,6 @@ export default function RevenueEstimator({ onClose }) {
         title="YouTube & AdSense Revenue Estimator"
         description="Calculate your estimated YouTube channel earnings and AdSense revenue. Adjust daily views, channel niche, and audience tiers to see potential daily, monthly, and yearly profits."
         url="/tools/youtube-revenue-calculator"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Revenue+Estimator"
       />
       {/* ── Modal Panel ── */}
       <div

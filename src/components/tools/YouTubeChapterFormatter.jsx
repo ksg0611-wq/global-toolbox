@@ -90,7 +90,6 @@ Raw notes: ${rawNotes}`;
         title="YouTube Timestamp & Chapter Formatter"
         description="Convert messy video notes into perfectly formatted YouTube video chapters and timestamps using AI. Just copy and paste into your video description."
         url="/tools/youtube-chapter-formatter"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Chapter+Formatter"
       />
       {/* ── Modal Panel ── */}
       <div

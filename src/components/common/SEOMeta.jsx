@@ -13,10 +13,10 @@ export default function SEOMeta({
   url = '',
   imageUrl = ''
 }) {
-  const defaultTitle = 'Global ToolBox - Free Web Utilities for Creators & Developers';
+  const defaultTitle = 'Global ToolBox - Professional Web Utilities for Creators & Developers';
   const displayTitle = title ? `${title} | Global ToolBox` : defaultTitle;
   const fullUrl = url ? (url.startsWith('http') ? url : `https://global-toolbox.com${url}`) : 'https://global-toolbox.com';
-  const ogImageUrl = imageUrl || 'https://via.placeholder.com/1200x630/1f2937/a3e635?text=Global+ToolBox';
+  const ogImageUrl = imageUrl || 'https://global-toolbox.com/assets/og-default.png';
 
   return (
     <Helmet>

@@ -6,7 +6,7 @@ export default function TermsOfService() {
     <div className="max-w-4xl mx-auto px-6 py-12 md:py-20 text-slate-800 dark:text-zinc-200">
       <SEO
         title="Terms of Service"
-        description="Terms of service and user agreements for using the free web utility tools on Global ToolBox."
+        description="Terms of service and user agreements for using the web utility tools on Global ToolBox."
         url="/terms"
       />
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent dark:from-white dark:to-indigo-200">
@@ -21,7 +21,7 @@ export default function TermsOfService() {
 
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8">1. Description of Service</h2>
         <p>
-          Global ToolBox is a web platform providing free utility tools, calculators, formatters, and generators for creators, digital marketers, and developers. These tools are provided "as-is" and "as-available" without warranties of any kind.
+          Global ToolBox is a web platform providing utility tools, calculators, formatters, and generators for creators, digital marketers, and developers. These tools are provided "as-is" and "as-available" without warranties of any kind.
         </p>
 
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8">2. Permitted Use</h2>

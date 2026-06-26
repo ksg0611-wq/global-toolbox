@@ -110,9 +110,8 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
     >
       <SEOMeta
         title="YouTube SEO Description & Tag Generator"
-        description="Generate highly optimized YouTube video descriptions and 15 relevant tags based on your keywords and title using AI. Free tool for YouTube SEO."
+        description="Generate highly optimized YouTube video descriptions and 15 relevant tags based on your keywords and title using AI. Essential tool for YouTube SEO."
         url="/tools/youtube-description-generator"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Description+Generator"
       />
       {/* 마크다운 프리뷰 전용 CSS 스타일 주입 */}
       <style>{`
@@ -389,7 +388,7 @@ The description must be in English and include: 1) A catchy introduction, 2) A d
           <AffiliateCard
             title="🚀 Want to rank #1 on YouTube Search?"
             description="Discover hidden keywords, spy on competitors' tags, and optimize your videos 10x faster with TubeBuddy's free browser extension."
-            buttonText="Get TubeBuddy for Free"
+            buttonText="Try TubeBuddy Pro"
             linkUrl="https://www.tubebuddy.com"
           />
 

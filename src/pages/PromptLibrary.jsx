@@ -35,7 +35,7 @@ export default function PromptLibrary({ onNavigate }) {
     <>
       <SEO
         title="AI Master Prompts Library"
-        description="Explore our library of free, highly optimized AI prompts for Development, Marketing, Copywriting, Midjourney v6 design, and Advanced Chain-of-Thought reasoning."
+        description="Explore our library of highly optimized AI prompts for Development, Marketing, Copywriting, Midjourney v6 design, and Advanced Chain-of-Thought reasoning."
         url="/prompts"
       />
 

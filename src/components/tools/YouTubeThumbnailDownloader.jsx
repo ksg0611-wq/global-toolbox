@@ -72,10 +72,9 @@ export default function YouTubeThumbnailDownloader({ onClose }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
     >
       <SEOMeta
-        title="Free YouTube Thumbnail Downloader | Grab HD Images"
-        description="Download high-resolution (HD, 1080p, maxresdefault) thumbnails from any YouTube video instantly for free. No API key needed."
+        title="YouTube Thumbnail Downloader | Grab HD Images"
+        description="Download high-resolution (HD, 1080p, maxresdefault) thumbnails from any YouTube video instantly. No API key needed."
         url="/tools/youtube-thumbnail-downloader"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=YouTube+Thumbnail+Downloader"
       />
 
       {/* ── Modal Panel ── */}

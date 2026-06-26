@@ -152,7 +152,6 @@ export default function ViralHookGenerator({ onClose }) {
         title="Short-form Viral Hook Generator"
         description="Generate viral, high-converting 3-second hook ideas for TikTok, YouTube Shorts, and Instagram Reels using AI. Choose topic, platform, and tone."
         url="/tools/viral-hook-generator"
-        imageUrl="https://via.placeholder.com/1200x630/1f2937/a3e635?text=Viral+Hook+Generator"
       />
       {/* ── Modal Panel ── */}
       <div
