@@ -40,6 +40,7 @@ export const getBlogPosts = () => {
       description: metadata.description || '',
       relatedTool: metadata.relatedTool || '',
       tag: metadata.tag || 'Guide',
+      image: metadata.image || '',
     });
   }
   

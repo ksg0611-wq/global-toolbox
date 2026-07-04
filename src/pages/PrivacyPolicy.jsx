@@ -7,6 +7,7 @@ export default function PrivacyPolicy() {
       <SEO
         title="Privacy Policy"
         description="Privacy policy details for Global ToolBox. Learn about our secure 100% client-side computations, AdSense cookies, and analytics tracking."
+        image="/assets/og-default.png"
         url="/privacy"
       />
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent dark:from-white dark:to-indigo-200">

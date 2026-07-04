@@ -55,7 +55,19 @@ export default function ToolCard({
   const IconComponent = ICON_MAP[iconName] ?? Icons.IconDefault;
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-250/70 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-300 dark:hover:border-zinc-750">
+    <a href={comingSoon ? '#' : href}
+      onClick={(e) => {
+        if (comingSoon) {
+          e.preventDefault();
+          return;
+        }
+        if (openModal && onLaunch) {
+          e.preventDefault();
+          onLaunch();
+        }
+      }}
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-250/70 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-300 dark:hover:border-zinc-750 cursor-pointer text-left decoration-none"
+    >
 
       {/* 호버 시 상단 glow */}
       <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-tr from-indigo-400/20 to-purple-400/20 blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -120,20 +132,13 @@ export default function ToolCard({
               {TOOL_CARD.comingSoonBadge}
             </span>
           ) : (
-            <a href={href}
-              onClick={(e) => {
-                if (openModal && onLaunch) {
-                  e.preventDefault();
-                  onLaunch();
-                }
-              }}
-              className="group/btn inline-flex items-center gap-1.5 rounded-xl bg-slate-900 dark:bg-zinc-700 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:shadow-indigo-500/25 hover:shadow-md active:scale-95">
+            <span className="group/btn inline-flex items-center gap-1.5 rounded-xl bg-slate-900 dark:bg-zinc-700 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:shadow-indigo-500/25 hover:shadow-md active:scale-95">
               {TOOL_CARD.launchButton}
               <IconArrowRight />
-            </a>
+            </span>
           )}
         </div>
       </div>
-    </article>
+    </a>
   );
 }

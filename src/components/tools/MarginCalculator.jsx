@@ -43,18 +43,27 @@ const IconCheck = () => (
 );
 
 // ── 입력 필드 컴포넌트 ───────────────────────────────────────────────────────
-function InputField({ id, label, placeholder, unit, hint, value, onChange, type = 'number' }) {
+// ── 입력 필드 컴포넌트 ───────────────────────────────────────────────────────
+function InputField({ id, label, placeholder, unit, hint, value, onChange, type = 'number', isDark }) {
+  const LIME = '#deff9a';
+  const LIME_DIM = 'rgba(222,255,154,0.12)';
+  const INDIGO = '#4f46e5';
+  const INDIGO_DIM = 'rgba(79,70,229,0.15)';
+
+  const primaryColor = isDark ? LIME : INDIGO;
+  const focusDimColor = isDark ? LIME_DIM : INDIGO_DIM;
+
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-xs font-semibold uppercase tracking-wider"
-        style={{ color: LIME }}>
+      <label htmlFor={id} className="text-xs font-semibold uppercase tracking-wider transition-colors"
+        style={{ color: primaryColor }}>
         {label}
       </label>
       <div className="relative flex items-center">
         {/* 앞쪽 단위 */}
         {['$'].includes(unit) && (
-          <span className="absolute left-3 text-sm font-bold select-none"
-            style={{ color: LIME }}>
+          <span className="absolute left-3 text-sm font-bold select-none transition-colors"
+            style={{ color: primaryColor }}>
             {unit}
           </span>
         )}
@@ -69,45 +78,61 @@ function InputField({ id, label, placeholder, unit, hint, value, onChange, type 
           placeholder={placeholder}
           className="w-full rounded-xl border py-3 text-sm font-medium outline-none transition-all"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            borderColor: 'rgba(222,255,154,0.2)',
-            color: '#f1f5f9',
+            background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
+            borderColor: isDark ? 'rgba(222,255,154,0.2)' : '#cbd5e1',
+            color: isDark ? '#f1f5f9' : '#0f172a',
             paddingLeft:  ['$'].includes(unit) ? '2rem' : '0.875rem',
             paddingRight: ['%', 'leads'].includes(unit) ? '3.5rem' : '0.875rem',
           }}
-          onFocus={(e) => { e.target.style.borderColor = LIME; e.target.style.boxShadow = `0 0 0 3px ${LIME_DIM}`; }}
-          onBlur={(e)  => { e.target.style.borderColor = 'rgba(222,255,154,0.2)'; e.target.style.boxShadow = 'none'; }}
+          onFocus={(e) => {
+            e.target.style.borderColor = primaryColor;
+            e.target.style.boxShadow = `0 0 0 3px ${focusDimColor}`;
+          }}
+          onBlur={(e)  => {
+            e.target.style.borderColor = isDark ? 'rgba(222,255,154,0.2)' : '#cbd5e1';
+            e.target.style.boxShadow = 'none';
+          }}
         />
         {/* 뒤쪽 단위 */}
         {['%', 'leads'].includes(unit) && (
-          <span className="absolute right-3 text-xs font-semibold select-none text-slate-400">
+          <span className="absolute right-3 text-xs font-semibold select-none text-slate-400 dark:text-zinc-500">
             {unit}
           </span>
         )}
       </div>
-      {hint && <p className="text-xs text-slate-500">{hint}</p>}
+      {hint && <p className="text-xs text-slate-500 dark:text-zinc-400">{hint}</p>}
     </div>
   );
 }
 
 // ── 결과 행 컴포넌트 ─────────────────────────────────────────────────────────
-function ResultRow({ label, value, prefix = '', suffix = '', highlight = false, positive }) {
+function ResultRow({ label, value, prefix = '', suffix = '', highlight = false, positive, isDark }) {
   const hasValue = value !== null && value !== undefined;
+  const LIME = '#deff9a';
+  const LIME_DIM = 'rgba(222,255,154,0.12)';
+  const INDIGO = '#4f46e5';
+  const INDIGO_DIM = 'rgba(79,70,229,0.08)';
 
-  // positive: true=녹색, false=빨간색, undefined=라임(중립)
+  const primaryColor = isDark ? LIME : INDIGO;
+  const dimColor = isDark ? LIME_DIM : INDIGO_DIM;
+
+  // positive: true=녹색, false=빨간색, undefined=라임/인디고(중립)
   const valueColor =
     positive === true  ? '#4ade80' :   // green-400
     positive === false ? '#f87171' :   // red-400
-    LIME;
+    primaryColor;
 
   return (
-    <div className={`flex items-center justify-between rounded-xl px-4 py-3 transition-colors ${
-      highlight ? '' : 'bg-white/5'
+    <div className={`flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-300 ${
+      highlight ? '' : (isDark ? 'bg-white/5' : 'bg-slate-100/80')
     }`}
-      style={highlight ? { background: LIME_DIM, border: `1px solid rgba(222,255,154,0.25)` } : {}}>
-      <span className="text-sm text-slate-400 font-medium">{label}</span>
+      style={highlight ? {
+        background: dimColor,
+        border: `1px solid ${isDark ? 'rgba(222,255,154,0.25)' : 'rgba(79,70,229,0.2)'}`
+      } : {}}>
+      <span className="text-sm text-slate-400 dark:text-zinc-500 font-medium">{label}</span>
       <span className="text-base font-bold tabular-nums"
-        style={{ color: hasValue ? valueColor : '#475569' }}>
+        style={{ color: hasValue ? valueColor : (isDark ? '#475569' : '#94a3b8') }}>
         {hasValue ? `${prefix}${value}${suffix}` : '—'}
       </span>
     </div>
@@ -116,6 +141,15 @@ function ResultRow({ label, value, prefix = '', suffix = '', highlight = false, 
 
 // ── 메인 컴포넌트 ─────────────────────────────────────────────────────────────
 export default function MarginCalculator({ onClose }) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [payout,      setPayout]      = useState('');
   const [adSpend,     setAdSpend]     = useState('');
   const [conversions, setConversions] = useState('');
@@ -198,26 +232,29 @@ export default function MarginCalculator({ onClose }) {
 
       {/* ── Modal Panel ── */}
       <div
-        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
-        style={{ background: '#111118', border: '1px solid rgba(222,255,154,0.18)' }}
+        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl transition-colors duration-300"
+        style={{
+          background: isDark ? '#111118' : '#ffffff',
+          border: isDark ? '1px solid rgba(222,255,154,0.18)' : '1px solid rgba(0,0,0,0.08)'
+        }}
       >
         {/* ── Lime top accent line ── */}
         <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-          style={{ background: `linear-gradient(90deg, transparent, ${LIME}, transparent)` }} />
+          style={{ background: `linear-gradient(90deg, transparent, ${isDark ? LIME : '#4f46e5'}, transparent)` }} />
 
         {/* ── Header ── */}
         <div className="flex items-start justify-between px-6 pt-7 pb-5">
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: LIME }}>
+            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: isDark ? LIME : '#1e1b4b' }}>
               {MARGIN_CALC.title}
             </h2>
-            <p className="mt-1 text-sm text-slate-400">{MARGIN_CALC.subtitle}</p>
+            <p className="mt-1 text-sm text-slate-400 dark:text-zinc-400">{MARGIN_CALC.subtitle}</p>
           </div>
           <button
             onClick={onClose}
             aria-label={MARGIN_CALC.closeAriaLabel}
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:text-white ml-4"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors ml-4 cursor-pointer text-slate-400 dark:text-zinc-400 hover:text-slate-600 dark:hover:text-white"
+            style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }}
           >
             <IconClose />
           </button>
@@ -235,18 +272,21 @@ export default function MarginCalculator({ onClose }) {
                   placeholder={MARGIN_CALC.placeholderPayout}
                   unit={MARGIN_CALC.unitPayout}
                   value={payout} onChange={setPayout}
+                  isDark={isDark}
                 />
                 <InputField
                   id="adspend" label={MARGIN_CALC.labelAdSpend}
                   placeholder={MARGIN_CALC.placeholderAdSpend}
                   unit={MARGIN_CALC.unitAdSpend}
                   value={adSpend} onChange={setAdSpend}
+                  isDark={isDark}
                 />
                 <InputField
                   id="conversions" label={MARGIN_CALC.labelConversions}
                   placeholder={MARGIN_CALC.placeholderConversions}
                   unit={MARGIN_CALC.unitConversions}
                   value={conversions} onChange={setConversions}
+                  isDark={isDark}
                 />
                 <InputField
                   id="fees" label={MARGIN_CALC.labelFees}
@@ -254,12 +294,13 @@ export default function MarginCalculator({ onClose }) {
                   unit={MARGIN_CALC.unitFees}
                   hint={MARGIN_CALC.feesHint}
                   value={fees} onChange={setFees}
+                  isDark={isDark}
                 />
               </div>
 
               {/* ── RIGHT: Results ── */}
               <div className="flex flex-col gap-3">
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: LIME }}>
+                <p className="text-xs font-bold uppercase tracking-wider transition-colors" style={{ color: isDark ? LIME : '#4f46e5' }}>
                   {MARGIN_CALC.outputTitle}
                 </p>
 
@@ -269,6 +310,7 @@ export default function MarginCalculator({ onClose }) {
                       label={MARGIN_CALC.labelGrossRevenue}
                       value={result.grossRevenue}
                       prefix="$"
+                      isDark={isDark}
                     />
                     <ResultRow
                       label={MARGIN_CALC.labelNetProfit}
@@ -276,23 +318,29 @@ export default function MarginCalculator({ onClose }) {
                       prefix="$"
                       highlight
                       positive={result.netProfitPositive}
+                      isDark={isDark}
                     />
                     <ResultRow
                       label={MARGIN_CALC.labelROI}
                       value={result.roi}
                       suffix="%"
                       positive={result.roiPositive}
+                      isDark={isDark}
                     />
                     <ResultRow
                       label={MARGIN_CALC.labelMargin}
                       value={result.margin}
                       suffix="%"
                       positive={result.marginPositive}
+                      isDark={isDark}
                     />
                   </>
                 ) : (
-                  <div className="flex flex-grow items-center justify-center rounded-xl py-12 text-sm text-slate-500 text-center"
-                    style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+                  <div className="flex flex-grow items-center justify-center rounded-xl py-12 text-sm text-slate-500 text-center transition-all duration-300"
+                    style={{
+                      background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                      border: isDark ? '1px dashed rgba(255,255,255,0.08)' : '1px dashed rgba(0,0,0,0.1)'
+                    }}>
                     {MARGIN_CALC.emptyHint}
                   </div>
                 )}
@@ -301,8 +349,11 @@ export default function MarginCalculator({ onClose }) {
                 <div className="mt-auto pt-2 flex gap-3">
                   <button
                     onClick={handleReset}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-300 transition-all hover:text-white active:scale-95"
-                    style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-slate-500 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white transition-all active:scale-95 cursor-pointer"
+                    style={{
+                      background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.04)',
+                      border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)'
+                    }}
                   >
                     <IconReset /> {MARGIN_CALC.btnReset}
                   </button>
@@ -310,11 +361,17 @@ export default function MarginCalculator({ onClose }) {
                   <button
                     onClick={handleCopy}
                     disabled={!result}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                     style={{
-                      background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
-                      border: `1px solid ${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
-                      color: copied ? '#4ade80' : LIME,
+                      background: copied
+                        ? (isDark ? 'rgba(74,222,128,0.15)' : 'rgba(74,222,128,0.08)')
+                        : (isDark ? LIME_DIM : 'rgba(79,70,229,0.08)'),
+                      border: `1px solid ${copied
+                        ? (isDark ? 'rgba(74,222,128,0.4)' : 'rgba(74,222,128,0.2)')
+                        : (isDark ? 'rgba(222,255,154,0.3)' : 'rgba(79,70,229,0.2)')}`,
+                      color: copied
+                        ? '#4ade80'
+                        : (isDark ? LIME : '#4f46e5'),
                     }}
                   >
                     {copied ? <><IconCheck /> {MARGIN_CALC.btnCopied}</> : <><IconCopy /> {MARGIN_CALC.btnCopy}</>}

@@ -25,6 +25,9 @@ import YouTubeDescriptionGenerator from './components/tools/YouTubeDescriptionGe
 import HashtagGenerator from './components/tools/HashtagGenerator';
 import YouTubeThumbnailDownloader from './components/tools/YouTubeThumbnailDownloader';
 import YouTubeScriptGenerator from './components/tools/YouTubeScriptGenerator';
+import YouTubeThumbnailAbTester from './components/tools/YouTubeThumbnailAbTester';
+import UtmLinkBuilder from './components/tools/UtmLinkBuilder';
+import WordCounter from './components/tools/WordCounter';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import About from './pages/About';
@@ -39,10 +42,25 @@ import PromptDetail from './pages/PromptDetail';
 import { HERO, TOOLS_SECTION } from './constants/strings';
 import { TOOLS } from './constants/tools';
 import { IconSpark, IconFilter, IconSearch } from './components/icons';
+import promptsData from './data/prompts.json';
+import { getBlogPosts } from './utils/blog';
 
 export default function App() {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(TOOLS_SECTION.filterAll);
+
+  // AdSense 스크립트 동적 주입 (Hydration 이후 브라우저에서만 실행되도록 설정하여 react-snap 빌드 방어)
+  useEffect(() => {
+    // react-snap은 localhost에서 실행되므로 hostname 물리적 환경으로 100% 차단
+    if (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1') return;
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8195982419600082';
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+  }, []);
   
   // 즐겨찾기(Pin) 툴 ID 목록 상태 관리
   const [pinnedToolIds, setPinnedToolIds] = useState(() => {
@@ -196,29 +214,95 @@ export default function App() {
       window.history.pushState(null, '', newPath);
     }
 
+    let metaTitle = "Global ToolBox | 24+ Essential Web Utilities";
+    let metaDesc  = "Instant access to professional web utilities with 24+ tools and a curated AI prompt library.";
+    let ogUrlVal  = "https://global-toolbox.com";
+    let ogImgUrl  = "https://global-toolbox.com/assets/og-default.png";
+
     const tool = TOOLS.find((t) => t.id === activeTool);
 
     if (tool) {
-      document.title = `${tool.title} | Global ToolBox`;
-
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) metaDesc.setAttribute('content', tool.description);
-
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.setAttribute('content', `${tool.title} | Global ToolBox`);
-
-      const ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) ogDesc.setAttribute('content', tool.description);
-
-      const ogUrl = document.querySelector('meta[property="og:url"]');
-      if (ogUrl) ogUrl.setAttribute('content', `https://global-toolbox.com/tools/${tool.id}`);
-
-      const twTitle = document.querySelector('meta[name="twitter:title"]');
-      if (twTitle) twTitle.setAttribute('content', `${tool.title} | Global ToolBox`);
-
-      const twDesc = document.querySelector('meta[name="twitter:description"]');
-      if (twDesc) twDesc.setAttribute('content', tool.description);
+      metaTitle = `${tool.title} | Global ToolBox`;
+      metaDesc  = tool.description;
+      ogUrlVal  = `https://global-toolbox.com/tools/${tool.id}`;
+    } else if (activeTool === 'blog') {
+      metaTitle = "Creator & Developer Blog | Global ToolBox";
+      metaDesc  = "Discover expert guides, SEO strategies, and creator monetization formulas on the Global ToolBox blog. Learn CPM calculations, tag optimization, and cold outreach tips.";
+      ogUrlVal  = "https://global-toolbox.com/blog";
+    } else if (activeTool === 'blog-post') {
+      const posts = getBlogPosts();
+      const post  = posts.find((p) => p.slug === activeSlug);
+      if (post) {
+        metaTitle = `${post.title} | Global ToolBox`;
+        metaDesc  = post.description;
+        if (post.image) {
+          ogImgUrl = post.image.startsWith('http') ? post.image : `https://global-toolbox.com${post.image}`;
+        }
+      }
+      ogUrlVal  = `https://global-toolbox.com/blog/${activeSlug}`;
+    } else if (activeTool === 'prompts') {
+      metaTitle = "AI Master Prompts Library | Global ToolBox";
+      metaDesc  = "Explore our library of highly optimized AI prompts for Development, Marketing, Copywriting, Midjourney v6 design, and Advanced Chain-of-Thought reasoning.";
+      ogUrlVal  = "https://global-toolbox.com/prompts";
+    } else if (activeTool === 'prompt-detail') {
+      const promptItem = promptsData.find((p) => p.slug === activeSlug);
+      if (promptItem) {
+        metaTitle = `${promptItem.title} | Global ToolBox`;
+        metaDesc  = promptItem.metaDescription || promptItem.excerpt;
+      }
+      ogUrlVal  = `https://global-toolbox.com/prompts/${activeSlug}`;
+    } else if (activeTool === 'about') {
+      metaTitle = "About Us | Global ToolBox";
+      metaDesc  = "Welcome to Global ToolBox, a high-performance hub of client-side web utility applications designed specifically for creators, developers, and digital marketers worldwide.";
+      ogUrlVal  = "https://global-toolbox.com/about";
+    } else if (activeTool === 'privacy') {
+      metaTitle = "Privacy Policy | Global ToolBox";
+      metaDesc  = "Privacy policy details for Global ToolBox. Learn about our secure 100% client-side computations, AdSense cookies, and analytics tracking.";
+      ogUrlVal  = "https://global-toolbox.com/privacy";
+    } else if (activeTool === 'terms') {
+      metaTitle = "Terms of Service | Global ToolBox";
+      metaDesc  = "Terms of service and user agreements for using the web utility tools on Global ToolBox.";
+      ogUrlVal  = "https://global-toolbox.com/terms";
+    } else if (activeTool === 'my-toolbox') {
+      metaTitle = "My Toolbox | Global ToolBox";
+      metaDesc  = "Access your pinned and favorite online developer and creator web utility tools.";
+      ogUrlVal  = "https://global-toolbox.com/my-toolbox";
+    } else if (activeTool === 'suggest-tool') {
+      metaTitle = "Suggest a Tool | Global ToolBox";
+      metaDesc  = "Have an idea for a secure, browser-based web utility tool? Let us know and we might build it!";
+      ogUrlVal  = "https://global-toolbox.com/suggest-tool";
+    } else if (activeTool === 'contact') {
+      metaTitle = "Contact Us | Global ToolBox";
+      metaDesc  = "Get in touch with the team at Global ToolBox for support, sponsor requests, or feature inquiries.";
+      ogUrlVal  = "https://global-toolbox.com/contact";
     }
+
+    // DOM 업데이트
+    document.title = metaTitle;
+
+    const metaDescTag = document.querySelector('meta[name="description"]');
+    if (metaDescTag) metaDescTag.setAttribute('content', metaDesc);
+
+    const ogTitleTag = document.querySelector('meta[property="og:title"]');
+    if (ogTitleTag) ogTitleTag.setAttribute('content', metaTitle);
+
+    const ogDescTag = document.querySelector('meta[property="og:description"]');
+    if (ogDescTag) ogDescTag.setAttribute('content', metaDesc);
+
+    const ogUrlTag = document.querySelector('meta[property="og:url"]');
+    if (ogUrlTag) ogUrlTag.setAttribute('content', ogUrlVal);
+
+    const ogImgTag = document.querySelector('meta[property="og:image"]');
+    if (ogImgTag) ogImgTag.setAttribute('content', ogImgUrl);
+
+    const twTitleTag = document.querySelector('meta[name="twitter:title"]');
+    if (twTitleTag) twTitleTag.setAttribute('content', metaTitle);
+
+    const twDescTag = document.querySelector('meta[name="twitter:description"]');
+    if (twDescTag) twDescTag.setAttribute('content', metaDesc);
+
+    const twImgTag = document.querySelector('meta[name="twitter:image"]');
+    if (twImgTag) twImgTag.setAttribute('content', ogImgUrl);
   }, [activeTool, activeSlug]);
 
   const categories = useMemo(
@@ -331,6 +415,33 @@ export default function App() {
               {activeTool === 'hashtag-generator' && <HashtagGenerator onClose={() => setActiveTool(null)} />}
               {activeTool === 'youtube-thumbnail-downloader' && <YouTubeThumbnailDownloader onClose={() => setActiveTool(null)} />}
               {activeTool === 'youtube-script-generator' && <YouTubeScriptGenerator onClose={() => setActiveTool(null)} />}
+              {activeTool === 'youtube-thumbnail-ab-tester' && (
+                <ModalWrapper
+                  title="YouTube Thumbnail A/B Tester"
+                  subtitle="Compare two thumbnail candidates side-by-side in real feed mockups"
+                  onClose={() => setActiveTool(null)}
+                >
+                  <YouTubeThumbnailAbTester />
+                </ModalWrapper>
+              )}
+              {activeTool === 'utm-link-builder' && (
+                <ModalWrapper
+                  title="UTM Link Builder"
+                  subtitle="Build GA4-compatible campaign tracking URLs with smart helpers"
+                  onClose={() => setActiveTool(null)}
+                >
+                  <UtmLinkBuilder />
+                </ModalWrapper>
+              )}
+              {activeTool === 'word-counter' && (
+                <ModalWrapper
+                  title="Word Counter + Reading Time"
+                  subtitle="Analyze text length, reading duration, and keyword density in real-time"
+                  onClose={() => setActiveTool(null)}
+                >
+                  <WordCounter />
+                </ModalWrapper>
+              )}
             </>
           </div>
         ) : (
@@ -469,5 +580,71 @@ export default function App() {
 
       </div>
     </ErrorBoundary>
+  );
+}
+
+// ─── 공통 모달 래퍼 컴포넌트 ─────────────────────────────────────────
+function ModalWrapper({ title, subtitle, onClose, children }) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  const LIME = '#deff9a';
+  return (
+    <div
+      className="fixed inset-0 z-50 notranslate flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      {/* ── Modal Panel ── */}
+      <div
+        className="relative w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-colors duration-300"
+        style={{
+          background: isDark ? '#111118' : '#ffffff',
+          border: isDark ? '1px solid rgba(222,255,154,0.18)' : '1px solid rgba(0,0,0,0.08)'
+        }}
+      >
+        {/* ── Lime top accent line ── */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+          style={{ background: `linear-gradient(90deg, transparent, ${isDark ? LIME : 'rgba(99,102,241,0.6)'}, transparent)` }}
+        />
+
+        {/* ── Header ── */}
+        <div className="flex items-start justify-between px-6 pt-7 pb-5">
+          <div>
+            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: isDark ? LIME : '#1e1b4b' }}>
+              {title}
+            </h2>
+            {subtitle && <p className="mt-1 text-sm text-slate-400 dark:text-zinc-400">{subtitle}</p>}
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close Modal"
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors ml-4 cursor-pointer"
+            style={{
+              background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+              color: isDark ? '#a1a1aa' : '#4b5563'
+            }}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ── Body ── */}
+        <div className="px-6 pb-6 overflow-y-auto flex-1">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }

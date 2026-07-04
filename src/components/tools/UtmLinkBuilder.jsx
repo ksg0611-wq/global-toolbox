@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   Link2, Copy, CheckCheck, AlertCircle, ChevronDown,
   ChevronUp, ToggleLeft, ToggleRight, Zap, ExternalLink
 } from 'lucide-react';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 // ─── 스마트 포맷터 ────────────────────────────────────────────────────
 function formatParam(value, lowercase, spaceToDash) {
@@ -13,20 +14,20 @@ function formatParam(value, lowercase, spaceToDash) {
 }
 
 // ─── Toggle 스위치 컴포넌트 ──────────────────────────────────────────
-function SmartToggle({ id, label, hint, checked, onChange }) {
+function SmartToggle({ id, label, hint, checked, onChange, isDark }) {
   return (
     <div className="flex items-start justify-between gap-3 py-2.5">
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-zinc-300 leading-tight">{label}</p>
-        <p className="text-xs text-zinc-600 leading-snug mt-0.5">{hint}</p>
+        <p className="text-xs font-semibold leading-tight text-slate-700 dark:text-zinc-300">{label}</p>
+        <p className="text-xs leading-snug mt-0.5 text-slate-400 dark:text-zinc-500">{hint}</p>
       </div>
       <button
         id={id}
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative flex-shrink-0 h-5 w-9 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 mt-0.5 ${
-          checked ? 'bg-indigo-600' : 'bg-zinc-700'
+        className={`relative flex-shrink-0 h-5 w-9 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 mt-0.5 cursor-pointer ${
+          checked ? 'bg-indigo-600' : (isDark ? 'bg-zinc-705' : 'bg-slate-250')
         }`}
       >
         <span
@@ -41,25 +42,25 @@ function SmartToggle({ id, label, hint, checked, onChange }) {
 
 // ─── 인풋 필드 컴포넌트 ──────────────────────────────────────────────
 function ParamInput({
-  id, label, placeholder, value, onChange, required, badge, hint
+  id, label, placeholder, value, onChange, required, badge, hint, isDark
 }) {
   const isEmpty = required && value.trim() === '';
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-xs font-semibold text-zinc-400 flex items-center gap-1.5">
+        <label htmlFor={id} className="text-xs font-semibold text-slate-500 dark:text-zinc-400 flex items-center gap-1.5">
           {label}
           {required && (
             <span className="text-red-500 text-xs">*</span>
           )}
           {badge && (
-            <span className="rounded-md bg-indigo-500/15 px-1.5 py-0.5 text-xs font-medium text-indigo-400">
+            <span className="rounded-md bg-indigo-500/10 dark:bg-indigo-500/15 px-1.5 py-0.5 text-xs font-medium text-indigo-600 dark:text-indigo-400">
               {badge}
             </span>
           )}
         </label>
         {hint && (
-          <span className="text-xs text-zinc-600 truncate max-w-[130px]">{hint}</span>
+          <span className="text-xs text-slate-400 dark:text-zinc-550 truncate max-w-[130px]">{hint}</span>
         )}
       </div>
       <input
@@ -70,10 +71,12 @@ function ParamInput({
         placeholder={placeholder}
         autoComplete="off"
         spellCheck={false}
-        className={`rounded-lg border px-3 py-2 text-sm text-zinc-100 placeholder-zinc-600 outline-none transition-all duration-150 bg-zinc-800/60 ${
+        className={`rounded-lg border px-3 py-2 text-sm transition-all duration-150 outline-none ${
           isEmpty
-            ? 'border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-            : 'border-zinc-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20'
+            ? 'border-red-500/50 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 bg-white dark:bg-zinc-800/60 text-slate-800 dark:text-zinc-100'
+            : (isDark
+              ? 'border-zinc-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-zinc-800/60 text-zinc-100 placeholder-zinc-650'
+              : 'border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 bg-white text-slate-800 placeholder-slate-400')
         }`}
       />
     </div>
@@ -92,6 +95,15 @@ function UrlPill({ name, value }) {
 
 // ─── 메인 컴포넌트 ───────────────────────────────────────────────────
 export default function UtmLinkBuilder() {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   // 필수 파라미터
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [source, setSource] = useState('');
@@ -234,18 +246,18 @@ export default function UtmLinkBuilder() {
 
   return (
     // 최상위: notranslate로 Chrome 번역 파서에 의한 URL 스트링 오염 방지
-    <div className="notranslate flex flex-col lg:flex-row gap-0 min-h-0 h-full">
+    <div className="notranslate flex flex-col lg:flex-row gap-0 min-h-0 h-full text-slate-800 dark:text-zinc-100 transition-colors duration-300">
 
       {/* ════════════════════════════════
           입력 폼 패널 (좌측)
       ════════════════════════════════ */}
-      <aside className="w-full lg:w-80 xl:w-96 flex-shrink-0 border-b lg:border-b-0 lg:border-r border-zinc-800 bg-zinc-950/50 flex flex-col overflow-y-auto">
+      <aside className="w-full lg:w-80 xl:w-96 flex-shrink-0 border-b lg:border-b-0 lg:border-r flex flex-col overflow-y-auto transition-colors duration-300 border-slate-205 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-955/50">
 
         {/* 스마트 헬퍼 토글 바 */}
-        <div className="border-b border-zinc-800 px-5 py-3">
+        <div className="border-b px-5 py-3 border-slate-200 dark:border-zinc-800">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="h-3.5 w-3.5 text-amber-400" />
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Smart Formatting</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-550">Smart Formatting</span>
           </div>
           <SmartToggle
             id="toggle-lowercase"
@@ -253,14 +265,16 @@ export default function UtmLinkBuilder() {
             hint="GA4 treats 'Google' ≠ 'google'"
             checked={autoLowercase}
             onChange={handleToggleLowercase}
+            isDark={isDark}
           />
-          <div className="border-t border-zinc-800/70" />
+          <div className="border-t border-slate-200/80 dark:border-zinc-800/70" />
           <SmartToggle
             id="toggle-space"
             label="Convert Spaces → Dashes"
             hint="Prevents %20 encoding in URLs"
             checked={spaceToDash}
             onChange={handleToggleSpaceToDash}
+            isDark={isDark}
           />
         </div>
 
@@ -269,7 +283,7 @@ export default function UtmLinkBuilder() {
 
           {/* ── 필수 파라미터 ── */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-550 dark:text-zinc-500 flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-red-500 inline-block" />
               Required Parameters
             </h3>
@@ -283,6 +297,7 @@ export default function UtmLinkBuilder() {
                 onChange={setWebsiteUrl}
                 required
                 hint="Base destination URL"
+                isDark={isDark}
               />
               <ParamInput
                 id="field-source"
@@ -292,6 +307,7 @@ export default function UtmLinkBuilder() {
                 onChange={makeHandler(setSource)}
                 required
                 badge="utm_source"
+                isDark={isDark}
               />
               <ParamInput
                 id="field-medium"
@@ -301,6 +317,7 @@ export default function UtmLinkBuilder() {
                 onChange={makeHandler(setMedium)}
                 required
                 badge="utm_medium"
+                isDark={isDark}
               />
               <ParamInput
                 id="field-campaign"
@@ -310,6 +327,7 @@ export default function UtmLinkBuilder() {
                 onChange={makeHandler(setCampaign)}
                 required
                 badge="utm_campaign"
+                isDark={isDark}
               />
             </div>
           </div>
@@ -318,13 +336,13 @@ export default function UtmLinkBuilder() {
           <div className="flex flex-col gap-3">
             <button
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className="flex items-center justify-between w-full text-left group"
+              className="flex items-center justify-between w-full text-left group cursor-pointer"
             >
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-550 dark:text-zinc-500 flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 inline-block" />
                 Optional Parameters
               </h3>
-              <span className="text-zinc-600 group-hover:text-zinc-400 transition-colors">
+              <span className="text-slate-400 dark:text-zinc-600 group-hover:text-slate-600 dark:group-hover:text-zinc-400 transition-colors">
                 {showAdvanced
                   ? <ChevronUp className="h-3.5 w-3.5" />
                   : <ChevronDown className="h-3.5 w-3.5" />
@@ -342,6 +360,7 @@ export default function UtmLinkBuilder() {
                   onChange={makeHandler(setTerm)}
                   badge="utm_term"
                   hint="Paid search keywords"
+                  isDark={isDark}
                 />
                 <ParamInput
                   id="field-content"
@@ -351,6 +370,7 @@ export default function UtmLinkBuilder() {
                   onChange={makeHandler(setContent)}
                   badge="utm_content"
                   hint="A/B test differentiator"
+                  isDark={isDark}
                 />
                 <ParamInput
                   id="field-id"
@@ -360,6 +380,7 @@ export default function UtmLinkBuilder() {
                   onChange={makeHandler(setUtmId)}
                   badge="utm_id"
                   hint="Ad system integration"
+                  isDark={isDark}
                 />
               </div>
             )}
@@ -368,10 +389,10 @@ export default function UtmLinkBuilder() {
 
         {/* GA4 안내 푸터 */}
         <div className="px-5 pb-5 mt-auto">
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 flex gap-2.5">
+          <div className="rounded-xl border p-3 flex gap-2.5 bg-slate-100/50 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800">
             <AlertCircle className="h-3.5 w-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-zinc-500 leading-relaxed">
-              GA4 UTM parameters are <span className="text-zinc-400 font-medium">case-sensitive</span>. Keep all values consistent across campaigns to avoid data fragmentation in your reports.
+            <p className="text-xs text-slate-500 dark:text-zinc-500 leading-relaxed">
+              GA4 UTM parameters are <span className="text-slate-800 dark:text-zinc-450 font-medium">case-sensitive</span>. Keep all values consistent across campaigns to avoid data fragmentation in your reports.
             </p>
           </div>
         </div>
@@ -380,19 +401,19 @@ export default function UtmLinkBuilder() {
       {/* ════════════════════════════════
           결과 & 미리보기 패널 (우측)
       ════════════════════════════════ */}
-      <main className="flex-1 overflow-y-auto bg-zinc-950 p-6 flex flex-col gap-6">
+      <main className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 transition-colors duration-300 bg-white dark:bg-zinc-955">
 
         {/* ── 검증 경고 ── */}
         {missingFields.length > 0 && (
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/8 p-4 flex gap-3">
             <AlertCircle className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-amber-300 mb-1">Required fields missing</p>
+              <p className="text-sm font-semibold text-amber-305 dark:text-amber-300 mb-1">Required fields missing</p>
               <ul className="flex flex-wrap gap-1.5">
                 {missingFields.map((f) => (
                   <li
                     key={f}
-                    className="rounded-md bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400 font-medium"
+                    className="rounded-md bg-amber-500/10 dark:bg-amber-500/15 px-2 py-0.5 text-xs text-amber-600 dark:text-amber-450 font-medium"
                   >
                     {f}
                   </li>
@@ -405,34 +426,36 @@ export default function UtmLinkBuilder() {
         {/* ── 실시간 URL 미리보기 ── */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <Link2 className="h-4 w-4 text-indigo-400" />
-            <h3 className="text-sm font-bold text-zinc-200">Live Preview</h3>
+            <Link2 className="h-4 w-4 text-indigo-500 dark:text-indigo-405" />
+            <h3 className="text-sm font-bold text-slate-800 dark:text-zinc-200">Live Preview</h3>
             {isComplete && (
-              <span className="ml-auto text-xs text-emerald-400 font-medium flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+              <span className="ml-auto text-xs text-emerald-600 dark:text-emerald-450 font-medium flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
                 Ready
               </span>
             )}
           </div>
 
           <div
-            className={`rounded-xl border bg-zinc-900 p-4 font-mono text-xs leading-relaxed break-all transition-colors duration-200 ${
-              isComplete ? 'border-zinc-700' : 'border-zinc-800'
+            className={`rounded-xl border p-4 font-mono text-xs leading-relaxed break-all transition-colors duration-200 ${
+              isComplete
+                ? (isDark ? 'border-zinc-700 bg-zinc-900 text-zinc-350' : 'border-slate-350 bg-slate-50 text-slate-700')
+                : (isDark ? 'border-zinc-800 bg-zinc-900 text-zinc-600' : 'border-slate-200 bg-slate-50 text-slate-400')
             }`}
           >
             {isComplete && previewParts ? (
               <span className="flex flex-wrap gap-x-0 gap-y-1 items-start">
-                <span className="text-blue-400">{baseDisplay}</span>
-                <span className="text-zinc-500">?</span>
+                <span className="text-indigo-605 dark:text-blue-400">{baseDisplay}</span>
+                <span className="text-slate-400 dark:text-zinc-500">?</span>
                 {previewParts.map((p, i) => (
                   <span key={p.name} className="flex items-center gap-0 flex-wrap">
-                    {i > 0 && <span className="text-zinc-500">&amp;</span>}
+                    {i > 0 && <span className="text-slate-400 dark:text-zinc-500">&amp;</span>}
                     <UrlPill name={p.name} value={p.value} />
                   </span>
                 ))}
               </span>
             ) : (
-              <span className="text-zinc-600">
+              <span className="text-slate-400 dark:text-zinc-600">
                 Fill in the required fields to generate your UTM URL…
               </span>
             )}
@@ -445,12 +468,12 @@ export default function UtmLinkBuilder() {
             id="utm-copy-btn"
             onClick={handleCopy}
             disabled={!isComplete}
-            className={`relative flex items-center justify-center gap-2.5 w-full rounded-xl px-5 py-3.5 font-semibold text-sm transition-all duration-200 active:scale-[0.98] ${
+            className={`relative flex items-center justify-center gap-2.5 w-full rounded-xl px-5 py-3.5 font-semibold text-sm transition-all duration-200 active:scale-[0.98] cursor-pointer ${
               isComplete
                 ? copied
                   ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/25'
-                : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-550 text-white shadow-lg shadow-indigo-600/25'
+                : 'bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-605 cursor-not-allowed border border-slate-200 dark:border-transparent'
             }`}
           >
             {copied ? (
@@ -473,10 +496,10 @@ export default function UtmLinkBuilder() {
 
           {/* 전체 URL 텍스트 (선택 복사용) */}
           {isComplete && (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-3 flex items-start gap-2.5">
+            <div className="rounded-xl border p-3 flex items-start gap-2.5 bg-slate-50 dark:bg-zinc-900/40 border-slate-205 dark:border-zinc-800">
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-zinc-500 mb-1 font-medium">Full URL</p>
-                <p className="text-xs text-zinc-400 font-mono break-all leading-relaxed select-all">
+                <p className="text-xs text-slate-400 dark:text-zinc-500 mb-1 font-medium">Full URL</p>
+                <p className="text-xs text-slate-700 dark:text-zinc-400 font-mono break-all leading-relaxed select-all">
                   {finalUrl}
                 </p>
               </div>
@@ -484,7 +507,7 @@ export default function UtmLinkBuilder() {
                 href={finalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all"
+                className="flex-shrink-0 flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium border-slate-250 dark:border-zinc-700 text-slate-500 dark:text-zinc-405 hover:text-slate-800 dark:hover:text-zinc-200 hover:border-slate-350 dark:hover:border-zinc-600 transition-all"
                 title="Open in new tab"
               >
                 <ExternalLink className="h-3 w-3" />
@@ -496,19 +519,19 @@ export default function UtmLinkBuilder() {
 
         {/* ── 파라미터 참조 테이블 ── */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-600">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-600">
             GA4 Parameter Reference
           </h3>
-          <div className="rounded-xl border border-zinc-800 overflow-hidden">
+          <div className="rounded-xl border overflow-hidden border-slate-200 dark:border-zinc-800">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-zinc-800 bg-zinc-900">
-                  <th className="text-left px-3 py-2 text-zinc-500 font-semibold">Parameter</th>
-                  <th className="text-left px-3 py-2 text-zinc-500 font-semibold">Purpose</th>
-                  <th className="text-left px-3 py-2 text-zinc-500 font-semibold">Required</th>
+                <tr className="border-b bg-slate-100/60 dark:bg-zinc-900 border-slate-200 dark:border-zinc-800">
+                  <th className="text-left px-3 py-2 text-slate-500 dark:text-zinc-550 font-semibold">Parameter</th>
+                  <th className="text-left px-3 py-2 text-slate-500 dark:text-zinc-550 font-semibold">Purpose</th>
+                  <th className="text-left px-3 py-2 text-slate-500 dark:text-zinc-550 font-semibold">Required</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60">
+              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
                 {[
                   { param: 'utm_source', purpose: 'Traffic origin platform', required: true },
                   { param: 'utm_medium', purpose: 'Marketing channel type', required: true },
@@ -517,18 +540,18 @@ export default function UtmLinkBuilder() {
                   { param: 'utm_content', purpose: 'A/B test differentiator', required: false },
                   { param: 'utm_id', purpose: 'Ad system campaign ID', required: false },
                 ].map((row) => (
-                  <tr key={row.param} className="hover:bg-zinc-800/30 transition-colors">
-                    <td className="px-3 py-2 font-mono text-amber-400 whitespace-nowrap">
+                  <tr key={row.param} className="hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors">
+                    <td className="px-3 py-2 font-mono text-indigo-600 dark:text-amber-400 whitespace-nowrap">
                       {row.param}
                     </td>
-                    <td className="px-3 py-2 text-zinc-400">{row.purpose}</td>
+                    <td className="px-3 py-2 text-slate-600 dark:text-zinc-400">{row.purpose}</td>
                     <td className="px-3 py-2">
                       {row.required ? (
-                        <span className="rounded-md bg-red-500/15 px-1.5 py-0.5 text-red-400 font-semibold text-xs">
+                        <span className="rounded-md bg-red-50/10 dark:bg-red-500/15 px-1.5 py-0.5 text-red-650 dark:text-red-405 font-semibold text-xs">
                           Yes
                         </span>
                       ) : (
-                        <span className="text-zinc-600">Optional</span>
+                        <span className="text-slate-400 dark:text-zinc-600">Optional</span>
                       )}
                     </td>
                   </tr>
@@ -540,7 +563,7 @@ export default function UtmLinkBuilder() {
 
         {/* ── 빠른 예시 프리셋 ── */}
         <div className="flex flex-col gap-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-600">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-650">
             Quick Presets
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -574,14 +597,14 @@ export default function UtmLinkBuilder() {
                   setMedium(fmt(preset.values.medium));
                   setCampaign(fmt(preset.values.campaign));
                 }}
-                className="flex items-center gap-2.5 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2.5 text-left hover:border-zinc-700 hover:bg-zinc-800/60 transition-all duration-150 active:scale-[0.98] group"
+                className="flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-all duration-150 active:scale-[0.98] group cursor-pointer border-slate-205 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 hover:border-slate-350 dark:hover:border-zinc-750 hover:bg-slate-100/60 dark:hover:bg-zinc-800/60"
               >
                 <span className="text-base flex-shrink-0">{preset.icon}</span>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-zinc-300 group-hover:text-white transition-colors">
+                  <p className="text-xs font-semibold text-slate-700 dark:text-zinc-300 group-hover:text-indigo-605 dark:group-hover:text-white transition-colors">
                     {preset.label}
                   </p>
-                  <p className="text-xs text-zinc-600 truncate font-mono">
+                  <p className="text-xs text-slate-450 dark:text-zinc-600 truncate font-mono">
                     {preset.values.source} / {preset.values.medium}
                   </p>
                 </div>
@@ -589,6 +612,34 @@ export default function UtmLinkBuilder() {
             ))}
           </div>
         </div>
+
+        <ToolSEOSection
+          title="Understanding GA4 UTM Campaign Tracking Best Practices"
+          description="UTM parameters are crucial tags appended to the end of a URL to track user interactions and campaign origins inside analytical tools like Google Analytics 4 (GA4). Properly tagged links let you see exactly which newsletter, social media ad, or affiliate partner drove traffic and conversions, helping you optimize marketing budgets and resources."
+          howToUse={[
+            "Enter your target Website URL in the input field.",
+            "Specify the Campaign Source (e.g. newsletter, google) indicating where the traffic originates.",
+            "Specify the Campaign Medium (e.g. email, cpc) indicating the channel type.",
+            "Provide a Campaign Name (e.g. winter-sale) to identify the specific marketing effort.",
+            "Add optional parameters like Campaign Term (keywords) or Campaign Content (A/B testing details) if needed.",
+            "Enable/disable smart formatting toggles (like Auto-lowercase or converting Spaces to Dashes) to keep links clean.",
+            "Copy the generated URL or click 'Test' to check if it redirects correctly."
+          ]}
+          faqs={[
+            {
+              question: "What are UTM parameters and why are they important?",
+              answer: "UTM (Urchin Tracking Module) parameters are five standard URL query parameters used by marketers to track the effectiveness of online marketing campaigns across traffic sources and publishing media. They allow Google Analytics to capture precise referrer data instead of grouping traffic under general direct or organic buckets."
+            },
+            {
+              question: "How does GA4 handle campaign traffic compared to Universal Analytics?",
+              answer: "In GA4, traffic source dimensions are split into User-level, Session-level, and Event-level scopes. Consistently using standard UTM variables ensures that GA4 correctly attributes conversions to campaign sources (e.g., 'Session source/medium') rather than misattributing them to 'Direct' when links are clicked from external native apps."
+            },
+            {
+              question: "Why should I keep my UTM parameters in lowercase?",
+              answer: "Analytics platforms are case-sensitive. If you use 'utm_source=Email' in one link and 'utm_source=email' in another, GA4 will treat them as two completely separate traffic sources, fragmenting your campaign data. Enabling the Auto-lowercase option keeps your analytics data clean and unified."
+            }
+          ]}
+        />
 
       </main>
     </div>

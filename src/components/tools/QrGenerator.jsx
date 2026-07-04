@@ -32,6 +32,15 @@ const IconQrCode = () => (
 );
 
 export default function QrGenerator({ onClose }) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [inputText, setInputText] = useState('');
   const [fgColor, setFgColor] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
@@ -99,30 +108,33 @@ export default function QrGenerator({ onClose }) {
       />
 
       <div
-        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
-        style={{ background: '#111118', border: '1px solid rgba(222,255,154,0.18)' }}
+        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl transition-colors duration-300"
+        style={{
+          background: isDark ? '#111118' : '#ffffff',
+          border: isDark ? '1px solid rgba(222,255,154,0.18)' : '1px solid rgba(0,0,0,0.08)'
+        }}
       >
         {/* 상단 라임색 액센트 라인 */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-          style={{ background: `linear-gradient(90deg, transparent, \${LIME}, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent, ${isDark ? LIME : '#4f46e5'}, transparent)` }}
         />
 
         {/* 헤더 */}
         <div className="flex items-start justify-between px-6 pt-7 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: LIME }}>
+            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: isDark ? LIME : '#1e1b4b' }}>
               QR Code Generator
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-slate-400 dark:text-zinc-400">
               Create high-resolution, customized QR codes instantly in your browser.
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Close QR Code Generator"
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:text-white ml-4"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors ml-4 cursor-pointer text-slate-400 dark:text-zinc-400 hover:text-slate-655 dark:hover:text-white"
+            style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }}
           >
             <IconClose />
           </button>
@@ -138,8 +150,8 @@ export default function QrGenerator({ onClose }) {
                 <div className="flex flex-col gap-1.5">
                   <label
                     htmlFor="qr-input"
-                    className="text-xs font-semibold uppercase tracking-wider"
-                    style={{ color: LIME }}
+                    className="text-xs font-semibold uppercase tracking-wider transition-colors"
+                    style={{ color: isDark ? LIME : '#4f46e5' }}
                   >
                     URL or Text Source
                   </label>
@@ -151,31 +163,31 @@ export default function QrGenerator({ onClose }) {
                     placeholder="Enter URL or text to generate..."
                     className="w-full rounded-xl border py-3 px-4 text-sm font-medium outline-none transition-all"
                     style={{
-                      background: 'rgba(255,255,255,0.04)',
-                      borderColor: 'rgba(222,255,154,0.15)',
-                      color: '#f1f5f9',
+                      background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
+                      borderColor: isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1',
+                      color: isDark ? '#f1f5f9' : '#0f172a',
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = LIME;
-                      e.target.style.boxShadow = `0 0 0 3px \${LIME_DIM}`;
+                      e.target.style.borderColor = isDark ? LIME : '#4f46e5';
+                      e.target.style.boxShadow = `0 0 0 3px ${isDark ? LIME_DIM : 'rgba(79,70,229,0.15)'}`;
                     }}
                     onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(222,255,154,0.15)';
+                      e.target.style.borderColor = isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1';
                       e.target.style.boxShadow = 'none';
                     }}
                   />
                 </div>
 
                 {/* 디자인 커스텀 컬러 피커 */}
-                <div className="flex flex-col gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-4">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <div className="flex flex-col gap-3 rounded-xl border p-4 transition-colors duration-300 border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     Customize Colors
                   </span>
                   
                   <div className="grid grid-cols-2 gap-4">
                     {/* Foreground color picker */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xxs font-semibold uppercase text-slate-400">
+                      <label className="text-xxs font-semibold uppercase text-slate-500 dark:text-slate-400">
                         QR Color (Foreground)
                       </label>
                       <div className="flex items-center gap-2">
@@ -183,15 +195,15 @@ export default function QrGenerator({ onClose }) {
                           type="color"
                           value={fgColor}
                           onChange={(e) => setFgColor(e.target.value)}
-                          className="w-8 h-8 rounded border border-white/20 bg-transparent cursor-pointer"
+                          className="w-8 h-8 rounded border border-slate-350 dark:border-white/20 bg-transparent cursor-pointer"
                         />
-                        <span className="text-xs font-mono text-slate-300 uppercase">{fgColor}</span>
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-300 uppercase">{fgColor}</span>
                       </div>
                     </div>
 
                     {/* Background color picker */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xxs font-semibold uppercase text-slate-400">
+                      <label className="text-xxs font-semibold uppercase text-slate-500 dark:text-slate-400">
                         Background Color
                       </label>
                       <div className="flex items-center gap-2">
@@ -199,9 +211,9 @@ export default function QrGenerator({ onClose }) {
                           type="color"
                           value={bgColor}
                           onChange={(e) => setBgColor(e.target.value)}
-                          className="w-8 h-8 rounded border border-white/20 bg-transparent cursor-pointer"
+                          className="w-8 h-8 rounded border border-slate-350 dark:border-white/20 bg-transparent cursor-pointer"
                         />
-                        <span className="text-xs font-mono text-slate-300 uppercase">{bgColor}</span>
+                        <span className="text-xs font-mono text-slate-600 dark:text-slate-300 uppercase">{bgColor}</span>
                       </div>
                     </div>
                   </div>
@@ -209,21 +221,22 @@ export default function QrGenerator({ onClose }) {
               </div>
 
               {/* 2. QR 렌더링 및 액션 영역 (우측) */}
-              <div className="flex flex-col items-center justify-center gap-4 bg-white/[0.02] border border-white/5 rounded-2xl p-6 min-h-[300px]">
+              <div className="flex flex-col items-center justify-center gap-4 border rounded-2xl p-6 min-h-[300px] transition-colors duration-300 border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02]">
                 {inputText.trim() ? (
-                  <div className="flex flex-col items-center gap-5">
+                  <div className="flex flex-col items-center gap-5 w-full">
                     {/* QR 코드 캔버스 */}
-                    <div className="p-3 bg-white rounded-xl shadow-lg border border-white/10 flex items-center justify-center">
+                    <div className="p-3 bg-white rounded-xl shadow-lg border border-slate-200 dark:border-white/10 flex items-center justify-center">
                       <canvas ref={canvasRef} className="w-[180px] h-[180px] md:w-[200px] md:h-[200px]" />
                     </div>
                     
                     {/* 다운로드 버튼 */}
                     <button
                       onClick={handleDownload}
-                      className="flex items-center justify-center gap-2 rounded-xl py-3 px-6 text-sm font-bold transition-all active:scale-95 text-slate-900 w-full"
+                      className="flex items-center justify-center gap-2 rounded-xl py-3 px-6 text-sm font-bold transition-all active:scale-95 w-full cursor-pointer"
                       style={{
-                        background: LIME,
-                        boxShadow: `0 4px 14px \${LIME_DIM}`,
+                        background: isDark ? LIME : '#4f46e5',
+                        boxShadow: `0 4px 14px ${isDark ? LIME_DIM : 'rgba(79,70,229,0.15)'}`,
+                        color: isDark ? '#0f172a' : '#ffffff',
                       }}
                     >
                       <IconDownload />
@@ -234,10 +247,10 @@ export default function QrGenerator({ onClose }) {
                   // 빈 입력 시 안내 스크린
                   <div className="flex flex-col items-center gap-3 text-center px-4">
                     <IconQrCode />
-                    <h3 className="text-sm font-bold text-slate-300 mt-2">
+                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-300 mt-2">
                       No QR Code Generated Yet
                     </h3>
-                    <p className="text-xs text-slate-500 max-w-[220px] leading-relaxed">
+                    <p className="text-xs text-slate-500 dark:text-zinc-500 max-w-[220px] leading-relaxed">
                       Enter URL or text to generate QR code and customize colors in real-time.
                     </p>
                   </div>

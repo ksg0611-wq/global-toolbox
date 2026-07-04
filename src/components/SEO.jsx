@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, image, url }) => {
   const defaultTitle = "Global ToolBox | 24+ Essential Web Utilities";
@@ -6,34 +7,32 @@ const SEO = ({ title, description, image, url }) => {
   const defaultImage = "https://global-toolbox.com/assets/og-default.png"; 
   const defaultUrl = "https://global-toolbox.com";
 
-  useEffect(() => {
-    document.title = title ? `${title} | Global ToolBox` : defaultTitle;
+  const displayTitle = title ? `${title} | Global ToolBox` : defaultTitle;
+  const fullDesc = description || defaultDesc;
+  const ogImageUrl = image || defaultImage;
+  const fullUrl = url ? `${defaultUrl}${url}` : defaultUrl;
 
-    const updateMetaTag = (property, content, isName = false) => {
-      const attribute = isName ? 'name' : 'property';
-      let element = document.querySelector(`meta[${attribute}="${property}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attribute, property);
-        document.head.appendChild(element);
-      }
-      element.setAttribute('content', content);
-    };
+  return (
+    <Helmet>
+      {/* Primary HTML Meta Tags */}
+      <title>{displayTitle}</title>
+      <meta name="description" content={fullDesc} />
 
-    updateMetaTag('description', description || defaultDesc, true);
-    updateMetaTag('og:title', title ? `${title} | Global ToolBox` : defaultTitle);
-    updateMetaTag('og:description', description || defaultDesc);
-    updateMetaTag('og:image', image || defaultImage);
-    updateMetaTag('og:url', url ? `${defaultUrl}${url}` : defaultUrl);
-    updateMetaTag('og:type', 'website');
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:title" content={displayTitle} />
+      <meta property="og:description" content={fullDesc} />
+      <meta property="og:image" content={ogImageUrl} />
 
-    updateMetaTag('twitter:card', 'summary_large_image', true);
-    updateMetaTag('twitter:title', title ? `${title} | Global ToolBox` : defaultTitle, true);
-    updateMetaTag('twitter:description', description || defaultDesc, true);
-    updateMetaTag('twitter:image', image || defaultImage, true);
-  }, [title, description, image, url]);
-
-  return null;
+      {/* Twitter Cards */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={fullUrl} />
+      <meta name="twitter:title" content={displayTitle} />
+      <meta name="twitter:description" content={fullDesc} />
+      <meta name="twitter:image" content={ogImageUrl} />
+    </Helmet>
+  );
 };
 
 export default SEO;

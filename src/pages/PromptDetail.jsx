@@ -39,6 +39,7 @@ export default function PromptDetail({ slug, onNavigateBack, onNavigateToTool })
       <SEO
         title={prompt.title}
         description={prompt.metaDescription}
+        image="/assets/og-default.png"
         url={`/prompts/${activeSlug}`}
       />
 
@@ -92,8 +93,8 @@ export default function PromptDetail({ slug, onNavigateBack, onNavigateToTool })
             </div>
             
             {/* Protect target text block from Chrome translation crashes */}
-            <div className="p-6 notranslate">
-              <pre className="font-mono text-sm leading-relaxed text-slate-800 dark:text-zinc-200 whitespace-pre-wrap break-words bg-slate-50 dark:bg-zinc-950 p-5 rounded-xl border border-slate-100 dark:border-zinc-900">
+            <div className="p-6">
+              <pre className="font-mono text-sm leading-relaxed text-slate-800 dark:text-zinc-200 whitespace-pre-wrap break-words bg-slate-50 dark:bg-zinc-955 p-5 rounded-xl border border-slate-100 dark:border-zinc-900">
                 {prompt.promptText}
               </pre>
             </div>

@@ -38,6 +38,15 @@ const IconTrash = () => (
 );
 
 export default function TextFormatter({ onClose }) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [copied, setCopied] = useState(false);
@@ -133,30 +142,33 @@ export default function TextFormatter({ onClose }) {
       />
 
       <div
-        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
-        style={{ background: '#111118', border: '1px solid rgba(222,255,154,0.18)' }}
+        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl transition-colors duration-300"
+        style={{
+          background: isDark ? '#111118' : '#ffffff',
+          border: isDark ? '1px solid rgba(222,255,154,0.18)' : '1px solid rgba(0,0,0,0.08)'
+        }}
       >
         {/* 라임색 상단 강조선 */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-          style={{ background: `linear-gradient(90deg, transparent, \${LIME}, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent, ${isDark ? LIME : '#4f46e5'}, transparent)` }}
         />
 
         {/* 헤더 */}
         <div className="flex items-start justify-between px-6 pt-7 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: LIME }}>
+            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: isDark ? LIME : '#1e1b4b' }}>
               Text Formatter
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-slate-400 dark:text-zinc-400">
               Clean up, format, and convert your text structures in real-time.
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Close text formatter"
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:text-white ml-4"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors ml-4 cursor-pointer text-slate-400 dark:text-zinc-400 hover:text-slate-655 dark:hover:text-white"
+            style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }}
           >
             <IconClose />
           </button>
@@ -172,20 +184,20 @@ export default function TextFormatter({ onClose }) {
               <div className="flex flex-wrap items-center gap-2 justify-between">
                 <label
                   htmlFor="input-text"
-                  className="text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: LIME }}
+                  className="text-xs font-semibold uppercase tracking-wider transition-colors"
+                  style={{ color: isDark ? LIME : '#4f46e5' }}
                 >
                   Source Text
                 </label>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                    Characters: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.charCount}</span>
+                  <span className="inline-flex items-center rounded-md px-2 py-1 text-xxs font-medium border transition-colors duration-300 bg-white/5 dark:bg-zinc-800/40 text-slate-500 dark:text-slate-350 border-slate-200 dark:border-white/10">
+                    Characters: <span className="ml-1 font-bold" style={{ color: isDark ? LIME : '#4f46e5' }}>{stats.charCount}</span>
                   </span>
-                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                    Words: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.wordCount}</span>
+                  <span className="inline-flex items-center rounded-md px-2 py-1 text-xxs font-medium border transition-colors duration-300 bg-white/5 dark:bg-zinc-800/40 text-slate-500 dark:text-slate-350 border-slate-200 dark:border-white/10">
+                    Words: <span className="ml-1 font-bold" style={{ color: isDark ? LIME : '#4f46e5' }}>{stats.wordCount}</span>
                   </span>
-                  <span className="inline-flex items-center rounded-md bg-white/5 px-2 py-1 text-xxs font-medium text-slate-350 border border-white/10">
-                    Lines: <span className="ml-1 font-bold" style={{ color: LIME }}>{stats.lineCount}</span>
+                  <span className="inline-flex items-center rounded-md px-2 py-1 text-xxs font-medium border transition-colors duration-300 bg-white/5 dark:bg-zinc-800/40 text-slate-500 dark:text-slate-350 border-slate-200 dark:border-white/10">
+                    Lines: <span className="ml-1 font-bold" style={{ color: isDark ? LIME : '#4f46e5' }}>{stats.lineCount}</span>
                   </span>
                 </div>
               </div>
@@ -198,16 +210,16 @@ export default function TextFormatter({ onClose }) {
                 placeholder="Paste or type your text here..."
                 className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  borderColor: 'rgba(222,255,154,0.15)',
-                  color: '#f1f5f9',
+                  background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
+                  borderColor: isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1',
+                  color: isDark ? '#f1f5f9' : '#0f172a',
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = LIME;
-                  e.target.style.boxShadow = `0 0 0 3px \${LIME_DIM}`;
+                  e.target.style.borderColor = isDark ? LIME : '#4f46e5';
+                  e.target.style.boxShadow = `0 0 0 3px ${isDark ? LIME_DIM : 'rgba(79,70,229,0.15)'}`;
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = 'rgba(222,255,154,0.15)';
+                  e.target.style.borderColor = isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1';
                   e.target.style.boxShadow = 'none';
                 }}
               />
@@ -219,41 +231,22 @@ export default function TextFormatter({ onClose }) {
                 Transform Actions
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                <button
-                  onClick={handleUppercase}
-                  disabled={!inputText}
-                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  UPPERCASE
-                </button>
-                <button
-                  onClick={handleLowercase}
-                  disabled={!inputText}
-                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  lowercase
-                </button>
-                <button
-                  onClick={handleCamelCase}
-                  disabled={!inputText}
-                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-3 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  camelCase
-                </button>
-                <button
-                  onClick={handleRemoveExtraSpaces}
-                  disabled={!inputText}
-                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
-                >
-                  Remove Spaces
-                </button>
-                <button
-                  onClick={handleRemoveLineBreaks}
-                  disabled={!inputText}
-                  className="rounded-xl bg-white/5 border border-white/10 py-2.5 px-2 text-xs font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center"
-                >
-                  Remove Lines
-                </button>
+                {[
+                  { label: 'UPPERCASE', handler: handleUppercase },
+                  { label: 'lowercase', handler: handleLowercase },
+                  { label: 'camelCase', handler: handleCamelCase },
+                  { label: 'Remove Spaces', handler: handleRemoveExtraSpaces },
+                  { label: 'Remove Lines', handler: handleRemoveLineBreaks },
+                ].map((btn) => (
+                  <button
+                    key={btn.label}
+                    onClick={btn.handler}
+                    disabled={!inputText}
+                    className="rounded-xl py-2.5 px-2 text-xs font-semibold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed text-center transition-colors duration-300 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-605 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10"
+                  >
+                    {btn.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -261,8 +254,8 @@ export default function TextFormatter({ onClose }) {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="output-text"
-                className="text-xs font-semibold uppercase tracking-wider"
-                style={{ color: LIME }}
+                className="text-xs font-semibold uppercase tracking-wider transition-colors"
+                style={{ color: isDark ? LIME : '#4f46e5' }}
               >
                 Formatted Output
               </label>
@@ -274,9 +267,9 @@ export default function TextFormatter({ onClose }) {
                 placeholder="Your formatted text will appear here..."
                 className="w-full rounded-xl border p-3 text-sm font-medium outline-none transition-all resize-y min-h-[120px]"
                 style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  borderColor: 'rgba(255,255,255,0.08)',
-                  color: outputText ? '#f1f5f9' : '#64748b',
+                  background: isDark ? 'rgba(255,255,255,0.02)' : '#f1f5f9',
+                  borderColor: isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0',
+                  color: outputText ? (isDark ? '#f1f5f9' : '#0f172a') : '#64748b',
                 }}
               />
             </div>
@@ -286,7 +279,7 @@ export default function TextFormatter({ onClose }) {
               <button
                 onClick={handleClear}
                 disabled={!inputText && !outputText}
-                className="flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 text-sm font-semibold text-slate-350 transition-all hover:text-white hover:bg-white/5 border border-white/10 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 rounded-xl py-2.5 px-4 text-sm font-semibold transition-all border active:scale-95 disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer text-slate-500 dark:text-slate-350 bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10"
               >
                 <IconTrash /> Clear
               </button>
@@ -294,11 +287,17 @@ export default function TextFormatter({ onClose }) {
               <button
                 onClick={handleCopy}
                 disabled={!outputText}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 style={{
-                  background: copied ? 'rgba(74,222,128,0.15)' : LIME_DIM,
-                  border: `1px solid \${copied ? 'rgba(74,222,128,0.4)' : 'rgba(222,255,154,0.3)'}`,
-                  color: copied ? '#4ade80' : LIME,
+                  background: copied
+                    ? (isDark ? 'rgba(74,222,128,0.15)' : 'rgba(74,222,128,0.08)')
+                    : (isDark ? LIME_DIM : 'rgba(79,70,229,0.08)'),
+                  border: `1px solid ${copied
+                    ? (isDark ? 'rgba(74,222,128,0.4)' : 'rgba(74,222,128,0.2)')
+                    : (isDark ? 'rgba(222,255,154,0.3)' : 'rgba(79,70,229,0.2)')}`,
+                  color: copied
+                    ? '#4ade80'
+                    : (isDark ? LIME : '#4f46e5'),
                 }}
               >
                 {copied ? (

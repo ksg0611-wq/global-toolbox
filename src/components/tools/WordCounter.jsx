@@ -1,8 +1,9 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   Type, Clock, BarChart2, Copy, CheckCheck, Trash2,
   AlignLeft, Mic, TrendingUp, ChevronUp, ChevronDown
 } from 'lucide-react';
+import ToolSEOSection from '../common/ToolSEOSection';
 
 // ─── 읽기 속도 상수 ───────────────────────────────────────────────────
 const WPM_READING  = 238; // 성인 묵독 평균 (글로벌 표준)
@@ -40,35 +41,46 @@ function formatTime(totalSeconds) {
 }
 
 // ─── 메트릭 카드 컴포넌트 ────────────────────────────────────────────
-function MetricCard({ icon: Icon, iconColor, label, value, subValue, large }) {
+function MetricCard({ icon: Icon, iconColor, label, value, subValue, large, isDark }) {
   return (
-    <div className={`flex flex-col gap-1 rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5 transition-colors hover:border-zinc-700 ${large ? 'col-span-2' : ''}`}>
+    <div className={`flex flex-col gap-1 rounded-xl border p-3.5 transition-colors duration-300 ${
+      isDark
+        ? 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700'
+        : 'border-slate-205 bg-white hover:border-slate-350 shadow-sm'
+    } ${large ? 'col-span-2' : ''}`}>
       <div className="flex items-center gap-1.5 mb-0.5">
         <Icon className={`h-3.5 w-3.5 ${iconColor}`} />
-        <span className="text-xs font-medium text-zinc-500 truncate">{label}</span>
+        <span className="text-xs font-medium text-slate-450 dark:text-zinc-500 truncate">{label}</span>
       </div>
-      <span className="text-2xl font-bold tracking-tight text-white leading-none">
+      <span className="text-2xl font-bold tracking-tight leading-none text-slate-855 dark:text-white transition-colors">
         {value}
       </span>
       {subValue && (
-        <span className="text-xs text-zinc-600 mt-0.5">{subValue}</span>
+        <span className="text-xs text-slate-400 dark:text-zinc-600 mt-0.5">{subValue}</span>
       )}
     </div>
   );
 }
 
 // ─── 시간 카드 컴포넌트 ──────────────────────────────────────────────
-function TimeCard({ icon: Icon, iconColor, bg, label, sublabel, time }) {
+function TimeCard({ icon: Icon, iconColor, bg, label, sublabel, time, isDark }) {
+  const dynamicBg = isDark
+    ? bg
+    : (bg.includes('sky') ? 'border-sky-200 bg-sky-50/40 text-sky-800' : 'border-pink-200 bg-pink-50/40 text-pink-800');
+  const dynamicIconColor = isDark
+    ? iconColor
+    : (iconColor.includes('sky') ? 'text-sky-600 bg-sky-100' : 'text-pink-600 bg-pink-100');
+
   return (
-    <div className={`flex items-center gap-4 rounded-xl border ${bg} p-4`}>
-      <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${iconColor}`}>
+    <div className={`flex items-center gap-4 rounded-xl border p-4 transition-colors duration-300 ${dynamicBg}`}>
+      <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl transition-colors ${dynamicIconColor}`}>
         <Icon className="h-5 w-5" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-zinc-400">{label}</p>
-        <p className="text-xs text-zinc-600">{sublabel}</p>
+        <p className="text-xs font-semibold text-slate-500 dark:text-zinc-405">{label}</p>
+        <p className="text-xs text-slate-400 dark:text-zinc-600">{sublabel}</p>
       </div>
-      <span className="font-mono text-lg font-bold text-white tracking-tight flex-shrink-0">
+      <span className="font-mono text-lg font-bold tracking-tight flex-shrink-0 text-slate-800 dark:text-white transition-colors">
         {time}
       </span>
     </div>
@@ -76,23 +88,23 @@ function TimeCard({ icon: Icon, iconColor, bg, label, sublabel, time }) {
 }
 
 // ─── 키워드 밀도 행 컴포넌트 ─────────────────────────────────────────
-function KeywordRow({ rank, word, count, percent, maxPercent }) {
+function KeywordRow({ rank, word, count, percent, maxPercent, isDark }) {
   const barWidth = maxPercent > 0 ? (percent / maxPercent) * 100 : 0;
-  const rankColors = ['text-amber-400', 'text-zinc-300', 'text-amber-600', 'text-zinc-500', 'text-zinc-600'];
+  const rankColors = ['text-amber-500 dark:text-amber-400', 'text-slate-400 dark:text-zinc-300', 'text-amber-600 dark:text-amber-600', 'text-slate-400 dark:text-zinc-500', 'text-slate-350 dark:text-zinc-600'];
   return (
     <div className="flex items-center gap-3 group">
-      <span className={`text-xs font-bold w-4 flex-shrink-0 ${rankColors[rank] || 'text-zinc-600'}`}>
+      <span className={`text-xs font-bold w-4 flex-shrink-0 ${rankColors[rank] || 'text-slate-400 dark:text-zinc-600'}`}>
         {rank + 1}
       </span>
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline justify-between mb-1">
-          <span className="text-sm font-semibold text-zinc-200 truncate">{word}</span>
+          <span className="text-sm font-semibold text-slate-700 dark:text-zinc-200 truncate transition-colors">{word}</span>
           <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-            <span className="text-xs text-zinc-500 font-mono">{count}×</span>
-            <span className="text-xs font-bold text-indigo-400 w-12 text-right">{percent.toFixed(1)}%</span>
+            <span className="text-xs text-slate-400 dark:text-zinc-500 font-mono">{count}×</span>
+            <span className="text-xs font-bold text-indigo-650 dark:text-indigo-400 w-12 text-right">{percent.toFixed(1)}%</span>
           </div>
         </div>
-        <div className="h-1 w-full rounded-full bg-zinc-800 overflow-hidden">
+        <div className="h-1 w-full rounded-full overflow-hidden bg-slate-200 dark:bg-zinc-800 transition-colors">
           <div
             className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-purple-500 transition-all duration-500"
             style={{ width: `${barWidth}%` }}
@@ -104,12 +116,18 @@ function KeywordRow({ rank, word, count, percent, maxPercent }) {
 }
 
 // ─── 보조 버튼 컴포넌트 ──────────────────────────────────────────────
-function ActionBtn({ onClick, icon: Icon, label, variant = 'default', disabled }) {
-  const base = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed';
+function ActionBtn({ onClick, icon: Icon, label, variant = 'default', disabled, isDark }) {
+  const base = 'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer';
   const variants = {
-    default: 'border border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600 hover:text-zinc-100',
-    danger:  'border border-red-900/60 bg-red-950/40 text-red-400 hover:border-red-700 hover:bg-red-900/40',
-    success: 'border border-emerald-900/60 bg-emerald-950/40 text-emerald-400 hover:border-emerald-700',
+    default: isDark
+      ? 'border border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600 hover:text-zinc-100'
+      : 'border border-slate-250 bg-slate-50 text-slate-600 hover:border-slate-350 hover:text-slate-805',
+    danger: isDark
+      ? 'border border-red-900/60 bg-red-950/40 text-red-400 hover:border-red-700 hover:bg-red-900/40'
+      : 'border border-red-200 bg-red-50 text-red-655 hover:border-red-300 hover:bg-red-100/50',
+    success: isDark
+      ? 'border border-emerald-900/60 bg-emerald-950/40 text-emerald-400 hover:border-emerald-700'
+      : 'border border-emerald-205 bg-emerald-50 text-emerald-600 hover:border-emerald-305',
   };
   return (
     <button className={`${base} ${variants[variant]}`} onClick={onClick} disabled={disabled}>
@@ -121,6 +139,15 @@ function ActionBtn({ onClick, icon: Icon, label, variant = 'default', disabled }
 
 // ─── 메인 컴포넌트 ───────────────────────────────────────────────────
 export default function WordCounter() {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [text, setText]       = useState('');
   const [copied, setCopied]   = useState(false);
   const [showKw, setShowKw]   = useState(true);
@@ -220,21 +247,21 @@ export default function WordCounter() {
 
   return (
     // 최상위: notranslate → 자동 번역이 카운팅 정규식 왜곡 방지
-    <div className="notranslate flex flex-col lg:flex-row gap-0 min-h-0 h-full">
+    <div className="notranslate flex flex-col lg:flex-row gap-0 min-h-0 h-full text-slate-800 dark:text-zinc-100 transition-colors duration-300">
 
       {/* ════════════════════════════════
           텍스트 입력 패널 (좌측)
       ════════════════════════════════ */}
-      <div className="w-full lg:w-[55%] xl:w-[58%] flex-shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-zinc-800 bg-zinc-950">
+      <div className="w-full lg:w-[55%] xl:w-[58%] flex-shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r transition-colors duration-300 border-slate-205 dark:border-zinc-800 bg-white dark:bg-zinc-955">
 
         {/* 헤더 */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-zinc-800">
           <div className="flex items-center gap-2">
-            <AlignLeft className="h-4 w-4 text-indigo-400" />
-            <span className="text-sm font-bold text-zinc-200">Text Input</span>
+            <AlignLeft className="h-4 w-4 text-indigo-500 dark:text-indigo-400" />
+            <span className="text-sm font-bold text-slate-800 dark:text-zinc-200">Text Input</span>
           </div>
           {!isEmpty && (
-            <span className="text-xs text-zinc-500 font-mono tabular-nums">
+            <span className="text-xs font-mono tabular-nums text-slate-400 dark:text-zinc-550">
               {metrics.charWithSpaces.toLocaleString()} chars
             </span>
           )}
@@ -246,19 +273,20 @@ export default function WordCounter() {
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="Paste your text, blog post, or video script here..."
-          className="flex-1 resize-none bg-transparent px-4 pt-4 pb-3 text-sm text-zinc-100 placeholder-zinc-700 outline-none leading-relaxed min-h-64 lg:min-h-0"
+          className="flex-1 resize-none bg-transparent px-4 pt-4 pb-3 text-sm outline-none leading-relaxed min-h-64 lg:min-h-0 text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-650"
           spellCheck={false}
           style={{ fontFamily: '"Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif' }}
         />
 
         {/* 보조 버튼 바 */}
-        <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-t border-zinc-800 bg-zinc-950/80">
+        <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-t border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-955/80">
           <ActionBtn
             onClick={handleClear}
             icon={Trash2}
             label="Clear"
             variant="danger"
             disabled={isEmpty}
+            isDark={isDark}
           />
           <ActionBtn
             onClick={handleCopy}
@@ -266,19 +294,22 @@ export default function WordCounter() {
             label={copied ? 'Copied!' : 'Copy Text'}
             variant={copied ? 'success' : 'default'}
             disabled={isEmpty}
+            isDark={isDark}
           />
-          <div className="h-4 w-px bg-zinc-800 mx-0.5" />
+          <div className="h-4 w-px bg-slate-200 dark:bg-zinc-800 mx-0.5" />
           <ActionBtn
             onClick={handleUppercase}
             icon={Type}
             label="UPPERCASE"
             disabled={isEmpty}
+            isDark={isDark}
           />
           <ActionBtn
             onClick={handleLowercase}
             icon={Type}
             label="lowercase"
             disabled={isEmpty}
+            isDark={isDark}
           />
         </div>
       </div>
@@ -286,44 +317,48 @@ export default function WordCounter() {
       {/* ════════════════════════════════
           실시간 대시보드 (우측)
       ════════════════════════════════ */}
-      <div className="flex-1 overflow-y-auto bg-zinc-950 flex flex-col gap-5 p-5">
+      <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5 transition-colors duration-300 bg-slate-50 dark:bg-zinc-950">
 
         {/* ── 섹션: 기본 카운터 ── */}
         <section>
           <div className="flex items-center gap-2 mb-3">
-            <BarChart2 className="h-4 w-4 text-indigo-400" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+            <BarChart2 className="h-4 w-4 text-indigo-500 dark:text-indigo-405" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-500">
               Real-time Counters
             </h3>
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             <MetricCard
               icon={Type}
-              iconColor="text-indigo-400"
+              iconColor="text-indigo-500 dark:text-indigo-400"
               label="Characters (with spaces)"
               value={metrics.charWithSpaces.toLocaleString()}
               subValue="including whitespace"
+              isDark={isDark}
             />
             <MetricCard
               icon={Type}
-              iconColor="text-purple-400"
+              iconColor="text-purple-500 dark:text-purple-400"
               label="Characters (no spaces)"
               value={metrics.charWithoutSpaces.toLocaleString()}
               subValue="stripped whitespace"
+              isDark={isDark}
             />
             <MetricCard
               icon={AlignLeft}
-              iconColor="text-sky-400"
+              iconColor="text-sky-500 dark:text-sky-400"
               label="Words"
               value={metrics.words.toLocaleString()}
               subValue="whitespace-delimited"
+              isDark={isDark}
             />
             <MetricCard
               icon={AlignLeft}
-              iconColor="text-emerald-400"
+              iconColor="text-emerald-500 dark:text-emerald-400"
               label="Paragraphs"
               value={metrics.paragraphs.toLocaleString()}
               subValue={`${metrics.sentences} sentence${metrics.sentences !== 1 ? 's' : ''}`}
+              isDark={isDark}
             />
           </div>
         </section>
@@ -331,30 +366,32 @@ export default function WordCounter() {
         {/* ── 섹션: 시간 예측 ── */}
         <section>
           <div className="flex items-center gap-2 mb-3">
-            <Clock className="h-4 w-4 text-amber-400" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+            <Clock className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-500">
               Estimated Time
             </h3>
-            <span className="ml-auto text-xs text-zinc-700">
+            <span className="ml-auto text-xs text-slate-400 dark:text-zinc-700 font-medium">
               {metrics.words.toLocaleString()} words
             </span>
           </div>
           <div className="flex flex-col gap-2.5">
             <TimeCard
               icon={Clock}
-              iconColor="text-sky-400 bg-sky-500/10"
+              iconColor="text-sky-450 bg-sky-500/10"
               bg="border-sky-900/40 bg-sky-500/5"
               label="Reading Time"
               sublabel={`~${WPM_READING} words per minute`}
               time={times.reading}
+              isDark={isDark}
             />
             <TimeCard
               icon={Mic}
-              iconColor="text-pink-400 bg-pink-500/10"
+              iconColor="text-pink-450 bg-pink-500/10"
               bg="border-pink-900/40 bg-pink-500/5"
               label="Speaking Time"
               sublabel={`~${WPM_SPEAKING} wpm · narration speed`}
               time={times.speaking}
+              isDark={isDark}
             />
           </div>
         </section>
@@ -362,14 +399,14 @@ export default function WordCounter() {
         {/* ── 섹션: SEO 키워드 밀도 ── */}
         <section>
           <button
-            className="flex items-center gap-2 w-full mb-3 group"
+            className="flex items-center gap-2 w-full mb-3 group cursor-pointer"
             onClick={() => setShowKw(v => !v)}
           >
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 group-hover:text-zinc-400 transition-colors">
+            <TrendingUp className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-500 group-hover:text-slate-700 dark:group-hover:text-zinc-400 transition-colors">
               Keyword Density — Top 5
             </h3>
-            <span className="ml-auto text-zinc-700 group-hover:text-zinc-500 transition-colors">
+            <span className="ml-auto text-slate-400 dark:text-zinc-700 group-hover:text-slate-600 dark:group-hover:text-zinc-550 transition-colors">
               {showKw
                 ? <ChevronUp className="h-3.5 w-3.5" />
                 : <ChevronDown className="h-3.5 w-3.5" />}
@@ -377,7 +414,7 @@ export default function WordCounter() {
           </button>
 
           {showKw && (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+            <div className="rounded-xl border p-4 bg-white dark:bg-zinc-900/40 border-slate-205 dark:border-zinc-800">
               {keywords.length > 0 ? (
                 <div className="flex flex-col gap-4">
                   {keywords.map((kw, i) => (
@@ -388,6 +425,7 @@ export default function WordCounter() {
                       count={kw.count}
                       percent={kw.percent}
                       maxPercent={maxKwPercent}
+                      isDark={isDark}
                     />
                   ))}
                 </div>
@@ -434,6 +472,32 @@ export default function WordCounter() {
             </div>
           </section>
         )}
+
+        <ToolSEOSection
+          title="Maximizing Content Quality: Word Counting & Reading Time Analysis"
+          description="Whether you are writing blog posts, social media updates, video scripts, or academic papers, keeping track of word counts, character counts, and keyword densities is essential for search engine optimization (SEO) and readability. Reading and speaking time metrics also help creators optimize narration speed and script length for target audiences."
+          howToUse={[
+            "Type or paste your text content into the main editor area.",
+            "Review the real-time metrics for Words, Characters (with and without spaces), Sentences, and Paragraphs.",
+            "Check the estimated Reading Time and Speaking Time based on standard reading and speaking speeds.",
+            "Expand the Keyword Density section to analyze your top 5 most frequently used terms (excluding stopwords).",
+            "Copy the analyzed text or clear the editor to start fresh."
+          ]}
+          faqs={[
+            {
+              question: "Why is keyword density important in copywriting and SEO?",
+              answer: "Keyword density represents the percentage of times a keyword appears in a text compared to the total word count. While search engines no longer rely on simple keyword stuffing, keeping keyword density between 1-2% helps search crawlers identify the main topic of your page without triggering spam filters."
+            },
+            {
+              question: "How are reading time and speaking time estimated?",
+              answer: "Reading time is calculated based on a standard silent reading speed of approximately 238 words per minute (WPM). Speaking time is modeled at roughly 140 WPM, which is the average pace for clear narration, voiceovers, and video presentations."
+            },
+            {
+              question: "Does this tool store my text data?",
+              answer: "No, all text analysis and processing happen locally in your web browser. Your text content is never sent to a server, ensuring complete privacy and security for your drafts."
+            }
+          ]}
+        />
 
       </div>
     </div>

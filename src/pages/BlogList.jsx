@@ -17,6 +17,7 @@ export default function BlogList({ onNavigate }) {
       <SEO
         title="Creator & Developer Blog"
         description="Discover expert guides, SEO strategies, and creator monetization formulas on the Global ToolBox blog. Learn CPM calculations, tag optimization, and cold outreach tips."
+        image="/assets/og-default.png"
         url="/blog"
       />
 
@@ -44,47 +45,55 @@ export default function BlogList({ onNavigate }) {
                 {posts.map((post) => (
                   <article
                     key={post.slug}
-                    onClick={() => onNavigate(post.slug)}
-                    className="group flex flex-col justify-between p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-[#deff9a]/10 dark:hover:bg-[#deff9a]/5 hover:border-[#8fc400]/40 dark:hover:border-[#deff9a]/40 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md dark:shadow-xl dark:shadow-black/20"
+                    className="group flex flex-col justify-between p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-[#deff9a]/10 dark:hover:bg-[#deff9a]/5 hover:border-[#8fc400]/40 dark:hover:border-[#deff9a]/40 transition-all duration-300 shadow-sm hover:shadow-md dark:shadow-xl dark:shadow-black/20"
                   >
-                    <div className="space-y-4">
-                      {/* 날짜 표시 */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold tracking-widest text-slate-500 dark:text-zinc-500 uppercase">
-                          {new Date(post.date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </span>
-                        <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
-                        <span className="text-[10px] font-bold text-[#8fc400] dark:text-[#deff9a] uppercase tracking-wider">
-                          {post.tag || 'Guide'}
-                        </span>
+                    <a
+                      href={`/blog/${post.slug}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onNavigate(post.slug);
+                      }}
+                      className="flex flex-col justify-between h-full w-full outline-none text-left cursor-pointer"
+                    >
+                      <div className="space-y-4">
+                        {/* 날짜 표시 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold tracking-widest text-slate-500 dark:text-zinc-500 uppercase">
+                            {new Date(post.date).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                          <span className="text-[10px] font-bold text-[#8fc400] dark:text-[#deff9a] uppercase tracking-wider">
+                            {post.tag || 'Guide'}
+                          </span>
+                        </div>
+
+                        {/* 제목 */}
+                        <h2 className="text-lg font-bold text-gray-950 dark:text-white group-hover:text-[#8fc400] dark:group-hover:text-[#deff9a] transition-colors line-clamp-2 leading-snug">
+                          {post.title}
+                        </h2>
+
+                        {/* 설명 */}
+                        <p className="text-xs text-slate-655 dark:text-zinc-400 line-clamp-3 leading-relaxed">
+                          {post.description}
+                        </p>
                       </div>
 
-                      {/* 제목 */}
-                      <h2 className="text-lg font-bold text-gray-950 dark:text-white group-hover:text-[#8fc400] dark:group-hover:text-[#deff9a] transition-colors line-clamp-2 leading-snug">
-                        {post.title}
-                      </h2>
-
-                      {/* 설명 */}
-                      <p className="text-xs text-slate-655 dark:text-zinc-400 line-clamp-3 leading-relaxed">
-                        {post.description}
-                      </p>
-                    </div>
-
-                    {/* 링크 이동 버튼 형태 */}
-                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700/50 flex items-center justify-between text-xs font-semibold">
-                      <span className="text-slate-500 dark:text-zinc-500 group-hover:text-slate-800 dark:group-hover:text-zinc-300 transition-colors">
-                        Read Full Article
-                      </span>
-                      <span 
-                        className="transition-transform duration-300 transform group-hover:translate-x-1 text-[#8fc400] dark:text-[#deff9a]"
-                      >
-                        👉
-                      </span>
-                    </div>
+                      {/* 링크 이동 버튼 형태 */}
+                      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700/50 flex items-center justify-between text-xs font-semibold">
+                        <span className="text-slate-500 dark:text-zinc-500 group-hover:text-slate-800 dark:group-hover:text-zinc-300 transition-colors font-semibold">
+                          Read Full Article
+                        </span>
+                        <span 
+                          className="transition-transform duration-300 transform group-hover:translate-x-1 text-[#8fc400] dark:text-[#deff9a]"
+                        >
+                          👉
+                        </span>
+                      </div>
+                    </a>
                   </article>
                 ))}
               </div>

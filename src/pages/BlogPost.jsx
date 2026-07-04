@@ -93,6 +93,7 @@ export default function BlogPost({ slug, onNavigateBack, onNavigateToTool }) {
       <SEO
         title={post.title}
         description={post.description}
+        image={post.image}
         url={`/blog/${post.slug}`}
       />
 

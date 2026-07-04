@@ -47,6 +47,15 @@ const IconCompress = () => (
 );
 
 export default function JsonFormatter({ onClose }) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [error, setError] = useState('');
@@ -135,30 +144,33 @@ export default function JsonFormatter({ onClose }) {
       />
 
       <div
-        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl"
-        style={{ background: '#111118', border: '1px solid rgba(222,255,154,0.18)' }}
+        className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl transition-colors duration-300"
+        style={{
+          background: isDark ? '#111118' : '#ffffff',
+          border: isDark ? '1px solid rgba(222,255,154,0.18)' : '1px solid rgba(0,0,0,0.08)'
+        }}
       >
         {/* 상단 라임색 포인트 라인 */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-          style={{ background: `linear-gradient(90deg, transparent, ${LIME}, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent, ${isDark ? LIME : '#4f46e5'}, transparent)` }}
         />
 
         {/* 헤더 */}
         <div className="flex items-start justify-between px-6 pt-7 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: LIME }}>
+            <h2 className="text-xl font-extrabold tracking-tight" style={{ color: isDark ? LIME : '#1e1b4b' }}>
               JSON Formatter & Validator
             </h2>
-            <p className="mt-1 text-sm text-slate-400">
+            <p className="mt-1 text-sm text-slate-400 dark:text-zinc-400">
               Clean up, parse, validate, and minify your JSON data structures locally.
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Close JSON formatter"
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-slate-400 transition-colors hover:text-white ml-4"
-            style={{ background: 'rgba(255,255,255,0.06)' }}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition-colors ml-4 cursor-pointer text-slate-400 dark:text-zinc-400 hover:text-slate-655 dark:hover:text-white"
+            style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }}
           >
             <IconClose />
           </button>
@@ -173,8 +185,8 @@ export default function JsonFormatter({ onClose }) {
               <div className="flex-1 flex flex-col gap-2">
                 <label
                   htmlFor="input-json"
-                  className="text-xs font-semibold uppercase tracking-wider"
-                  style={{ color: LIME }}
+                  className="text-xs font-semibold uppercase tracking-wider transition-colors"
+                  style={{ color: isDark ? LIME : '#4f46e5' }}
                 >
                   Raw JSON Input
                 </label>
@@ -185,18 +197,18 @@ export default function JsonFormatter({ onClose }) {
                   placeholder='Paste raw JSON here...\nExample:\n{"name":"John","age":30,"city":"New York"}'
                   className="w-full h-[320px] rounded-xl border p-4 text-xs font-mono outline-none transition-all resize-y min-h-[200px]"
                   style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    borderColor: error ? '#f87171' : 'rgba(222,255,154,0.15)',
-                    color: '#f1f5f9',
+                    background: isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc',
+                    borderColor: error ? '#f87171' : (isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1'),
+                    color: isDark ? '#f1f5f9' : '#0f172a',
                   }}
                   onFocus={(e) => {
-                    e.target.style.borderColor = error ? '#f87171' : LIME;
+                    e.target.style.borderColor = error ? '#f87171' : (isDark ? LIME : '#4f46e5');
                     e.target.style.boxShadow = error
                       ? '0 0 0 3px rgba(248,113,113,0.15)'
-                      : `0 0 0 3px ${LIME_DIM}`;
+                      : `0 0 0 3px ${isDark ? LIME_DIM : 'rgba(79,70,229,0.15)'}`;
                   }}
                   onBlur={(e) => {
-                    e.target.style.borderColor = error ? '#f87171' : 'rgba(222,255,154,0.15)';
+                    e.target.style.borderColor = error ? '#f87171' : (isDark ? 'rgba(222,255,154,0.15)' : '#cbd5e1');
                     e.target.style.boxShadow = 'none';
                   }}
                 />
@@ -209,12 +221,12 @@ export default function JsonFormatter({ onClose }) {
               </div>
 
               {/* 2. 중앙 제어 버튼 바 (PC 세로 / 모바일 가로) */}
-              <div className="flex flex-row md:flex-col items-center justify-center gap-2 py-2 md:py-0">
+              <div className="flex flex-row md:flex-col items-center justify-center gap-2 py-2 md:py-0 w-full md:w-auto">
                 <button
                   onClick={handleFormat}
                   disabled={!inputText.trim()}
                   title="Beautify and indent JSON"
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 px-4 py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full cursor-pointer transition-colors duration-300 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-605 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10"
                 >
                   <IconSparkles />
                   <span className="hidden sm:inline md:inline">Beautify</span>
@@ -224,7 +236,7 @@ export default function JsonFormatter({ onClose }) {
                   onClick={handleMinify}
                   disabled={!inputText.trim()}
                   title="Minify JSON (remove whitespace/newlines)"
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-200 px-4 py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full cursor-pointer transition-colors duration-300 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-605 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10"
                 >
                   <IconCompress />
                   <span className="hidden sm:inline md:inline">Minify</span>
@@ -234,7 +246,7 @@ export default function JsonFormatter({ onClose }) {
                   onClick={handleClear}
                   disabled={!inputText && !outputText}
                   title="Clear all fields"
-                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white px-4 py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-1.5 rounded-xl py-3 text-xs font-bold transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed w-full cursor-pointer transition-colors duration-300 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10"
                 >
                   <IconTrash />
                   <span className="hidden sm:inline md:inline">Clear</span>
@@ -246,8 +258,8 @@ export default function JsonFormatter({ onClose }) {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="output-json"
-                    className="text-xs font-semibold uppercase tracking-wider"
-                    style={{ color: LIME }}
+                    className="text-xs font-semibold uppercase tracking-wider transition-colors"
+                    style={{ color: isDark ? LIME : '#4f46e5' }}
                   >
                     Formatted Output
                   </label>
@@ -256,11 +268,15 @@ export default function JsonFormatter({ onClose }) {
                   <button
                     onClick={handleCopy}
                     disabled={!outputText}
-                    className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xxs font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xxs font-bold transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                     style={{
-                      background: copied ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.04)',
-                      border: `1px solid ${copied ? 'rgba(74,222,128,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                      color: copied ? '#4ade80' : LIME,
+                      background: copied
+                        ? (isDark ? 'rgba(74,222,128,0.1)' : 'rgba(74,222,128,0.08)')
+                        : (isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'),
+                      border: `1px solid ${copied
+                        ? 'rgba(74,222,128,0.3)'
+                        : (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)')}`,
+                      color: copied ? '#4ade80' : (isDark ? LIME : '#4f46e5'),
                     }}
                   >
                     {copied ? (
@@ -282,9 +298,9 @@ export default function JsonFormatter({ onClose }) {
                   placeholder="Formatted JSON result will be displayed here..."
                   className="w-full h-[320px] rounded-xl border p-4 text-xs font-mono outline-none transition-all resize-y min-h-[200px]"
                   style={{
-                    background: 'rgba(255,255,255,0.02)',
-                    borderColor: 'rgba(255,255,255,0.08)',
-                    color: outputText ? '#38bdf8' : '#64748b',
+                    background: isDark ? 'rgba(255,255,255,0.02)' : '#f1f5f9',
+                    borderColor: isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0',
+                    color: outputText ? (isDark ? '#38bdf8' : '#0284c7') : '#64748b',
                   }}
                 />
               </div>
