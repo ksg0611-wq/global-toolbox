@@ -45,7 +45,9 @@
     "skipThirdPartyRequests": true,
     "puppeteerArgs": [
       "--disable-features=ServiceWorker",
-      "--disable-application-cache"
+      "--disable-application-cache",
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
     ],
     "include": [
       "/",
