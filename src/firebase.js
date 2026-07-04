@@ -13,9 +13,30 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Firebase 앱 초기화
-const app = initializeApp(firebaseConfig);
+let app;
+let auth;
+let db;
+
+try {
+  // 빌드 환경(ReactSnap)이거나 API 키가 비정상적일 때 하드 크래시 방어
+  const isBuildEnv = (typeof navigator !== 'undefined' && /ReactSnap/i.test(navigator.userAgent)) || !firebaseConfig.apiKey;
+  
+  if (isBuildEnv) {
+    console.warn('Firebase initialization skipped or mocked during static build phase.');
+    app = {};
+    auth = {}; // 필요한 최소한의 모킹 객체
+    db = {};
+  } else {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
+} catch (error) {
+  console.error('Gracefully handled Firebase init error during build:', error);
+  app = {};
+  auth = {};
+  db = {};
+}
 
 // 다른 컴포넌트에서 가져다 쓸 수 있도록 인증(Auth) 및 데이터베이스(Firestore) 객체를 내보냅니다.
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export { app, auth, db };
