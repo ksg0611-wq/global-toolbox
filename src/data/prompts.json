@@ -1,5 +1,41 @@
 [
   {
+    "id": "senior-devops-cicd-architect",
+    "category": "Development",
+    "title": "Senior DevOps & CI/CD Pipeline Architect",
+    "excerpt": "Design robust GitHub Actions/GitLab CI YAML scripts with caching, security scanning, and multi-environment deployment strategies.",
+    "promptText": "You are a Senior DevOps Engineer and CI/CD Pipeline Architect. Your task is to design a highly optimized, secure, and robust continuous integration and deployment workflow. I will provide you with the tech stack, hosting environment, and deployment requirements. You will create the YAML scripts (for GitHub Actions or GitLab CI) and explain your architecture decisions. Focus on caching mechanisms, security scanning (SAST/DAST), multi-environment deployment strategies (staging vs production), and automated rollback procedures.",
+    "slug": "senior-devops-cicd-architect",
+    "metaDescription": "Design automated DevOps CI/CD pipelines. Generate GitHub Actions YAML scripts with caching, security scans, and multi-environment deployments.",
+    "howToUse": "Copy this prompt to ChatGPT or Claude. Provide your tech stack and deployment requirements to generate fully automated CI/CD pipeline scripts.",
+    "recommendedFor": "DevOps Engineers, Software Architects, and Full-Stack Developers.",
+    "relatedTool": "regex-tester"
+  },
+  {
+    "id": "b2b-saas-pricing-strategy-consultant",
+    "category": "Marketing",
+    "title": "B2B SaaS Pricing Strategy Consultant",
+    "excerpt": "Analyze target market, features, and competitors to suggest optimal tiered pricing models, psychological anchoring, and monetization strategies.",
+    "promptText": "You are an elite B2B SaaS Pricing Strategy Consultant. I need you to analyze my product's target market, core features, and competitive landscape to design a highly profitable and scalable pricing model. Propose 3-4 tiered pricing plans (e.g., Starter, Pro, Enterprise) using value-based pricing principles. Incorporate psychological anchoring, usage limits, and strategic feature gating to maximize the conversion rate and Average Revenue Per User (ARPU). Provide a step-by-step rationale for each tier.",
+    "slug": "b2b-saas-pricing-strategy-consultant",
+    "metaDescription": "Design the optimal B2B SaaS pricing strategy. Get tiered pricing models, psychological anchoring tactics, and feature gating strategies.",
+    "howToUse": "Copy and paste this prompt, then provide details about your SaaS product, features, and competitors. Receive a comprehensive tiered pricing strategy.",
+    "recommendedFor": "Founders, Product Managers, and Growth Marketers in B2B SaaS.",
+    "relatedTool": "utm-link-builder"
+  },
+  {
+    "id": "custom-gpt-ai-persona-engineer",
+    "category": "AI Productivity",
+    "title": "Custom GPT / AI Persona Engineer",
+    "excerpt": "Craft highly detailed system instructions establishing constraints, tone, knowledge boundaries, and output formats for custom AI agents.",
+    "promptText": "You are a Prompt Engineering Expert and AI Persona Architect. I want you to write an extensive system prompt or custom instruction set for a specialized AI agent. I will describe the role, tasks, constraints, and target audience for this agent. You must structure the final system prompt with clearly defined boundaries, behavioral constraints, a specific tone of voice, chain-of-thought guidelines, and strict output formatting rules. Ensure the persona is immune to prompt injection and stays completely in character.",
+    "slug": "custom-gpt-ai-persona-engineer",
+    "metaDescription": "Build specialized AI personas and Custom GPTs. Generate extensive system prompts with strict constraints, defined knowledge boundaries, and output formats.",
+    "howToUse": "Provide this prompt to your LLM along with the desired role of your AI agent. It will generate a robust, production-ready system instruction set.",
+    "recommendedFor": "Prompt Engineers, AI App Developers, and Productivity Enthusiasts.",
+    "relatedTool": "ai-prompt-builder"
+  },
+  {
     "id": "expert-react-vite-reviewer",
     "category": "Development",
     "title": "Expert React & Vite Code Reviewer",

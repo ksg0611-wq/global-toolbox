@@ -22,10 +22,17 @@ try {
   const isBuildEnv = (typeof navigator !== 'undefined' && /ReactSnap/i.test(navigator.userAgent)) || !firebaseConfig.apiKey;
   
   if (isBuildEnv) {
-    console.warn('Firebase initialization skipped or mocked during static build phase.');
-    app = {};
-    auth = {}; // 필요한 최소한의 모킹 객체
-    db = {};
+    console.warn('Firebase initialization with dummy config during static build phase.');
+    app = initializeApp({
+      apiKey: "AIzaSyDummyKey123456789012345678901234",
+      authDomain: "dummy-project.firebaseapp.com",
+      projectId: "dummy-project",
+      storageBucket: "dummy-project.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcdef1234567890"
+    });
+    auth = getAuth(app);
+    db = getFirestore(app);
   } else {
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
