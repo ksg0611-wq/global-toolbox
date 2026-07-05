@@ -29,6 +29,9 @@ jobs:
       - name: Run Post-processing Cleanup
         run: node scripts/cleanup-ads.js
 
+      - name: Include Backend Functions
+        run: cp -r functions ./dist/
+
       - name: Deploy to Release Branch
         uses: peaceiris/actions-gh-pages@v3
         with:
