@@ -130,6 +130,12 @@ export default function BlogPost({ slug, onNavigateBack, onNavigateToTool }) {
               <p className="text-base text-slate-655 dark:text-zinc-400 font-medium leading-relaxed italic border-l-2 border-slate-200 dark:border-zinc-800/80 pl-4 py-1">
                 {post.description}
               </p>
+
+              {/* Author Byline for E-E-A-T */}
+              <div className="flex items-center gap-2 pt-2 text-xs font-semibold text-slate-600 dark:text-zinc-400">
+                <span className="w-5 h-5 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-[10px] border border-slate-200 dark:border-zinc-700">✍️</span>
+                <span>Written by SungGeun Kim</span>
+              </div>
             </div>
 
             {/* 본문 마크다운 영역 */}

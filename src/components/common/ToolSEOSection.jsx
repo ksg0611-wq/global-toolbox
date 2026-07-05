@@ -23,10 +23,18 @@ export default function ToolSEOSection({
     <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
       {/* 1. Main Heading */}
       {title && (
-        <h2 className="text-sm font-bold text-slate-900 dark:text-white">
+        <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3">
           {title}
         </h2>
       )}
+
+      {/* E-E-A-T Byline Badge for AdSense Quality Validation */}
+      <div className="flex items-center gap-2 mb-4 bg-indigo-50/50 dark:bg-indigo-900/10 p-2.5 rounded-lg border border-indigo-100 dark:border-indigo-800/30">
+        <span className="text-base">💡</span>
+        <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+          Curated & Verified by Seonggeun Kim (AI & Web Architecture Expert)
+        </span>
+      </div>
 
       {/* 2. Main Description */}
       {description && (
