@@ -15,7 +15,7 @@ export default function About() {
       </h1>
       <div className="space-y-6 text-sm md:text-base leading-relaxed text-slate-600 dark:text-zinc-400 font-medium">
         <p>
-          Welcome to <strong>Global ToolBox</strong>. I am Seonggeun Kim, a solo maker deeply passionate about productivity and efficiency. I personally designed and built this hub of web utility applications to help creators, developers, and digital marketers worldwide streamline their daily workflows.
+          Welcome to <strong>Global ToolBox</strong>. I am SungGeun Kim, a solo maker deeply passionate about productivity and efficiency. I personally designed and built this hub of web utility applications to help creators, developers, and digital marketers worldwide streamline their daily workflows.
         </p>
         
         <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8">My Mission</h2>
@@ -38,7 +38,7 @@ export default function About() {
 
         <div className="border-t border-slate-200 dark:border-zinc-800/80 pt-6 mt-10">
           <p className="text-xs text-slate-400 dark:text-zinc-500 font-semibold">
-            Crafted with passion by Seonggeun Kim.
+            Crafted with passion by SungGeun Kim.
           </p>
         </div>
       </div>

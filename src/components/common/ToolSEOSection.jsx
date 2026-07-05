@@ -32,7 +32,7 @@ export default function ToolSEOSection({
       <div className="flex items-center gap-2 mb-4 bg-indigo-50/50 dark:bg-indigo-900/10 p-2.5 rounded-lg border border-indigo-100 dark:border-indigo-800/30">
         <span className="text-base">💡</span>
         <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300">
-          Curated & Verified by Seonggeun Kim (AI & Web Architecture Expert)
+          Curated & Verified by SungGeun Kim (AI & Web Architecture Expert)
         </span>
       </div>
 
