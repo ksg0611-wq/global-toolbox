@@ -125,6 +125,14 @@ export default function PromptDetail({ slug, onNavigateBack, onNavigateToTool })
 
           </div>
 
+          {/* E-E-A-T Byline Badge for AdSense Quality Validation */}
+          <div className="flex items-center justify-center gap-2 mt-8 bg-indigo-50/50 dark:bg-indigo-900/10 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
+            <span className="text-xl">💡</span>
+            <span className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">
+              Curated &amp; Verified by SungGeun Kim (AI &amp; Web Architecture Expert)
+            </span>
+          </div>
+
           {/* Related Tool CTA */}
           {relatedTool && (
             <div className="relative overflow-hidden rounded-2xl border p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-900 border-indigo-500/20 text-white dark:bg-zinc-900 dark:border-zinc-850">

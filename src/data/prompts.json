@@ -214,5 +214,41 @@
     "howToUse": "Supply your meeting transcript or audio notes. The AI will return a structured briefing with an executive summary, decisions, and an action items table.",
     "recommendedFor": "Project Managers, Executives, Team Leads, and Busy Professionals seeking to automate meeting minutes.",
     "relatedTool": "word-counter"
+  },
+  {
+    "id": "saas-mvp-feature-prioritizer",
+    "category": "Development",
+    "title": "Lean SaaS MVP Feature Prioritizer",
+    "excerpt": "Filter out the noise and define the absolute core features for your SaaS MVP using the MoSCoW method.",
+    "promptText": "You are a pragmatic SaaS Product Manager and MVP Architect. I will provide you with a service idea and a raw list of features. Your goal is to filter out the noise and define the absolute core features necessary for an MVP. Categorize the features using the MoSCoW method (Must-Have, Should-Have, Could-Have, Won't-Have). Then, output a markdown blueprint containing a timeline that a solo developer could realistically build in a 2-week sprint.",
+    "slug": "saas-mvp-feature-prioritizer",
+    "metaDescription": "Filter out the noise and define the absolute core features for your SaaS MVP using the MoSCoW method with a 2-week solo developer sprint timeline.",
+    "howToUse": "Copy this prompt and provide your SaaS idea and feature list. The AI will output a prioritized MoSCoW list and a 2-week build timeline blueprint.",
+    "recommendedFor": "Indie Hackers, Solo Developers, Product Managers, and SaaS Founders.",
+    "relatedTool": "markdown-editor"
+  },
+  {
+    "id": "clean-code-security-auditor",
+    "category": "Development",
+    "title": "Clean Code Refactoring & Security Auditor",
+    "excerpt": "Audit your code snippets for readability, performance bottlenecks, and critical security vulnerabilities.",
+    "promptText": "You are an elite Staff Software Engineer and Cybersecurity Expert. I will provide you with a snippet of source code. You must analyze it rigorously and provide three things: 1. Clean Code Refactoring: Propose refactored code that significantly improves readability and maintainability. 2. Performance Analysis: Identify time and space complexity bottlenecks and suggest improvements. 3. Security Audit: Pinpoint any critical vulnerabilities based on the OWASP Top 10 and provide the necessary defense code.",
+    "slug": "clean-code-security-auditor",
+    "metaDescription": "Audit your code snippets for readability, performance bottlenecks, and critical security vulnerabilities based on OWASP Top 10.",
+    "howToUse": "Paste this prompt followed by your code snippet. The AI will output refactored code, complexity improvements, and security patches.",
+    "recommendedFor": "Software Engineers, Backend Developers, and Security Enthusiasts.",
+    "relatedTool": "regex-tester"
+  },
+  {
+    "id": "semantic-seo-cluster-architect",
+    "category": "Marketing",
+    "title": "Semantic SEO Content Cluster Architect",
+    "excerpt": "Generate a comprehensive semantic content cluster and LSI keyword structure to dominate Google search rankings.",
+    "promptText": "You are a master SEO Strategist and Content Architect. I will give you a primary keyword. Your task is to generate a comprehensive semantic content cluster map tailored for Google's Knowledge Graph system. Please output a markdown template that includes: 1. A core Pillar Page topic and 5-7 supporting Cluster Topics. 2. Recommended H2 and H3 heading structures for the Pillar Page. 3. A list of highly relevant LSI (Latent Semantic Indexing) keywords to naturally weave into the content to signal high topical authority.",
+    "slug": "semantic-seo-cluster-architect",
+    "metaDescription": "Generate a comprehensive semantic content cluster, H2/H3 structures, and LSI keyword list to dominate Google search rankings.",
+    "howToUse": "Supply your main keyword. The AI will return a complete content cluster map, heading structures, and LSI keywords to boost your topical authority.",
+    "recommendedFor": "SEO Specialists, Content Marketers, and Niche Site Creators.",
+    "relatedTool": "utm-link-builder"
   }
 ]
