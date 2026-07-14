@@ -1,46 +1,46 @@
 ---
-title: "1인 개발자를 위한 무료 디스코드 웹훅 피드백 시스템 구축기"
-description: "DB나 어드민 페이지 없이 1인 개발자가 무료로 고객 피드백과 에러 로그를 수집하는 방법. Discord Webhook과 Cloudflare Functions를 활용한 아키텍처를 소개합니다."
+title: "Building a Free, DB-Less Feedback System via Discord Webhooks for Solo Developers"
+description: "Learn how solo developers can collect customer feedback and error logs for free without a database or admin page using Discord Webhooks and Cloudflare Functions."
 date: "2026-07-13"
 author: "SungGeun Kim"
 tags: ["Discord Webhook", "Cloudflare Functions", "Feedback System", "Indie Maker", "Serverless"]
 slug: "solo-developer-discord-webhook-feedback-system"
 ---
 
-## 1인 개발자에게 피드백 시스템이란?
+## Why Do Solo Developers Need a Feedback System?
 
-사용자의 피드백과 사이트 내에서 발생하는 에러 로그를 수집하는 것은 프로덕트 개선에 필수적입니다. 하지만 1인 메이커 입장에서는 피드백 저장을 위한 데이터베이스를 구축하고, 이를 확인하기 위한 어드민(Admin) 페이지까지 따로 만드는 것은 리소스 낭비가 될 수 있습니다. 
+Collecting user feedback and in-site error logs is vital for product iteration. However, for a solo indie maker, building a dedicated database to store feedback and an accompanying admin dashboard is often an inefficient use of resources.
 
-그래서 저는 평소 가장 많이 확인하는 메신저인 **디스코드(Discord)**를 활용하여, 별도의 비용과 관리 포인트 없이 즉각적으로 피드백을 받아볼 수 있는 웹훅(Webhook) 시스템을 구축했습니다.
+To solve this, I leveraged **Discord**—the messenger I check most frequently—to construct a webhook system that delivers instant feedback without incurring additional costs or maintenance overhead.
 
-## Discord Webhook 생성 방법
+## How to Create a Discord Webhook
 
-디스코드 웹훅을 만드는 과정은 매우 간단합니다.
+Setting up a Discord webhook is remarkably straightforward:
 
-1. 알림을 받을 디스코드 서버 내에 채널(예: `#feedback-logs`)을 만듭니다.
-2. 채널 설정(톱니바퀴 아이콘) > **연동(Integrations)** > **웹훅(Webhooks)** 메뉴로 이동합니다.
-3. '새 웹훅 만들기'를 클릭하고, 이름을 지정한 뒤 **웹훅 URL 복사** 버튼을 누릅니다. (이 URL은 절대 외부에 노출되어서는 안 됩니다.)
+1. Create a dedicated channel (e.g., `#feedback-logs`) in your target Discord server.
+2. Navigate to Channel Settings (gear icon) > **Integrations** > **Webhooks**.
+3. Click 'New Webhook', assign it a name, and hit the **Copy Webhook URL** button. (Ensure this URL is never exposed publicly.)
 
-## Cloudflare Functions와 연동하기 (코드 예제)
+## Integrating with Cloudflare Functions (Code Example)
 
-프론트엔드에서 곧바로 디스코드 웹훅 URL로 POST 요청을 보내면 보안 문제가 발생합니다. 따라서 중간에 백엔드 역할을 해줄 서버리스 함수가 필요합니다. 저는 Cloudflare Pages와 결합하기 좋은 **Cloudflare Functions (Workers)**를 사용했습니다.
+Sending POST requests directly from the frontend to a Discord webhook URL exposes it to security vulnerabilities. Therefore, a serverless function is required to act as a secure backend proxy. I utilized **Cloudflare Functions (Workers)**, which pairs perfectly with Cloudflare Pages.
 
-아래는 `functions/api/feedback.js`의 간단한 구현 예제입니다.
+Below is a simple implementation of `functions/api/feedback.js`:
 
 ```javascript
-// 환경 변수(env)에 저장된 FEEDBACK_WEBHOOK_URL을 사용합니다.
+// Utilizes the FEEDBACK_WEBHOOK_URL stored in environment variables (env).
 export async function onRequestPost({ request, env }) {
   try {
     const data = await request.json();
     const { name, email, message, type } = data;
 
     const embed = {
-      title: `새로운 ${type === 'bug' ? '버그 리포트 🐛' : '피드백 💡'}`,
+      title: `New ${type === 'bug' ? 'Bug Report 🐛' : 'Feedback 💡'}`,
       color: type === 'bug' ? 16711680 : 3447003, // Red for bugs, Blue for feedback
       fields: [
-        { name: '이름', value: name || '익명', inline: true },
-        { name: '이메일', value: email || '없음', inline: true },
-        { name: '메시지', value: message }
+        { name: 'Name', value: name || 'Anonymous', inline: true },
+        { name: 'Email', value: email || 'None', inline: true },
+        { name: 'Message', value: message }
       ],
       timestamp: new Date().toISOString()
     };
@@ -52,7 +52,7 @@ export async function onRequestPost({ request, env }) {
     });
 
     if (!response.ok) {
-      throw new Error('Discord Webhook 전송 실패');
+      throw new Error('Failed to send Discord Webhook');
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
@@ -62,10 +62,10 @@ export async function onRequestPost({ request, env }) {
 }
 ```
 
-프론트엔드에서는 폼 제출 시 `/api/feedback` 엔드포인트로 데이터를 보내기만 하면 됩니다.
+On the frontend, you simply send the form data to the `/api/feedback` endpoint upon submission.
 
-## 시스템의 장점과 아키텍처 관점의 인사이트
+## Architectural Insights and System Advantages
 
-이 시스템을 도입하고 나서 얻은 가장 큰 장점은 **즉각적인 반응성**과 **무료**라는 점입니다. 사용자가 툴을 사용하다가 버그 리포트를 남기면 즉시 핸드폰 디스코드 알림이 울려 신속하게 대응할 수 있었습니다. 
+The most significant advantages of this system are its **instant responsiveness** and **zero cost**. When a user submits a bug report, my phone immediately chimes with a Discord notification, allowing for rapid response times.
 
-DB 서버 유지보수나 어드민 페이지 관리가 필요 없고, 트래픽에 맞춰 자동으로 스케일링되는 Cloudflare의 엣지 네트워크를 100% 활용한다는 점에서, 빠른 실행력과 민첩함을 요구하는 1인 개발 환경에 최적화된 아키텍처입니다. 피드백 수집이 고민이시라면 당장 도입해 보시기를 권장합니다!
+By eliminating database maintenance and admin page management, and fully leveraging Cloudflare's auto-scaling edge network, this architecture is heavily optimized for the agility required in solo development. If you are struggling with feedback collection, I highly recommend adopting this setup!
