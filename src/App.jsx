@@ -96,7 +96,8 @@ export default function App() {
   
   // 현재 열려 있는 모달 도구 ID (URL 경로 분석 후 설정)
   const [activeTool, setActiveTool] = useState(() => {
-    const path = window.location.pathname;
+    let path = window.location.pathname;
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
     if (path.startsWith('/tools/')) {
       const toolId = path.substring(7);
       if (toolId === 'margin-calculator') return 'cpa-calculator';
@@ -123,7 +124,8 @@ export default function App() {
 
   // 현재 활성화된 블로그 글 혹은 프롬프트 slug
   const [activeSlug, setActiveSlug] = useState(() => {
-    const path = window.location.pathname;
+    let path = window.location.pathname;
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
     if (path.startsWith('/blog/')) {
       return path.substring(6); // '/blog/'는 6글자
     } else if (path.startsWith('/prompts/')) {
@@ -135,7 +137,8 @@ export default function App() {
   // 뒤로가기/앞으로가기 브라우저 내비게이션 지원
   useEffect(() => {
     const handlePopState = () => {
-      const path = window.location.pathname;
+      let path = window.location.pathname;
+      if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
       if (path.startsWith('/tools/')) {
         const toolId = path.substring(7);
         if (toolId === 'margin-calculator') {
@@ -210,7 +213,9 @@ export default function App() {
       }
     }
 
-    if (window.location.pathname !== newPath) {
+    const currentPath = window.location.pathname;
+    const isSamePath = currentPath === newPath || currentPath === newPath + '/';
+    if (!isSamePath) {
       window.history.pushState(null, '', newPath);
     }
 

@@ -17,6 +17,7 @@ const SEO = ({ title, description, image, url }) => {
       {/* Primary HTML Meta Tags */}
       <title>{displayTitle}</title>
       <meta name="description" content={fullDesc} />
+      <link rel="canonical" href={fullUrl} />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
