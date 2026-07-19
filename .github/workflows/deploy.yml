@@ -25,6 +25,7 @@ jobs:
 
       - name: Build and Pre-render
         run: npm run build
+        # Firebase Secrets for production runtime binding
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
