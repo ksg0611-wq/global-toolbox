@@ -39,10 +39,20 @@ try {
     db = getFirestore(app);
   }
 } catch (error) {
-  console.error('Gracefully handled Firebase init error during build:', error);
-  app = {};
-  auth = {};
-  db = {};
+  console.error('Gracefully handled Firebase init error during build/runtime:', error);
+  // 에러 발생 시(API 키 누락 등) 전체 사이트 크래시(Whiteout)를 방지하기 위해 
+  // 정상적인 형태의 Dummy Firebase Auth 인스턴스를 생성하여 내보냅니다.
+  const fallbackApp = initializeApp({
+    apiKey: "AIzaSyDummyKey123456789012345678901234",
+    authDomain: "dummy-project.firebaseapp.com",
+    projectId: "dummy-project",
+    storageBucket: "dummy-project.appspot.com",
+    messagingSenderId: "123456789012",
+    appId: "1:123456789012:web:abcdef1234567890"
+  }, "FallbackApp_" + Date.now());
+  app = fallbackApp;
+  auth = getAuth(fallbackApp);
+  db = getFirestore(fallbackApp);
 }
 
 // 다른 컴포넌트에서 가져다 쓸 수 있도록 인증(Auth) 및 데이터베이스(Firestore) 객체를 내보냅니다.
