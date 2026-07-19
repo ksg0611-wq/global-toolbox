@@ -18,8 +18,8 @@ let auth;
 let db;
 
 try {
-  // 빌드 환경(ReactSnap)이거나 API 키가 비정상적일 때 하드 크래시 방어
-  const isBuildEnv = (typeof navigator !== 'undefined' && /ReactSnap/i.test(navigator.userAgent)) || !firebaseConfig.apiKey;
+  // 빌드 환경(ReactSnap)일 때만 하드 크래시 방어 (진짜 환경에서는 환경변수 의존)
+  const isBuildEnv = typeof navigator !== 'undefined' && /ReactSnap/i.test(navigator.userAgent);
   
   if (isBuildEnv) {
     console.warn('Firebase initialization with dummy config during static build phase.');
