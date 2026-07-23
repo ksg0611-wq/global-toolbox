@@ -235,6 +235,12 @@
     <priority>0.75</priority>
   </url>
   <url>
+    <loc>https://global-toolbox.com/prompts/brand-sponsorship-pitch-deck-copywriter</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://global-toolbox.com/prompts/chain-of-thought-solver</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>weekly</changefreq>
@@ -242,6 +248,12 @@
   </url>
   <url>
     <loc>https://global-toolbox.com/prompts/clean-code-security-auditor</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://global-toolbox.com/prompts/complex-regex-builder-explainer</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
@@ -272,6 +284,12 @@
   </url>
   <url>
     <loc>https://global-toolbox.com/prompts/full-stack-code-auditor-security</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://global-toolbox.com/prompts/full-stack-security-vulnerability-auditor</loc>
     <lastmod>2026-07-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
