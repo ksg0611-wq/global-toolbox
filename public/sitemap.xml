@@ -253,6 +253,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://global-toolbox.com/prompts/api-integration-webhook-handler-architect</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://global-toolbox.com/prompts/b2b-cold-email-copywriter</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -326,6 +332,18 @@
   </url>
   <url>
     <loc>https://global-toolbox.com/prompts/high-converting-landing-page-copywriter</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://global-toolbox.com/prompts/high-converting-youtube-script-outliner</loc>
+    <lastmod>2026-08-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://global-toolbox.com/prompts/lighthouse-core-web-vitals-optimizer</loc>
     <lastmod>2026-08-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>

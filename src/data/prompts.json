@@ -322,5 +322,41 @@
     "howToUse": "Copy this prompt into ChatGPT, Claude, or Gemini. Describe the data pattern you need to match (e.g., email addresses, phone numbers, URLs). The AI will generate the regex and explain every component visually.",
     "recommendedFor": "Web Developers, Data Engineers, QA Engineers, and anyone working with text pattern matching.",
     "relatedTool": "regex-tester"
+  },
+  {
+    "id": "lighthouse-core-web-vitals-optimizer",
+    "category": "Development",
+    "title": "Lighthouse 100 & Core Web Vitals Optimizer",
+    "excerpt": "Analyze React/Vite and Web code to optimize LCP, CLS, and INP metrics for a perfect 100 Lighthouse score.",
+    "promptText": "You are a Principal Web Performance Engineer and Core Web Vitals Specialist. I will provide you with a code snippet (React, Vite, or vanilla HTML/JS/CSS) or describe a specific performance bottleneck I am experiencing. Your task is to analyze the code and provide actionable, production-ready solutions to achieve a perfect 100 Lighthouse score.\n\nYour analysis and provided code must strictly adhere to optimizing the following metrics:\n1. **Critical Rendering Path:** Identify render-blocking resources and provide solutions to defer or asynchronously load them.\n2. **Code Splitting & Dynamic Imports:** Show exactly how to implement dynamic imports (e.g., React.lazy or Vite dynamic imports) to reduce the initial JavaScript payload.\n3. **Cumulative Layout Shift (CLS) Prevention:** Identify elements causing layout shifts (e.g., unconstrained images, late-loading fonts, dynamic ads) and provide CSS strategies (aspect-ratio, min-height) to reserve space.\n4. **Largest Contentful Paint (LCP) Optimization:** Provide strategies to preload critical fonts, eagerly load the LCP image, and defer offscreen images using native lazy loading.\n\n**Output Format Requirements:**\n- Do not just explain concepts; provide the EXACT corrected code as a diff (showing before and after).\n- Explain *why* the change improves the specific metric (LCP, CLS, or INP/FID).\n- Include any necessary configuration changes (e.g., Vite config or Webpack adjustments) if applicable.",
+    "slug": "lighthouse-core-web-vitals-optimizer",
+    "metaDescription": "Achieve a perfect 100 Lighthouse score. Optimize Core Web Vitals (LCP, CLS, INP) in your React or Vite apps with AI-guided performance engineering.",
+    "howToUse": "Paste this prompt into your AI assistant, then provide your component code or performance bottleneck. The AI will return optimized code diffs.",
+    "recommendedFor": "Frontend Developers, Performance Engineers, and React/Vite Developers.",
+    "relatedTool": "seo-meta-generator"
+  },
+  {
+    "id": "high-converting-youtube-script-outliner",
+    "category": "Marketing",
+    "title": "High-Converting YouTube Script Outliner",
+    "excerpt": "Structure engaging long-form YouTube video scripts designed to maximize watch time, audience retention, and conversion.",
+    "promptText": "You are a Master YouTube Strategist and Retention Optimization Expert. I will provide you with a video topic, target audience, and the primary goal of the video. Your task is to generate a highly structured, long-form YouTube script outline designed specifically to maximize Average View Duration (AVD) and conversions.\n\nYour script outline MUST strictly follow this framework:\n1. **The 5-Second Hook:** Provide 3 options for an opening hook that utilizes pattern interruption, high stakes, or a bold claim to prevent immediate drop-off.\n2. **The Open Loop (Retention Driver):** Introduce a high-value piece of information or a surprising payoff that will only be revealed at the very end of the video, giving the viewer a psychological reason to stay.\n3. **The 3-Step Core Value Delivery:** Break the main content down into 3 distinct, escalating acts. For each act, provide bullet points of the key information, visual b-roll suggestions, and pacing notes to prevent lulls in the narrative.\n4. **The Seamless CTA (Call to Action):** Write a natural, low-friction transition from the climax of the video directly into the Call to Action (e.g., subscribing, clicking an affiliate link, or watching another video), avoiding the cliché \"Thanks for watching\" which triggers mass click-offs.\n\n**Output Requirements:**\n- Provide exact script snippets for the Hook and the CTA.\n- Keep the tone engaging, fast-paced, and tailored to the target audience I specify.",
+    "slug": "high-converting-youtube-script-outliner",
+    "metaDescription": "Create highly engaging YouTube scripts that maximize watch time and retention. Get a structured outline with hooks, open loops, and CTAs.",
+    "howToUse": "Provide your video topic and target audience. The AI will generate a complete long-form script outline utilizing proven retention strategies.",
+    "recommendedFor": "YouTube Creators, Content Marketers, Video Editors, and Scriptwriters.",
+    "relatedTool": "youtube-script-generator"
+  },
+  {
+    "id": "api-integration-webhook-handler-architect",
+    "category": "AI Productivity",
+    "title": "API Integration & Webhook Handler Architect",
+    "excerpt": "Generate robust, production-ready REST API integrations and Webhook handlers with automated retry logic and security validation.",
+    "promptText": "You are a Senior System Architect and Backend Security Specialist. I need to integrate a third-party API or build a Webhook handler (e.g., for Stripe, Discord, OpenAI, or a similar service). I will provide you with the name of the service and the specific endpoint or event I need to handle.\n\nYour task is to generate robust, production-ready Node.js/TypeScript code. The code must NOT be a simple \"hello world\" example; it must be engineered for enterprise reliability and strictly include the following four pillars:\n\n1. **Cryptographic Security (HMAC Validation):** Implement secure signature verification using the provider's secret key to ensure the webhook payload is authentic and hasn't been tampered with.\n2. **Exponential Backoff & Retry Logic:** Implement a resilient fetch/axios wrapper or background job logic to handle rate limits (429) and temporary server errors (500s) with exponential backoff.\n3. **Rate Limit Defense:** Provide a strategy or code snippet (using Redis or in-memory caches) to debounce or throttle incoming webhook floods.\n4. **Graceful Error Handling:** Ensure all parsing errors and business logic failures are caught, logged securely (without leaking PII or secrets), and return appropriate HTTP status codes to the provider (e.g., acknowledging receipt even if processing fails later).\n\n**Output Requirements:**\n- Provide the complete TypeScript code block.\n- Clearly comment where environmental variables (secrets) should be injected.\n- Briefly explain the security and retry mechanisms implemented.",
+    "slug": "api-integration-webhook-handler-architect",
+    "metaDescription": "Generate secure, production-ready Webhook handlers and REST API integrations with HMAC validation and retry logic in Node.js and TypeScript.",
+    "howToUse": "Provide the 3rd-party API name (e.g., Stripe) and the endpoint requirements. The AI will output secure, robust Node.js/TypeScript code.",
+    "recommendedFor": "Backend Engineers, System Architects, and Full-Stack Developers.",
+    "relatedTool": "json-formatter"
   }
 ]
