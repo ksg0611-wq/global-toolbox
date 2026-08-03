@@ -326,6 +326,16 @@ export default function JsonFormatter({ onClose }) {
                 answer: "Minification removes all white spaces, newlines, and indentations. This decreases payload size and improves performance when sending payloads over APIs."
               }
             ]}
+            extraSections={[
+              {
+                title: "Common Errors & Troubleshooting",
+                items: [
+                  { subtitle: "JSON SyntaxError: Unexpected token", text: "This is the most common error. It usually means you have a trailing comma at the end of an array or object, or you are missing double quotes around property keys." },
+                  { subtitle: "Single Quotes vs Double Quotes", text: "JSON strictly requires double quotes (\") for both keys and string values. Using single quotes (') will cause parsing errors." },
+                  { subtitle: "Unescaped Characters", text: "If your JSON string contains tabs, newlines, or unescaped double quotes inside the text, the parser will fail. Always use backslashes (\\\", \\n, \\t) for inner text." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>

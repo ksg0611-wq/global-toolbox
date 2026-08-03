@@ -719,6 +719,16 @@ export default function AIPromptBuilder({ onClose }) {
                 answer: "If logged in, prompts are securely synced with your profile. If anonymous, prompts are kept locally in your browser storage. We respect user confidentiality."
               }
             ]}
+            extraSections={[
+              {
+                title: "Glossary & Optimization Guide",
+                items: [
+                  { subtitle: "LLM (Large Language Model)", text: "A deep learning algorithm capable of recognizing, summarizing, translating, predicting, and generating text based on vast datasets (e.g., GPT-4, Claude 3.5, Gemini 1.5)." },
+                  { subtitle: "System Prompt / Persona", text: "The foundational instruction that sets the baseline behavior, tone, and boundaries for the AI. Assigning an 'Expert Persona' significantly reduces hallucinations." },
+                  { subtitle: "Few-Shot Prompting", text: "Providing the model with 2 to 3 clear examples of the desired input and output format within your prompt. This drastically improves structural compliance compared to zero-shot instructions." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>

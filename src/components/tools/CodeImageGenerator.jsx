@@ -437,6 +437,16 @@ export default function CodeImageGenerator({ onClose }) {
                 answer: "No. This generator is completely serverless. Code rendering is processed entirely inside your browser locally using the Canvas API and HTML5, protecting your data confidentiality."
               }
             ]}
+            extraSections={[
+              {
+                title: "Common Errors & Troubleshooting",
+                items: [
+                  { subtitle: "Loss of Syntax Highlighting", text: "If the text color appears plain white, ensure you have selected the correct 'Programming Language' from the dropdown. Syntax parsing relies on explicit language definitions." },
+                  { subtitle: "Image Text Appears Blurry", text: "Browsers on very low DPI monitors sometimes render canvas elements softly. Try generating the image on a higher resolution screen, or ensure browser zoom is set to 100% before exporting." },
+                  { subtitle: "Truncated Code Lines", text: "Very long lines without breaks will stretch the image horizontally, making it hard to read on mobile. Manually break long expressions or comments into multiple lines for optimal readability." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>

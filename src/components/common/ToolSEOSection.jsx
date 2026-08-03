@@ -17,7 +17,8 @@ export default function ToolSEOSection({
   title = '',
   description = '',
   howToUse = [],
-  faqs = []
+  faqs = [],
+  extraSections = []
 }) {
   return (
     <article className="mt-10 pt-6 border-t border-slate-150 dark:border-zinc-900 text-xs text-slate-500 dark:text-slate-400 space-y-4 text-left">
@@ -79,6 +80,29 @@ export default function ToolSEOSection({
           </div>
         </div>
       )}
+
+      {/* 5. Extra Sections (e.g. Glossary, Troubleshooting) */}
+      {extraSections && extraSections.length > 0 && extraSections.map((section, sIdx) => (
+        <div key={sIdx} className="space-y-4 pt-4 border-t border-slate-100 dark:border-zinc-900/50 mt-6">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-350">
+            {section.title}
+          </h3>
+          <div className="space-y-3">
+            {section.items && section.items.map((item, idx) => (
+              <div key={idx} className="space-y-1">
+                {item.subtitle && (
+                  <h4 className="font-bold text-slate-800 dark:text-zinc-200">
+                    {item.subtitle}
+                  </h4>
+                )}
+                <p className="leading-relaxed text-slate-500 dark:text-zinc-400 pl-4">
+                  {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </article>
   );
 }

@@ -465,6 +465,16 @@ export default function RegexTester({ onClose }) {
                 answer: "Yes. All regex compilation and matching are processed locally in your browser using JavaScript's native RegExp object. No text is sent to a server."
               }
             ]}
+            extraSections={[
+              {
+                title: "Common Errors & Troubleshooting",
+                items: [
+                  { subtitle: "Escaping Special Characters", text: "Characters like ., *, +, ?, ^, $, (, ), [, ], {, }, |, and \\ have special meanings in regular expressions. If you want to match them literally, you must escape them with a backslash (e.g., \\. to match a period)." },
+                  { subtitle: "Greedy vs. Lazy Matching", text: "By default, quantifiers like * and + are 'greedy' and will match as much text as possible. This often leads to capturing more than intended. Add a question mark (e.g., *?) to make them 'lazy' so they stop at the first match." },
+                  { subtitle: "Invalid Regular Expression", text: "If you see a syntax error, check for unclosed brackets, parentheses, or unescaped forward slashes (/). Additionally, some lookbehind assertions (?<=) are not supported in all older browser engines." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>

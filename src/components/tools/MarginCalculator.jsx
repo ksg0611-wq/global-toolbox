@@ -401,6 +401,16 @@ export default function MarginCalculator({ onClose }) {
                 answer: "No. All calculation formulas are run inside your browser cache locally, ensuring 100% campaign confidentiality."
               }
             ]}
+            extraSections={[
+              {
+                title: "Glossary & Optimization Guide",
+                items: [
+                  { subtitle: "CPA (Cost Per Action)", text: "The fixed amount a network pays you for a successful conversion or lead. Maintaining a positive spread between your ad spend and this payout is the core of affiliate media buying." },
+                  { subtitle: "ROI vs. ROAS", text: "ROI (Return on Investment) considers all expenses including fees, showing true profit percentages. ROAS (Return on Ad Spend) only measures revenue generated directly from ad dollars, often overstating actual profitability." },
+                  { subtitle: "Optimization Strategy", text: "To maximize margin, aim to lower your CPC (Cost Per Click) through A/B testing creatives, while simultaneously increasing your landing page conversion rate. Even a 1% increase in conversion rate can double net margins." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>

@@ -337,6 +337,16 @@ export default function TextFormatter({ onClose }) {
                 answer: "The 'Remove Spaces' action reduces multiple consecutive spaces or tabs into a single space, and trims any leading or trailing whitespace from the overall text block."
               }
             ]}
+            extraSections={[
+              {
+                title: "Common Errors & Troubleshooting",
+                items: [
+                  { subtitle: "camelCase Ignoring Numbers", text: "When converting to camelCase, numbers are preserved but they may break the capitalization of the following letter depending on spacing. Ensure words are separated by spaces or underscores before conversion." },
+                  { subtitle: "Remove Lines Not Working", text: "If line breaks persist, the text might contain hidden carriage returns (\\r) instead of standard newlines (\\n). Our tool handles standard combinations, but obscure encoding formats might require manual cleanup." },
+                  { subtitle: "Pasting Very Large Texts", text: "Pasting documents larger than 5MB may cause the browser to freeze momentarily while calculating real-time character and word counts. We recommend processing text in smaller chunks." }
+                ]
+              }
+            ]}
           />
         </div>
       </div>
