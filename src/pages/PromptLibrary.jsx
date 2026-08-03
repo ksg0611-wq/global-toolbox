@@ -94,54 +94,60 @@ export default function PromptLibrary({ onNavigate }) {
           </div>
 
           {/* Cards Grid */}
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {filteredPrompts.map((prompt) => (
-              <article
-                key={prompt.id}
-                onClick={() => onNavigate && onNavigate(prompt.slug)}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:hover:border-zinc-700 cursor-pointer"
-              >
-                {/* Top glow hover visual */}
-                <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-tr from-indigo-400/15 to-purple-400/15 blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          {filteredPrompts.length > 0 ? (
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPrompts.map((prompt) => (
+                <article
+                  key={prompt.id}
+                  onClick={() => onNavigate && onNavigate(prompt.slug)}
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:hover:border-zinc-700 cursor-pointer"
+                >
+                  {/* Top glow hover visual */}
+                  <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-tr from-indigo-400/15 to-purple-400/15 blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                <div className="space-y-4 flex-grow">
-                  {/* Category Tag */}
-                  <div className="flex items-center justify-between">
-                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${CATEGORY_TAG_COLORS[prompt.category] || 'bg-slate-100 text-slate-600'}`}>
-                      {prompt.category}
-                    </span>
+                  <div className="space-y-4 flex-grow">
+                    {/* Category Tag */}
+                    <div className="flex items-center justify-between">
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${CATEGORY_TAG_COLORS[prompt.category] || 'bg-slate-100 text-slate-600'}`}>
+                        {prompt.category}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-slate-955 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-250 leading-tight">
+                      {prompt.title}
+                    </h3>
+
+                    {/* Excerpt Description */}
+                    <p className="text-xs sm:text-sm text-slate-550 dark:text-zinc-400 leading-relaxed font-medium line-clamp-3">
+                      {prompt.excerpt}
+                    </p>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-lg font-bold text-slate-955 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-250 leading-tight">
-                    {prompt.title}
-                  </h3>
-
-                  {/* Excerpt Description */}
-                  <p className="text-xs sm:text-sm text-slate-550 dark:text-zinc-400 leading-relaxed font-medium line-clamp-3">
-                    {prompt.excerpt}
-                  </p>
-                </div>
-
-                {/* Footer Action Button */}
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/50 flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
-                    Prompt details
-                  </span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onNavigate) onNavigate(prompt.slug);
-                    }}
-                    className="flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-850 dark:hover:text-indigo-300 transition-colors cursor-pointer group/btn"
-                  >
-                    View Details
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                  {/* Footer Action Button */}
+                  <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/50 flex items-center justify-between">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+                      Prompt details
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onNavigate) onNavigate(prompt.slug);
+                      }}
+                      className="flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-850 dark:hover:text-indigo-300 transition-colors cursor-pointer group/btn"
+                    >
+                      View Details
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-zinc-500 text-sm">
+              ✨ No prompts found in this category.
+            </div>
+          )}
 
         </section>
       </div>
