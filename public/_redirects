@@ -1,2 +1,5 @@
 /tools / 301
+/blog/:slug  /blog/:slug/  308
+/prompts/:slug  /prompts/:slug/  308
+/tools/:slug  /tools/:slug/  308
 /* /index.html 200

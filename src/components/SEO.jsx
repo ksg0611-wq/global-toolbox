@@ -10,7 +10,8 @@ const SEO = ({ title, description, image, url }) => {
   const displayTitle = title ? `${title} | Global ToolBox` : defaultTitle;
   const fullDesc = description || defaultDesc;
   const ogImageUrl = image || defaultImage;
-  const fullUrl = url ? `${defaultUrl}${url}` : defaultUrl;
+  const normalizedUrl = url ? (url.endsWith('/') ? url : `${url}/`) : '';
+  const fullUrl = normalizedUrl ? `${defaultUrl}${normalizedUrl}` : defaultUrl;
 
   return (
     <Helmet>
