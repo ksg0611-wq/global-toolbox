@@ -1,0 +1,32 @@
+/tools / 301
+/blog/:slug  /blog/:slug/  308
+/prompts/:slug  /prompts/:slug/  308
+/tools/:slug  /tools/:slug/  308
+
+# Legacy / Broken External Links -> Tools Redirects (Directly to canonical trailing slash to avoid double hops)
+/youtube-analyzer /tools/youtube-analyzer/ 308
+/adsense-estimator /tools/adsense-estimator/ 308
+/viral-hook-generator /tools/viral-hook-generator/ 308
+/youtube-thumbnail-preview /tools/youtube-thumbnail-preview/ 308
+/cpa-calculator /tools/cpa-calculator/ 308
+/brand-deal-pitch-builder /tools/brand-deal-pitch-builder/ 308
+/text-formatter /tools/text-formatter/ 308
+/json-formatter /tools/json-formatter/ 308
+/qr-generator /tools/qr-generator/ 308
+/password-generator /tools/password-generator/ 308
+/image-compressor /tools/image-compressor/ 308
+/seo-meta-generator /tools/seo-meta-generator/ 308
+/regex-tester /tools/regex-tester/ 308
+/ai-prompt-builder /tools/ai-prompt-builder/ 308
+/code-image-generator /tools/code-image-generator/ 308
+/markdown-editor /tools/markdown-editor/ 308
+/youtube-chapter-formatter /tools/youtube-chapter-formatter/ 308
+/youtube-description-generator /tools/youtube-description-generator/ 308
+/hashtag-generator /tools/hashtag-generator/ 308
+/youtube-thumbnail-downloader /tools/youtube-thumbnail-downloader/ 308
+/youtube-script-generator /tools/youtube-script-generator/ 308
+/youtube-thumbnail-ab-tester /tools/youtube-thumbnail-ab-tester/ 308
+/utm-link-builder /tools/utm-link-builder/ 308
+/word-counter /tools/word-counter/ 308
+
+/* /index.html 200
